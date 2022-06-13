@@ -2,7 +2,7 @@
 # make assembly - Build the memory file for an assembly source
 # make program - Build the memory file for a C program
 
-SOURCE = test_progs/rv32_copy.s
+SOURCE = test_progs/rv32_fib.s
 
 CRT = crt.s
 LINKERS = linker.lds
@@ -15,24 +15,12 @@ ASFLAGS = -mno-relax -march=rv32im -mabi=ilp32 -nostartfiles -Wno-main -mstrict-
 OBJFLAGS = -SD -M no-aliases 
 OBJDFLAGS = -SD -M numeric,no-aliases
 
-TOOLCHAINDIR = ../lab4-toolchain
 
-##########################################################################
-# IF YOU AREN'T USING THE TOOLCHAIN WE PROVIDED, CHANGE THIS TO FALSE OR OVERRIDE IT
-LAZY = 1
-##########################################################################
+GCC = riscv32-unknown-elf-gcc
+OBJDUMP = riscv32-unknown-elf-objdump
+AS = riscv32-unknown-elf-as
+ELF2HEX = riscv32-unknown-elf-elf2hex
 
-ifeq (1, $(LAZY))
-	GCC = $(TOOLCHAINDIR)/riscv32/bin/riscv32-unknown-elf-gcc
-	OBJDUMP = $(TOOLCHAINDIR)/riscv32/bin/riscv32-unknown-elf-objdump
-	AS = $(TOOLCHAINDIR)/riscv32/bin/riscv32-unknown-elf-as
-	ELF2HEX = $(TOOLCHAINDIR)/elf2hex/bin/riscv32-unknown-elf-elf2hex
-else
-	GCC = riscv32-unknown-elf-gcc
-	OBJDUMP = riscv32-unknown-elf-objdump
-	AS = riscv32-unknown-elf-as
-	ELF2HEX = riscv32-unknown-elf-elf2hex
-endif
 
 
 compile: $(CRT) $(LINKERS)
