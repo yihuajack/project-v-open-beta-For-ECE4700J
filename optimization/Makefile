@@ -2,7 +2,10 @@
 # make assembly - Build the memory file for an assembly source
 # make program - Build the memory file for a C program
 
-SOURCE = test_progs/rv32_fib.s
+TESTDIR = test_progs
+SOURCE = $(TESTDIR)/$(SRC)
+SRCNAME = $(basename $(SRC))
+SRCTYPE = $(suffix $(SRC))
 
 CRT = crt.s
 LINKERS = linker.lds
@@ -22,19 +25,27 @@ AS = riscv32-unknown-elf-as
 ELF2HEX = riscv32-unknown-elf-elf2hex
 
 
+all:
+ifeq ($(SRCTYPE),.s)
+all: assembly
+else ifeq ($(SRCTYPE),.c)
+all: program
+else
+	$(error Source file suffix must be *.c or *.s)
+endif
 
 compile: $(CRT) $(LINKERS)
-	$(GCC) $(CFLAGS) $(OFLAGS) $(CRT) $(SOURCE) -T $(LINKERS) -o program.elf
-	$(GCC) $(CFLAGS) $(DEBUG_FLAG) $(OFLAGS) $(CRT) $(SOURCE) -T $(LINKERS) -o program.debug.elf
+	$(GCC) $(CFLAGS) $(OFLAGS) $(CRT) $(SOURCE) -T $(LINKERS) -o program_$(SRCNAME).elf
+	$(GCC) $(CFLAGS) $(DEBUG_FLAG) $(OFLAGS) $(CRT) $(SOURCE) -T $(LINKERS) -o program.debug_$(SRCNAME).elf
 assemble: $(ASLINKERS)
-	$(GCC) $(ASFLAGS) $(SOURCE) -T $(ASLINKERS) -o program.elf 
-	cp program.elf program.debug.elf
-disassemble: program.debug.elf
-	$(OBJDUMP) $(OBJFLAGS) program.debug.elf > program.dump
-	$(OBJDUMP) $(OBJDFLAGS) program.debug.elf > program.debug.dump
-	rm program.debug.elf
-hex: program.elf
-	$(ELF2HEX) --bit-width 64 --input program.elf > program.mem
+	$(GCC) $(ASFLAGS) $(SOURCE) -T $(ASLINKERS) -o program_$(SRCNAME).elf 
+	cp program_$(SRCNAME).elf program.debug_$(SRCNAME).elf
+disassemble: program.debug_$(SRCNAME).elf
+	$(OBJDUMP) $(OBJFLAGS) program.debug_$(SRCNAME).elf > program_$(SRCNAME).dump
+	$(OBJDUMP) $(OBJDFLAGS) program.debug_$(SRCNAME).elf > program.debug_$(SRCNAME).dump
+	rm program.debug_$(SRCNAME).elf
+hex: program_$(SRCNAME).elf
+	$(ELF2HEX) --bit-width 64 --input program_$(SRCNAME).elf > program_$(SRCNAME).mem
 
 program: compile disassemble hex
 	@:

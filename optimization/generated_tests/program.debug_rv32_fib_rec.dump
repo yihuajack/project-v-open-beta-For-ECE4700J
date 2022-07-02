@@ -1,0 +1,59 @@
+
+program.debug_rv32_fib_rec.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <fib-0x1c>:
+   0:	00100413          	addi	x8,x0,1
+   4:	00001fb7          	lui	x31,0x1
+   8:	00e00893          	addi	x17,x0,14
+   c:	01000def          	jal	x27,1c <fib>
+  10:	40000113          	addi	x2,x0,1024
+  14:	00112023          	sw	x1,0(x2)
+  18:	10500073          	wfi
+
+0000001c <fib>:
+  1c:	04088063          	beq	x17,x0,5c <fib_ret_1>
+  20:	02888e63          	beq	x17,x8,5c <fib_ret_1>
+  24:	fe0f8f93          	addi	x31,x31,-32 # fe0 <data+0xbe0>
+  28:	01bfac23          	sw	x27,24(x31)
+  2c:	011fa023          	sw	x17,0(x31)
+  30:	fff88893          	addi	x17,x17,-1
+  34:	fe9ffdef          	jal	x27,1c <fib>
+  38:	001fa423          	sw	x1,8(x31)
+  3c:	000fa883          	lw	x17,0(x31)
+  40:	ffe88893          	addi	x17,x17,-2
+  44:	fd9ffdef          	jal	x27,1c <fib>
+  48:	008fa103          	lw	x2,8(x31)
+  4c:	001100b3          	add	x1,x2,x1
+  50:	018fad83          	lw	x27,24(x31)
+  54:	020f8f93          	addi	x31,x31,32
+  58:	000d8067          	jalr	x0,0(x27)
+
+0000005c <fib_ret_1>:
+  5c:	00100093          	addi	x1,x0,1
+  60:	000d8067          	jalr	x0,0(x27)
+	...
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	2241                	.2byte	0x2241
+   2:	0000                	.2byte	0x0
+   4:	7200                	.2byte	0x7200
+   6:	7369                	.2byte	0x7369
+   8:	01007663          	bgeu	x0,x16,14 <fib-0x8>
+   c:	0018                	.2byte	0x18
+   e:	0000                	.2byte	0x0
+  10:	7205                	.2byte	0x7205
+  12:	3376                	.2byte	0x3376
+  14:	6932                	.2byte	0x6932
+  16:	7032                	.2byte	0x7032
+  18:	5f30                	.2byte	0x5f30
+  1a:	326d                	.2byte	0x326d
+  1c:	3070                	.2byte	0x3070
+  1e:	0800                	.2byte	0x800
+  20:	0a01                	.2byte	0xa01
+  22:	0b              	Address 0x0000000000000022 is out of bounds.
+

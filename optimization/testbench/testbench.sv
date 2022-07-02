@@ -1,3 +1,4 @@
+// `include "sys_defs.svh"
 /////////////////////////////////////////////////////////////////////////
 //                                                                     //
 //                                                                     //
@@ -177,6 +178,7 @@ module testbench;
 		@(posedge clock);
 		
 		$readmemh("program.mem", memory.unified_memory);
+		// $readmemh("program_rv32_fib_rec.mem", memory.unified_memory);
 		
 		@(posedge clock);
 		@(posedge clock);

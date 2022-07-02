@@ -8,6 +8,13 @@
 //                                                                     //
 //                                                                     //
 /////////////////////////////////////////////////////////////////////////
+// Changelog
+// [Deprecated] Add logic id_stall
+// Change assign if_id_enable
+// Add DH_FWD_TYPE rs1_forward_type_id, rs2_forward_type_id, rs1_forward_type_ex, rs2_forward_type_ex
+// Change ID/EX Pipeline Register always_ff if condition
+// Change EX/MEM Pipeline Register always_ff if condition
+// Change IF/ID Pipeline Register always_ff if condition
 
 `ifndef __PIPELINE_V__
 `define __PIPELINE_V__
@@ -130,6 +137,10 @@ module pipeline (
 	     (proc2Dmem_command == BUS_NONE) ? DOUBLE : proc2Dmem_size;
 	assign proc2mem_data = {32'b0, proc2Dmem_data};
 
+    // Additional logics
+    // logic id_stall;
+    // DH_FWD_TYPE rs1_forward_type_id, rs2_forward_type_id, rs1_forward_type_ex, rs2_forward_type_ex;
+
 //////////////////////////////////////////////////
 //                                              //
 //                  IF-Stage                    //
@@ -146,10 +157,11 @@ module pipeline (
 		// Inputs
 		.clock (clock),
 		.reset (reset),
-		.mem_wb_valid_inst(mem_wb_valid_inst),
+		// .mem_wb_valid_inst(mem_wb_valid_inst),
 		.ex_mem_take_branch(ex_mem_packet.take_branch),
 		.ex_mem_target_pc(ex_mem_packet.alu_result),
 		.Imem2proc_data(mem2proc_data),
+		.id_stall(ex_mem_packet.rd_mem | ex_mem_packet.wr_mem | id_packet.stall),
 		
 		// Outputs
 		.proc2Imem_addr(proc2Imem_addr),
@@ -166,10 +178,11 @@ module pipeline (
 	assign if_id_NPC        = if_id_packet.NPC;
 	assign if_id_IR         = if_id_packet.inst;
 	assign if_id_valid_inst = if_id_packet.valid;
-	assign if_id_enable = 1'b1; // always enabled
+	// assign if_id_enable = 1'b1; // always enabled
+	assign if_id_enable = ~id_packet.stall;
 	// synopsys sync_set_reset "reset"
 	always_ff @(posedge clock) begin
-		if (reset) begin 
+		if (reset | ex_mem_packet.take_branch) begin 
 			if_id_packet.inst  <= `SD `NOP;
 			if_id_packet.valid <= `SD `FALSE;
             if_id_packet.NPC   <= `SD 0;
@@ -195,9 +208,15 @@ module pipeline (
 		.wb_reg_wr_en_out   (wb_reg_wr_en_out),
 		.wb_reg_wr_idx_out  (wb_reg_wr_idx_out),
 		.wb_reg_wr_data_out (wb_reg_wr_data_out),
+		.id_ex_rd           (id_ex_packet.dest_reg_idx),
+		.ex_mem_rd          (ex_mem_packet.dest_reg_idx),
+		.id_ex_rd_mem       (id_ex_packet.rd_mem),
 		
 		// Outputs
 		.id_packet_out(id_packet)
+		// .id_stall_out(id_stall),
+		// .rs1_forward_type_out(rs1_forward_type_id),
+		// .rs2_forward_type_out(rs2_forward_type_id)
 	);
 
 
@@ -214,7 +233,7 @@ module pipeline (
 	assign id_ex_enable = 1'b1; // always enabled
 	// synopsys sync_set_reset "reset"
 	always_ff @(posedge clock) begin
-		if (reset) begin
+		if (reset | id_packet.stall | ex_mem_packet.take_branch) begin
 			id_ex_packet <= `SD '{{`XLEN{1'b0}},
 				{`XLEN{1'b0}}, 
 				{`XLEN{1'b0}}, 
@@ -231,16 +250,23 @@ module pipeline (
 				1'b0, //halt
 				1'b0, //illegal
 				1'b0, //csr_op
-				1'b0 //valid
-			}; 
+				1'b0, //valid
+				1'b0, //stall
+				NO_FWD, //rs1_forward_type
+				NO_FWD //rs2_forward_type
+			};
+			// rs1_forward_type_id <= `SD NO_FWD;
+			// rs2_forward_type_id <= `SD NO_FWD;
+			// id_stall <= `SD 1'b0;
 		end else begin // if (reset)
 			if (id_ex_enable) begin
 				id_ex_packet <= `SD id_packet;
+				// rs1_forward_type_ex <= `SD rs1_forward_type_id;
+				// rs2_forward_type_ex <= `SD rs2_forward_type_id;
 			end // if
 		end // else: !if(reset)
 	end // always
-
-
+    
 //////////////////////////////////////////////////
 //                                              //
 //                  EX-Stage                    //
@@ -251,6 +277,10 @@ module pipeline (
 		.clock(clock),
 		.reset(reset),
 		.id_ex_packet_in(id_ex_packet),
+		// .rs1_forward_type(rs1_forward_type_id),
+		// .rs2_forward_type(rs2_forward_type_id),
+		.ex_forward_rs(ex_mem_packet.alu_result),
+		.ex_mem_forward_rs(mem_wb_result),
 		// Outputs
 		.ex_packet_out(ex_packet)
 	);
@@ -268,7 +298,7 @@ module pipeline (
 	assign ex_mem_enable = 1'b1; // always enabled
 	// synopsys sync_set_reset "reset"
 	always_ff @(posedge clock) begin
-		if (reset) begin
+		if (reset | ex_mem_packet.take_branch) begin
 			ex_mem_IR     <= `SD `NOP;
 			ex_mem_packet <= `SD 0;
 		end else begin

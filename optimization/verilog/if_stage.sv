@@ -8,17 +8,26 @@
 //                                                                     //
 //                                                                     //
 /////////////////////////////////////////////////////////////////////////
+// Changelog
+// Add input id_stall
+// [Deprecated] Change assign PC_enable
+// [Deprecated] Change assign if_packet_out.NPC
+// [Deprecated] Change assign if_packet_out.PC
+// Delete mem_wb_valid_inst
+// Change assign if_packet_out.inst
+// Change sequential to combinational if_packet_out.valid
 
 `timescale 1ns/100ps
 
 module if_stage(
 	input         clock,                  // system clock
 	input         reset,                  // system reset
-	input         mem_wb_valid_inst,      // only go to next instruction when true
+	// input         mem_wb_valid_inst,      // only go to next instruction when true
 	                                      // makes pipeline behave as single-cycle
 	input         ex_mem_take_branch,      // taken-branch signal
 	input  [`XLEN-1:0] ex_mem_target_pc,        // target pc: use if take_branch is TRUE
 	input  [63:0] Imem2proc_data,          // Data coming back from instruction-memory
+	input         id_stall,
 	output logic [`XLEN-1:0] proc2Imem_addr,    // Address sent to Instruction memory
 	output IF_ID_PACKET if_packet_out         // Output data packet from IF going to ID, see sys_defs for signal information 
 );
@@ -33,7 +42,9 @@ module if_stage(
 	assign proc2Imem_addr = {PC_reg[`XLEN-1:3], 3'b0};
 	
 	// this mux is because the Imem gives us 64 bits not 32 bits
-	assign if_packet_out.inst = PC_reg[2] ? Imem2proc_data[63:32] : Imem2proc_data[31:0];
+	assign if_packet_out.inst = id_stall  ? `NOP :
+	                            PC_reg[2] ? Imem2proc_data[63:32] :
+	                            Imem2proc_data[31:0];
 	
 	// default next PC value
 	assign PC_plus_4 = PC_reg + 4;
@@ -62,10 +73,13 @@ module if_stage(
 	// fetch to stall until the previous instruction has completed
 	// This must be removed for Project 3
 	// synopsys sync_set_reset "reset"
-	always_ff @(posedge clock) begin
-		if (reset)
-			if_packet_out.valid <= `SD 1;  // must start with something
-		else
-			if_packet_out.valid <= `SD mem_wb_valid_inst;
-	end
+	// always_ff @(posedge clock) begin
+	// 	if (reset)
+	// 		if_packet_out.valid <= `SD 1;  // must start with something
+	// 	else
+	// 		if_packet_out.valid <= `SD mem_wb_valid_inst;
+	// end
+	
+	assign if_packet_out.valid = ~id_stall;
+	
 endmodule  // module if_stage

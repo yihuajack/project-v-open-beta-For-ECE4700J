@@ -7,6 +7,15 @@
 //                 compute immediate operand (if applicable)           // 
 //                                                                     //
 /////////////////////////////////////////////////////////////////////////
+// Changelog
+// Module id_stage:
+// [Deprecated] Add input id_ex_inst, id_ex_valid, id_ex_illegal
+// Add input id_ex_rd, ex_mem_rd, id_ex_rd_mem
+// [Deprecated] Add output id_brcond_select_out
+// [Deprecated] Add wire id_stall_cond
+// [Deprecated] Add output id_stall_out
+// [Deprecated] Add output DH_FWD_TYPE rs_forward_type_out, rt_forward_type_out
+// Add always_comb
 
 
 `timescale 1ns/100ps
@@ -227,10 +236,20 @@ module id_stage(
 	input  [4:0] wb_reg_wr_idx_out,  // Reg write index from WB Stage
 	input  [`XLEN-1:0] wb_reg_wr_data_out,  // Reg write data from WB Stage
 	input  IF_ID_PACKET if_id_packet_in,
+	input   [4:0] id_ex_rd,
+	input   [4:0] ex_mem_rd,
+	// input   [5:0] id_ex_inst_op_code,
+	// input         id_ex_valid,
+	// input         id_ex_illegal,
+	input         id_ex_rd_mem,
 	
 	output ID_EX_PACKET id_packet_out
+	// output logic id_stall_out,
+	// output BRCOND_OP_SELECT id_brcond_select_out
+	// output DH_FWD_TYPE rs1_forward_type_out,
+	// output DH_FWD_TYPE rs2_forward_type_out
 );
-
+    
     assign id_packet_out.inst = if_id_packet_in.inst;
     assign id_packet_out.NPC  = if_id_packet_in.NPC;
     assign id_packet_out.PC   = if_id_packet_in.PC;
@@ -277,5 +296,24 @@ module id_stage(
 			default:    id_packet_out.dest_reg_idx = `ZERO_REG; 
 		endcase
 	end
-   
+    
+    assign id_packet_out.stall = id_ex_rd_mem ? id_ex_rd != `ZERO_REG
+                            & (id_ex_rd == if_id_packet_in.inst.r.rs1
+                            | id_ex_rd == if_id_packet_in.inst.r.rs2) : 1'b0;
+    
+    always_comb begin
+        if (id_ex_rd != `ZERO_REG & id_ex_rd == if_id_packet_in.inst.r.rs1)
+            id_packet_out.rs1_forward_type = ID_EX_FWD;
+        else if (ex_mem_rd != `ZERO_REG & ex_mem_rd == if_id_packet_in.inst.r.rs1) 
+            id_packet_out.rs1_forward_type = EX_MEM_FWD;
+        else
+            id_packet_out.rs1_forward_type = NO_FWD;
+        if (id_ex_rd != `ZERO_REG & id_ex_rd == if_id_packet_in.inst.r.rs2)
+            id_packet_out.rs2_forward_type = ID_EX_FWD;
+        else if (ex_mem_rd != `ZERO_REG & ex_mem_rd == if_id_packet_in.inst.r.rs2) 
+            id_packet_out.rs2_forward_type = EX_MEM_FWD;
+        else
+            id_packet_out.rs2_forward_type = NO_FWD;
+    end
+
 endmodule // module id_stage

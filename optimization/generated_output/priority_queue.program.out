@@ -1,0 +1,514 @@
+launch_simulation
+Command: launch_simulation 
+INFO: [Vivado 12-12493] Simulation top is 'testbench'
+WARNING: [Vivado 12-12986] Compiled library path does not exist: ''
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim'
+INFO: [Vivado 12-12523] Detected 'SystemC/CPP/C' sources in the compile order, system simulation of the design will be performed.
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [USF-XSim-24] Using GCC version '6.2.0'
+INFO: [SIM-utils-72] Using boost library from 'F:/Xilinx/Vivado/2021.2/tps/boost_1_72_0'
+INFO: [SIM-utils-54] Inspecting design source files for 'testbench' in fileset 'sim_1'...
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_priority_queue.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_sampler.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_bfs.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_fib.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_backtrack.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_basic_malloc.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_copy.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_fib_rec.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_halt.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_alexnet.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/riscv_inst.h'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_priority_queue.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_sampler.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_bfs.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_fib.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_backtrack.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_basic_malloc.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_copy.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_fib_rec.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_halt.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_alexnet.mem'
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim'
+"xsc -c --gcc_compile_options "-I"F:/Xilinx/Vivado/2021.2/tps/boost_1_72_0"" -work xil_defaultlib -f testbench_c.prj"
+Multi-threading is on. Using 10 slave threads.
+Running compilation flowF:\Xilinx\Vivado\2021.2\data\..\tps\mingw\6.2.0\win64.o\nt\bin\gcc.exe  -fPIC -c -Wa,-W -IF:/Xilinx/Vivado/2021.2/tps/boost_1_72_0    -I"F:\Xilinx\Vivado\2021.2\data/xsim/include" -I"F:\Xilinx\Vivado\2021.2\data/xsim/systemc" "../../../../../project-v-open-beta-For-ECE4700J/optimization/testbench/pipe_print.c" -o "xsim.dir/xil_defaultlib\xsc\pipe_print.win64.obj" -DXILINX_SIMULATOR -Wno-deprecated-declarations 
+Done compilation"xvlog --incr --relax -L uvm -prj testbench_vlog.prj"
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/sys_defs.svh" into library xil_defaultlib
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/ISA.svh" into library xil_defaultlib
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/ex_stage.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-311] analyzing module brcond
+INFO: [VRFC 10-311] analyzing module ex_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/id_stage.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module decoder
+INFO: [VRFC 10-311] analyzing module id_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/if_stage.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module if_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/testbench/mem.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mem
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/mem_stage.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mem_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/pipeline.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pipeline
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/regfile.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module regfile
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/wb_stage.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module wb_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/testbench/testbench.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module testbench
+run_program: Time (s): cpu = 00:00:01 ; elapsed = 00:00:06 . Memory (MB): peak = 1541.285 ; gain = 0.000
+INFO: [USF-XSim-69] 'compile' step finished in '5' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim'
+"xsc --shared_systemc -lib xil_defaultlib -o libdpi.dll"
+Multi-threading is on. Using 10 slave threads.
+Linking with command:
+F:\Xilinx\Vivado\2021.2\data\..\tps\mingw\6.2.0\win64.o\nt\bin\g++.exe -Wa,-W  -DNT  -O -shared  -Wl,--stack,104857600 -o "libdpi.dll" xsim.dir/xil_defaultlib\xsc\*.obj     -LF:\Xilinx\Vivado\2021.2\lib\win64.o -lrdi_simulator_kernel  -lrdi_xsim_systemc 
+
+Running command : Done linking: "xelab --incr --debug typical --relax --mt 2 --include ""F:/Xilinx/Vivado/2021.2/tps/boost_1_72_0"" -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip -sv_root "." -sc_lib libdpi.dll --snapshot testbench_behav xil_defaultlib.testbench xil_defaultlib.glbl -log elaborate.log"
+Vivado Simulator v2021.2.1
+Copyright 1986-1999, 2001-2021 Xilinx, Inc. All Rights Reserved.
+Running: F:/Xilinx/Vivado/2021.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 --include F:/Xilinx/Vivado/2021.2/tps/boost_1_72_0 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip -sv_root . -sc_lib libdpi.dll --snapshot testbench_behav xil_defaultlib.testbench xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package xil_defaultlib.$unit_sys_defs_svh
+Compiling module xil_defaultlib.if_stage
+Compiling module xil_defaultlib.regfile
+Compiling module xil_defaultlib.decoder
+Compiling module xil_defaultlib.id_stage
+Compiling module xil_defaultlib.alu
+Compiling module xil_defaultlib.brcond
+Compiling module xil_defaultlib.ex_stage
+Compiling module xil_defaultlib.mem_stage
+Compiling module xil_defaultlib.wb_stage
+Compiling module xil_defaultlib.pipeline
+Compiling module xil_defaultlib.mem
+Compiling module xil_defaultlib.testbench
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot testbench_behav
+run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:07 . Memory (MB): peak = 1541.285 ; gain = 0.000
+INFO: [USF-XSim-69] 'elaborate' step finished in '8' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "testbench_behav -key {Behavioral:sim_1:Functional:testbench} -tclbatch {testbench.tcl} -view {F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/pipeline_behav.wcfg} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+can't read "::env(xv_cxl_win_path)": no such variable
+ERROR: [USF-XSim-102] Failed to set the LIBRARY_PATH env!
+Time resolution is 1 ps
+open_wave_config F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/pipeline_behav.wcfg
+WARNING: Simulation object /pipeline/clock was not found in the design.
+WARNING: Simulation object /pipeline/reset was not found in the design.
+WARNING: Simulation object /pipeline/mem2proc_response was not found in the design.
+WARNING: Simulation object /pipeline/mem2proc_data was not found in the design.
+WARNING: Simulation object /pipeline/mem2proc_tag was not found in the design.
+WARNING: Simulation object /pipeline/proc2mem_command was not found in the design.
+WARNING: Simulation object /pipeline/proc2mem_addr was not found in the design.
+WARNING: Simulation object /pipeline/proc2mem_data was not found in the design.
+WARNING: Simulation object /pipeline/proc2mem_size was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_completed_insts was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_error_status was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_commit_wr_idx was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_commit_wr_data was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_commit_wr_en was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_commit_NPC was not found in the design.
+WARNING: Simulation object /pipeline/if_NPC_out was not found in the design.
+WARNING: Simulation object /pipeline/if_IR_out was not found in the design.
+WARNING: Simulation object /pipeline/if_valid_inst_out was not found in the design.
+WARNING: Simulation object /pipeline/if_id_NPC was not found in the design.
+WARNING: Simulation object /pipeline/if_id_IR was not found in the design.
+WARNING: Simulation object /pipeline/if_id_valid_inst was not found in the design.
+WARNING: Simulation object /pipeline/id_ex_NPC was not found in the design.
+WARNING: Simulation object /pipeline/id_ex_IR was not found in the design.
+WARNING: Simulation object /pipeline/id_ex_valid_inst was not found in the design.
+WARNING: Simulation object /pipeline/ex_mem_NPC was not found in the design.
+WARNING: Simulation object /pipeline/ex_mem_IR was not found in the design.
+WARNING: Simulation object /pipeline/ex_mem_valid_inst was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_NPC was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_IR was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_valid_inst was not found in the design.
+WARNING: Simulation object /pipeline/if_id_enable was not found in the design.
+WARNING: Simulation object /pipeline/id_ex_enable was not found in the design.
+WARNING: Simulation object /pipeline/ex_mem_enable was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_enable was not found in the design.
+WARNING: Simulation object /pipeline/proc2Imem_addr was not found in the design.
+WARNING: Simulation object /pipeline/if_packet was not found in the design.
+WARNING: Simulation object /pipeline/if_id_packet was not found in the design.
+WARNING: Simulation object /pipeline/id_packet was not found in the design.
+WARNING: Simulation object /pipeline/id_ex_packet was not found in the design.
+WARNING: Simulation object /pipeline/ex_packet was not found in the design.
+WARNING: Simulation object /pipeline/ex_mem_packet was not found in the design.
+WARNING: Simulation object /pipeline/mem_result_out was not found in the design.
+WARNING: Simulation object /pipeline/proc2Dmem_addr was not found in the design.
+WARNING: Simulation object /pipeline/proc2Dmem_data was not found in the design.
+WARNING: Simulation object /pipeline/proc2Dmem_command was not found in the design.
+WARNING: Simulation object /pipeline/proc2Dmem_size was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_halt was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_illegal was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_dest_reg_idx was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_result was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_take_branch was not found in the design.
+WARNING: Simulation object /pipeline/wb_reg_wr_data_out was not found in the design.
+WARNING: Simulation object /pipeline/wb_reg_wr_idx_out was not found in the design.
+WARNING: Simulation object /pipeline/wb_reg_wr_en_out was not found in the design.
+source testbench.tcl
+# set curr_wave [current_wave_config]
+# if { [string length $curr_wave] == 0 } {
+#   if { [llength [get_objects]] > 0} {
+#     add_wave /
+#     set_property needs_save false [current_wave_config]
+#   } else {
+#      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+#   }
+# }
+# run 1000ns
+@@
+@@
+@@                     0  Asserting System reset......
+@@
+@@                     0 : System STILL at reset, can't show anything
+@@
+@@
+@@                 10000 : System STILL at reset, can't show anything
+@@
+@@
+@@                 20000 : System STILL at reset, can't show anything
+@@
+@@
+@@                 30000 : System STILL at reset, can't show anything
+@@
+@@                 36000  Deasserting System reset......
+@@
+@@
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'testbench_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 1000ns
+launch_simulation: Time (s): cpu = 00:00:03 ; elapsed = 00:00:16 . Memory (MB): peak = 1541.285 ; gain = 0.000
+run all
+@@@ Unified Memory contents hex on left, decimal on right: 
+@@@
+@@@ mem[    0] = 0000009700000013 : 648540061715
+@@@ mem[    8] = 0001011709c08093 : 282673436197011
+@@@ mem[   16] = 00010413ff410113 : 285958910050579
+@@@ mem[   24] = 0281819300001197 : 180567928431710615
+@@@ mem[   32] = 0000029300000213 : 2830383448595
+@@@ mem[   40] = 0000039300000313 : 3929895076627
+@@@ mem[   48] = 0000051300000493 : 5579162518675
+@@@ mem[   56] = 0000061300000593 : 6678674146707
+@@@ mem[   64] = 0000071300000693 : 7778185774739
+@@@ mem[   72] = 0000081300000793 : 8877697402771
+@@@ mem[   80] = 0000091300000893 : 9977209030803
+@@@ mem[   88] = 00000a1300000993 : 11076720658835
+@@@ mem[   96] = 00000b1300000a93 : 12176232286867
+@@@ mem[  104] = 00000c1300000b93 : 13275743914899
+@@@ mem[  112] = 00000d1300000c93 : 14375255542931
+@@@ mem[  120] = 00000e1300000d93 : 15474767170963
+@@@ mem[  128] = 00000f1300000e93 : 16574278798995
+@@@ mem[  136] = 6240006f00000f93 : 7079659090967793555
+@@@
+@@@ mem[  160] = f601011300010117 : 17726450789423055127
+@@@ mem[  168] = 00000013fea12c23 : 85876354083
+@@@ mem[  176] = fd01011310500073 : 18230853947962163315
+@@@ mem[  184] = 0281242302112623 : 180465192848664099
+@@@ mem[  192] = fca42e2303010413 : 18204726321647518739
+@@@ mem[  200] = 000017b7fdc42703 : 26079003944707
+@@@ mem[  208] = 00f76a6388078793 : 69641294964033427
+@@@ mem[  216] = 88078793000057b7 : 9801952179425138615
+@@@ mem[  224] = 00e7f863fdc42703 : 65293827963102979
+@@@ mem[  232] = 0000009700100513 : 648541111571
+@@@ mem[  240] = fdc42783fb4080e7 : 18285783834840563943
+@@@ mem[  248] = fef42423ff878793 : 18371348516980623251
+@@@ mem[  256] = 8887a783000057b7 : 9838016092096714679
+@@@ mem[  264] = 03c0006ffef42623 : 270216458661013027
+@@@ mem[  272] = 0007a783fec42783 : 2154510193796995
+@@@ mem[  280] = 02f76063fec42703 : 213745489915684611
+@@@ mem[  288] = fec42783fe842703 : 18357841428933256963
+@@@ mem[  296] = fec4278302e7ee63 : 18357841424711937635
+@@@ mem[  304] = fe8427030007a783 : 18339826476398389123
+@@@ mem[  312] = fec4278302f76663 : 18357841424712951395
+@@@ mem[  320] = fef426230007a783 : 18371350711717308291
+@@@ mem[  328] = fec42783fe842703 : 18357841428933256963
+@@@ mem[  336] = fec42783fce7f0e3 : 18357841428906242275
+@@@ mem[  344] = fe8427030007a783 : 18339826476398389123
+@@@ mem[  352] = fe842783faf778e3 : 18339827030364223715
+@@@ mem[  360] = 003797930047a783 : 15647781339768707
+@@@ mem[  368] = 00f70733fe842703 : 69532239142332163
+@@@ mem[  376] = 0007a783fec42783 : 2154510193796995
+@@@ mem[  384] = fe84278302f71e63 : 18339827026203450979
+@@@ mem[  392] = fec427830047a703 : 18357841424667879171
+@@@ mem[  400] = 0047a7830007a783 : 20168904429512579
+@@@ mem[  408] = fe84278300f70733 : 18339827026169890611
+@@@ mem[  416] = fec4278300e7a223 : 18357841424678363683
+@@@ mem[  424] = 0007a7030007a783 : 2153956164216707
+@@@ mem[  432] = 00e7a023fe842783 : 65196796074534787
+@@@ mem[  440] = fec427830140006f : 18357841424684154991
+@@@ mem[  448] = fe8427830007a703 : 18339827026154202883
+@@@ mem[  456] = fec4278300e7a023 : 18357841424678363171
+@@@ mem[  464] = 003797930047a783 : 15647781339768707
+@@@ mem[  472] = 00f707b3fec42703 : 69532788902340355
+@@@ mem[  480] = 02f71a63fe842703 : 213668524097545987
+@@@ mem[  488] = 0047a703fec42783 : 20168358947465091
+@@@ mem[  496] = 0047a783fe842783 : 20168908699084675
+@@@ mem[  504] = fec4278300f70733 : 18357841424679372595
+@@@ mem[  512] = fe84278300e7a223 : 18339827026168881699
+@@@ mem[  520] = fec427830007a703 : 18357841424663684867
+@@@ mem[  528] = 0100006f00e7a023 : 72058070794477603
+@@@ mem[  536] = fe842703fec42783 : 18339826480672155523
+@@@ mem[  544] = 000057b700e7a023 : 96443505811491
+@@@ mem[  552] = 88e7a423fec42703 : 9865033983283439363
+@@@ mem[  560] = 02c1208300000013 : 198475605593817107
+@@@ mem[  568] = 0301011302812403 : 216455438248518659
+@@@ mem[  576] = fd01011300008067 : 18230853947688517735
+@@@ mem[  584] = 0281242302112623 : 180465192848664099
+@@@ mem[  592] = fca42e2303010413 : 18204726321647518739
+@@@ mem[  600] = 8647a783000017b7 : 9675886505511360439
+@@@ mem[  608] = 00e7f663fdc42703 : 65291628939847427
+@@@ mem[  616] = 0700006f00000793 : 504403635006867347
+@@@ mem[  624] = 8607a783000017b7 : 9657872107001878455
+@@@ mem[  632] = 000017b7fef42623 : 26079023867427
+@@@ mem[  640] = fdc427838607a703 : 18285783832873903875
+@@@ mem[  648] = 000017b700f70733 : 26074762643251
+@@@ mem[  656] = 000017b786e7a023 : 26077009780771
+@@@ mem[  664] = fdc427838647a703 : 18285783832878098179
+@@@ mem[  672] = 000017b740f70733 : 26075836385075
+@@@ mem[  680] = fdc4278386e7a223 : 18285783832888582691
+@@@ mem[  688] = fec42783ff878713 : 18357841428950255379
+@@@ mem[  696] = fec4278300e7a223 : 18357841424678363683
+@@@ mem[  704] = fef4262300878793 : 18371350711725688723
+@@@ mem[  712] = 00000097fec42503 : 652814329091
+@@@ mem[  720] = 000057b7de8080e7 : 96447223595239
+@@@ mem[  728] = 000785138887a783 : 2116643778439043
+@@@ mem[  736] = 0281240302c12083 : 180465055421243523
+@@@ mem[  744] = 0000806703010113 : 141179920384275
+@@@ mem[  752] = 02112623fd010113 : 148942198690349331
+@@@ mem[  760] = 0301041302812423 : 216458736783402019
+@@@ mem[  768] = fdc42703fca42e23 : 18285783285108059683
+@@@ mem[  776] = 00e7f663000047b7 : 65291624682375095
+@@@ mem[  784] = 15c0006f00000793 : 1567253147066304403
+@@@ mem[  792] = 0037f793fdc42783 : 15753338708830083
+@@@ mem[  800] = fdc4278300078a63 : 18285783830625749603
+@@@ mem[  808] = 00478793ffc7f793 : 20133793067693971
+@@@ mem[  816] = fdc42783fcf42e23 : 18285783834869116451
+@@@ mem[  824] = fef4222300878793 : 18371346313679177619
+@@@ mem[  832] = 8887a783000057b7 : 9838016092096714679
+@@@ mem[  840] = fe842783fef42423 : 18339827030431114275
+@@@ mem[  848] = 000057b702079e63 : 96443524685411
+@@@ mem[  856] = fef4242388078793 : 18371348514975745939
+@@@ mem[  864] = fe842703000057b7 : 18339826476397909943
+@@@ mem[  872] = 000057b788e7a423 : 96445787513891
+@@@ mem[  880] = 000057b78887a703 : 96445781223171
+@@@ mem[  888] = 00e7a02388078793 : 65196794086655891
+@@@ mem[  896] = 88078793000057b7 : 9801952179425138615
+@@@ mem[  904] = fe8427830007a223 : 18339827026154201635
+@@@ mem[  912] = fef426230007a783 : 18371350711717308291
+@@@ mem[  920] = 0047a783fec42783 : 20168908703278979
+@@@ mem[  928] = 08e7e263fdc42703 : 641730391010715395
+@@@ mem[  936] = 0047a783fec42783 : 20168908703278979
+@@@ mem[  944] = 00f71c63fdc42703 : 69555535032362755
+@@@ mem[  952] = 0007a703fec42783 : 2153960437983107
+@@@ mem[  960] = 00e7a023fe842783 : 65196796074534787
+@@@ mem[  968] = fec427830400006f : 18357841424730292335
+@@@ mem[  976] = fe4427830047a703 : 18321812627648915203
+@@@ mem[  984] = fec4278340f70733 : 18357841425753114419
+@@@ mem[  992] = fec4278300e7a223 : 18357841424678363683
+@@@ mem[ 1000] = 003797930047a783 : 15647781339768707
+@@@ mem[ 1008] = 00f707b3fec42703 : 69532788902340355
+@@@ mem[ 1016] = fec42783fef42623 : 18357841428940596771
+@@@ mem[ 1024] = 00e7a223fdc42703 : 65198995085207299
+@@@ mem[ 1032] = fe842703000057b7 : 18339826476397909943
+@@@ mem[ 1040] = fec4278388e7a423 : 18357841426960065571
+@@@ mem[ 1048] = fef4262300878793 : 18371350711725688723
+@@@ mem[ 1056] = 04c0006ffec42783 : 342274052695795587
+@@@ mem[ 1064] = 8887a783000057b7 : 9838016092096714679
+@@@ mem[ 1072] = 02f71263fec42703 : 213659728008718083
+@@@ mem[ 1080] = 00000097fe442503 : 652805940483
+@@@ mem[ 1088] = fea42623e08080e7 : 18348832717346472167
+@@@ mem[ 1096] = 00079663fec42783 : 2135681057171331
+@@@ mem[ 1104] = 01c0006f00000793 : 126101266307745683
+@@@ mem[ 1112] = fef42423fec42783 : 18371348516967819139
+@@@ mem[ 1120] = 0007a783fec42783 : 2154510193796995
+@@@ mem[ 1128] = f2dff06ffef42623 : 17500971040794486307
+@@@ mem[ 1136] = 02c1208300078513 : 198475605594309907
+@@@ mem[ 1144] = 0301011302812403 : 216455438248518659
+@@@ mem[ 1152] = fd01011300008067 : 18230853947688517735
+@@@ mem[ 1160] = 0281242302112623 : 180465192848664099
+@@@ mem[ 1168] = fca42e2303010413 : 18204726321647518739
+@@@ mem[ 1176] = 00000097fdc42503 : 652797551875
+@@@ mem[ 1184] = fea42623e54080e7 : 18348832717426163943
+@@@ mem[ 1192] = 00000593fdc42603 : 6133175821827
+@@@ mem[ 1200] = 00000097fec42503 : 652814329091
+@@@ mem[ 1208] = fec427832b0080e7 : 18357841425384636647
+@@@ mem[ 1216] = 02c1208300078513 : 198475605594309907
+@@@ mem[ 1224] = 0301011302812403 : 216455438248518659
+@@@ mem[ 1232] = fd01011300008067 : 18230853947688517735
+@@@ mem[ 1240] = 0281242302112623 : 180465192848664099
+@@@ mem[ 1248] = fca42e2303010413 : 18204726321647518739
+@@@ mem[ 1256] = 00c00513fcb42c23 : 54048778930629667
+@@@ mem[ 1264] = e00080e700000097 : 16141042794121658519
+@@@ mem[ 1272] = fec42783fea42623 : 18357841428935353891
+@@@ mem[ 1280] = 00e7a023fdc42703 : 65196796061951747
+@@@ mem[ 1288] = fd842703fec42783 : 18267768886634227587
+@@@ mem[ 1296] = fec4278300e7a223 : 18357841424678363683
+@@@ mem[ 1304] = fec427830007a423 : 18357841424663684131
+@@@ mem[ 1312] = 02c1208300078513 : 198475605594309907
+@@@ mem[ 1320] = 0301011302812403 : 216455438248518659
+@@@ mem[ 1328] = fe01011300008067 : 18302911541726445671
+@@@ mem[ 1336] = 0201041300812e23 : 144401142711922211
+@@@ mem[ 1344] = fec42783fea42623 : 18357841428935353891
+@@@ mem[ 1352] = 0007a7830007a783 : 2154505920030595
+@@@ mem[ 1360] = 01c1240300078513 : 126421859847079187
+@@@ mem[ 1368] = 0000806702010113 : 141179903607059
+@@@ mem[ 1376] = 02112623fd010113 : 148942198690349331
+@@@ mem[ 1384] = 0301041302812423 : 216458736783402019
+@@@ mem[ 1392] = fdc42783fca42e23 : 18285783834863873571
+@@@ mem[ 1400] = fef426230007a783 : 18371350711717308291
+@@@ mem[ 1408] = 0007a783fdc42783 : 2154510177019779
+@@@ mem[ 1416] = fdc427830087a703 : 18285783830634145539
+@@@ mem[ 1424] = fec4250300e7a023 : 18357838675899293731
+@@@ mem[ 1432] = b1c080e700000097 : 12808379069867491479
+@@@ mem[ 1440] = 02c1208300000013 : 198475605593817107
+@@@ mem[ 1448] = 0301011302812403 : 216455438248518659
+@@@ mem[ 1456] = fd01011300008067 : 18230853947688517735
+@@@ mem[ 1464] = 0281242302112623 : 180465192848664099
+@@@ mem[ 1472] = fca42e2303010413 : 18204726321647518739
+@@@ mem[ 1480] = fcc42a23fcb42c23 : 18213729127045016611
+@@@ mem[ 1488] = 0007a783fdc42783 : 2154510177019779
+@@@ mem[ 1496] = fd442583fef42623 : 18249752838860449315
+@@@ mem[ 1504] = 00000097fd842503 : 652793357571
+@@@ mem[ 1512] = fea42423ef0080e7 : 18348830518566486247
+@@@ mem[ 1520] = 0007a783fdc42783 : 2154510177019779
+@@@ mem[ 1528] = fd4427030047a783 : 18249754483855173507
+@@@ mem[ 1536] = fdc4278302f75863 : 18285783830675019875
+@@@ mem[ 1544] = fe8427830007a703 : 18339827026154202883
+@@@ mem[ 1552] = fdc4278300e7a423 : 18285783830640436259
+@@@ mem[ 1560] = 00e7a023fe842703 : 65196796074534659
+@@@ mem[ 1568] = fec4278304c0006f : 18357841424742875247
+@@@ mem[ 1576] = fef426230087a783 : 18371350711725696899
+@@@ mem[ 1584] = 0087a783fec42783 : 38183307212760963
+@@@ mem[ 1592] = fec4278300078c63 : 18357841424663678051
+@@@ mem[ 1600] = 0047a7830087a783 : 20168904437901187
+@@@ mem[ 1608] = fce7cce3fd442703 : 18223759696756745987
+@@@ mem[ 1616] = 0087a703fec42783 : 38182757456947075
+@@@ mem[ 1624] = 00e7a423fe842783 : 65201194121045891
+@@@ mem[ 1632] = fe842703fec42783 : 18339826480672155523
+@@@ mem[ 1640] = 0000001300e7a423 : 81619559459
+@@@ mem[ 1648] = 0281240302c12083 : 180465055421243523
+@@@ mem[ 1656] = 0000806703010113 : 141179920384275
+@@@ mem[ 1664] = 00812e23fe010113 : 36361004115886355
+@@@ mem[ 1672] = fea4262302010413 : 18348832713613575187
+@@@ mem[ 1680] = 0007a783fec42783 : 2154510193796995
+@@@ mem[ 1688] = 0ff7f7930017b793 : 1150660440550258579
+@@@ mem[ 1696] = 01c1240300078513 : 126421859847079187
+@@@ mem[ 1704] = 0000806702010113 : 141179903607059
+@@@ mem[ 1712] = 00112e23fe010113 : 4835806724292883
+@@@ mem[ 1720] = 0201041300812c23 : 144401142711921699
+@@@ mem[ 1728] = 0040051300100593 : 18019977673049491
+@@@ mem[ 1736] = e0c080e700000097 : 16195085989650104471
+@@@ mem[ 1744] = fef4262300050793 : 18371350711717136275
+@@@ mem[ 1752] = 00200613fec40793 : 9013882203146131
+@@@ mem[ 1760] = 0007851300500593 : 2116641493091731
+@@@ mem[ 1768] = ecc080e700000097 : 17059777118105239703
+@@@ mem[ 1776] = 00300613fec40793 : 13517481830516627
+@@@ mem[ 1784] = 0007851300600593 : 2116641494140307
+@@@ mem[ 1792] = eb4080e700000097 : 16951690727048347799
+@@@ mem[ 1800] = 00000613fec40793 : 6682948405139
+@@@ mem[ 1808] = 0007851300700593 : 2116641495188883
+@@@ mem[ 1816] = e9c080e700000097 : 16843604335991455895
+@@@ mem[ 1824] = fec407930140006f : 18357806309031542895
+@@@ mem[ 1832] = 0000009700078513 : 648540554515
+@@@ mem[ 1840] = fec40793e34080e7 : 18357806312823226599
+@@@ mem[ 1848] = 0000009700078513 : 648540554515
+@@@ mem[ 1856] = 00050793f44080e7 : 1415706923008231
+@@@ mem[ 1864] = 00000793fc078ee3 : 8332169940707
+@@@ mem[ 1872] = 01c1208300078513 : 126418011556381971
+@@@ mem[ 1880] = 0201011301812403 : 144397844193813507
+@@@ mem[ 1888] = 872a433d00008067 : 9739671073414217831
+@@@ mem[ 1896] = 00f7779302c37363 : 69655792537793379
+@@@ mem[ 1904] = ff067693e5adefbd : 18376505707117539261
+@@@ mem[ 1912] = c34cc30c96ba8a3d : 14072837394461788733
+@@@ mem[ 1920] = 6be30741c74cc70c : 7774065360869574412
+@@@ mem[ 1928] = 06b38082e211fed7 : 482870884685709015
+@@@ mem[ 1936] = 00000297068a40c3 : 2847673041091
+@@@ mem[ 1944] = 072300a680679696 : 514255497569212054
+@@@ mem[ 1952] = 062300b706a300b7 : 442197974502801591
+@@@ mem[ 1960] = 052300b705a300b7 : 370140380448096439
+@@@ mem[ 1968] = 042300b704a300b7 : 298082786393391287
+@@@ mem[ 1976] = 032300b703a300b7 : 226025192338686135
+@@@ mem[ 1984] = 022300b702a300b7 : 153967598283980983
+@@@ mem[ 1992] = 012300b701a300b7 : 81910004229275831
+@@@ mem[ 2000] = 002300b700a300b7 : 9852410174570679
+@@@ mem[ 2008] = 0ff5f593808200b7 : 1150095293728030903
+@@@ mem[ 2016] = 96938dd500859693 : 10850171873241962131
+@@@ mem[ 2024] = 9693b7618dd50105 : 10850217556884914437
+@@@ mem[ 2032] = 9696000002970027 : 10850860352239239207
+@@@ mem[ 2040] = 8096fa8680e78286 : 9265868738956591750
+@@@ mem[ 2048] = 74e3963e8f1d17c1 : 8422740923546146753
+@@@ mem[ 2056] = 00000000b7a5f8c3 : 3081107651
+@@@
+@@@ mem[ 2144] = 00003fb0000008d0 : 70025146796240
+@@@
+@@@ mem[ 2176] = 0000000c00000894 : 51539609748
+@@@ mem[ 2184] = 0000000100000004 : 4294967300
+@@@ mem[ 2192] = 000008a80000089c : 9517647530140
+@@@ mem[ 2200] = 000000050000000c : 21474836492
+@@@ mem[ 2208] = 000008b000000002 : 9552007266306
+@@@ mem[ 2216] = 0000000c000008bc : 51539609788
+@@@ mem[ 2224] = 0000000300000006 : 12884901894
+@@@ mem[ 2232] = 0000488000000000 : 79714593013760
+@@@ mem[ 2240] = 000000070000000c : 30064771084
+@@@ mem[ 2248] = 0000088800000000 : 9380208574464
+@@@
+@@@ mem[18560] = 0000000000000880 : 2176
+@@@ mem[18568] = 0000000000000894 : 2196
+@@@
+@@@ mem[65272] = 000008c400000000 : 9637906612224
+@@@
+@@@ mem[65288] = 00004880000008bc : 79714593015996
+@@@
+@@@ mem[65304] = 000002d40000ff50 : 3109556387664
+@@@
+@@@ mem[65320] = 0000001400000000 : 85899345920
+@@@
+@@@ mem[65336] = 000008c400000880 : 9637906614400
+@@@
+@@@ mem[65352] = 000004440000ff80 : 4690104352640
+@@@
+@@@ mem[65368] = 0000000c00000000 : 51539607552
+@@@ mem[65376] = 0000001400000000 : 85899345920
+@@@ mem[65384] = 000008c400004880 : 9637906630784
+@@@
+@@@ mem[65400] = 000004f80000ffb0 : 5463198465968
+@@@
+@@@ mem[65416] = 000008b000000000 : 9552007266304
+@@@ mem[65424] = 0000001400000000 : 85899345920
+@@@ mem[65432] = 00000894000008a8 : 9431748184232
+@@@
+@@@ mem[65448] = 000005a00000ffe0 : 6184752971744
+@@@
+@@@ mem[65464] = 0000ffec00000007 : 281389077364743
+@@@
+@@@ mem[65480] = 0000ffec000008c4 : 281389077366980
+@@@
+@@@ mem[65496] = 0001000000010000 : 281474976776192
+@@@
+@@@ mem[65528] = 000000a000000000 : 687194767360
+@@@
+@@              28182000 : System halted
+@@
+@@@ System halted on WFI instruction
+@@@
+@@
+@@  2815 cycles / 1454 instrs = 1.936039 CPI
+@@
+@@  28140.00 ns total time to execute
+@@
+
+$finish called at time : 28282 ns : File "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/testbench/testbench.sv" Line 269

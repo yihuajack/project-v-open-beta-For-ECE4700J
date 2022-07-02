@@ -1,0 +1,279 @@
+launch_simulation
+Command: launch_simulation 
+INFO: [Vivado 12-12493] Simulation top is 'testbench'
+WARNING: [Vivado 12-12986] Compiled library path does not exist: ''
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim'
+INFO: [Vivado 12-12523] Detected 'SystemC/CPP/C' sources in the compile order, system simulation of the design will be performed.
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [USF-XSim-24] Using GCC version '6.2.0'
+INFO: [SIM-utils-72] Using boost library from 'F:/Xilinx/Vivado/2021.2/tps/boost_1_72_0'
+INFO: [SIM-utils-54] Inspecting design source files for 'testbench' in fileset 'sim_1'...
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_priority_queue.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_sampler.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_bfs.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_fib.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_backtrack.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_basic_malloc.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_copy.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_fib_rec.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_halt.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_alexnet.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/riscv_inst.h'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_priority_queue.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_sampler.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_bfs.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_fib.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_backtrack.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_basic_malloc.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_copy.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_fib_rec.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_rv32_halt.mem'
+INFO: [SIM-utils-43] Exported 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim/program_alexnet.mem'
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim'
+"xsc -c --gcc_compile_options "-I"F:/Xilinx/Vivado/2021.2/tps/boost_1_72_0"" -work xil_defaultlib -f testbench_c.prj"
+Multi-threading is on. Using 10 slave threads.
+Running compilation flowF:\Xilinx\Vivado\2021.2\data\..\tps\mingw\6.2.0\win64.o\nt\bin\gcc.exe  -fPIC -c -Wa,-W -IF:/Xilinx/Vivado/2021.2/tps/boost_1_72_0    -I"F:\Xilinx\Vivado\2021.2\data/xsim/include" -I"F:\Xilinx\Vivado\2021.2\data/xsim/systemc" "../../../../../project-v-open-beta-For-ECE4700J/optimization/testbench/pipe_print.c" -o "xsim.dir/xil_defaultlib\xsc\pipe_print.win64.obj" -DXILINX_SIMULATOR -Wno-deprecated-declarations 
+Done compilation"xvlog --incr --relax -L uvm -prj testbench_vlog.prj"
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/sys_defs.svh" into library xil_defaultlib
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/ISA.svh" into library xil_defaultlib
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/ex_stage.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-311] analyzing module brcond
+INFO: [VRFC 10-311] analyzing module ex_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/id_stage.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module decoder
+INFO: [VRFC 10-311] analyzing module id_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/if_stage.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module if_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/testbench/mem.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mem
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/mem_stage.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mem_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/pipeline.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pipeline
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/regfile.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module regfile
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/verilog/wb_stage.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module wb_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/testbench/testbench.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module testbench
+run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:06 . Memory (MB): peak = 1541.285 ; gain = 0.000
+INFO: [USF-XSim-69] 'compile' step finished in '6' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim'
+"xsc --shared_systemc -lib xil_defaultlib -o libdpi.dll"
+Multi-threading is on. Using 10 slave threads.
+Linking with command:
+F:\Xilinx\Vivado\2021.2\data\..\tps\mingw\6.2.0\win64.o\nt\bin\g++.exe -Wa,-W  -DNT  -O -shared  -Wl,--stack,104857600 -o "libdpi.dll" xsim.dir/xil_defaultlib\xsc\*.obj     -LF:\Xilinx\Vivado\2021.2\lib\win64.o -lrdi_simulator_kernel  -lrdi_xsim_systemc 
+
+Running command : Done linking: "xelab --incr --debug typical --relax --mt 2 --include ""F:/Xilinx/Vivado/2021.2/tps/boost_1_72_0"" -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip -sv_root "." -sc_lib libdpi.dll --snapshot testbench_behav xil_defaultlib.testbench xil_defaultlib.glbl -log elaborate.log"
+Vivado Simulator v2021.2.1
+Copyright 1986-1999, 2001-2021 Xilinx, Inc. All Rights Reserved.
+Running: F:/Xilinx/Vivado/2021.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 --include F:/Xilinx/Vivado/2021.2/tps/boost_1_72_0 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip -sv_root . -sc_lib libdpi.dll --snapshot testbench_behav xil_defaultlib.testbench xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package xil_defaultlib.$unit_sys_defs_svh
+Compiling module xil_defaultlib.if_stage
+Compiling module xil_defaultlib.regfile
+Compiling module xil_defaultlib.decoder
+Compiling module xil_defaultlib.id_stage
+Compiling module xil_defaultlib.alu
+Compiling module xil_defaultlib.brcond
+Compiling module xil_defaultlib.ex_stage
+Compiling module xil_defaultlib.mem_stage
+Compiling module xil_defaultlib.wb_stage
+Compiling module xil_defaultlib.pipeline
+Compiling module xil_defaultlib.mem
+Compiling module xil_defaultlib.testbench
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot testbench_behav
+run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:07 . Memory (MB): peak = 1541.285 ; gain = 0.000
+INFO: [USF-XSim-69] 'elaborate' step finished in '7' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/lab_4.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "testbench_behav -key {Behavioral:sim_1:Functional:testbench} -tclbatch {testbench.tcl} -view {F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/pipeline_behav.wcfg} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+can't read "::env(xv_cxl_win_path)": no such variable
+ERROR: [USF-XSim-102] Failed to set the LIBRARY_PATH env!
+Time resolution is 1 ps
+open_wave_config F:/Documents/GitHub/ECE4700J_SU2022/Lab4/lab_4/pipeline_behav.wcfg
+WARNING: Simulation object /pipeline/clock was not found in the design.
+WARNING: Simulation object /pipeline/reset was not found in the design.
+WARNING: Simulation object /pipeline/mem2proc_response was not found in the design.
+WARNING: Simulation object /pipeline/mem2proc_data was not found in the design.
+WARNING: Simulation object /pipeline/mem2proc_tag was not found in the design.
+WARNING: Simulation object /pipeline/proc2mem_command was not found in the design.
+WARNING: Simulation object /pipeline/proc2mem_addr was not found in the design.
+WARNING: Simulation object /pipeline/proc2mem_data was not found in the design.
+WARNING: Simulation object /pipeline/proc2mem_size was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_completed_insts was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_error_status was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_commit_wr_idx was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_commit_wr_data was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_commit_wr_en was not found in the design.
+WARNING: Simulation object /pipeline/pipeline_commit_NPC was not found in the design.
+WARNING: Simulation object /pipeline/if_NPC_out was not found in the design.
+WARNING: Simulation object /pipeline/if_IR_out was not found in the design.
+WARNING: Simulation object /pipeline/if_valid_inst_out was not found in the design.
+WARNING: Simulation object /pipeline/if_id_NPC was not found in the design.
+WARNING: Simulation object /pipeline/if_id_IR was not found in the design.
+WARNING: Simulation object /pipeline/if_id_valid_inst was not found in the design.
+WARNING: Simulation object /pipeline/id_ex_NPC was not found in the design.
+WARNING: Simulation object /pipeline/id_ex_IR was not found in the design.
+WARNING: Simulation object /pipeline/id_ex_valid_inst was not found in the design.
+WARNING: Simulation object /pipeline/ex_mem_NPC was not found in the design.
+WARNING: Simulation object /pipeline/ex_mem_IR was not found in the design.
+WARNING: Simulation object /pipeline/ex_mem_valid_inst was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_NPC was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_IR was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_valid_inst was not found in the design.
+WARNING: Simulation object /pipeline/if_id_enable was not found in the design.
+WARNING: Simulation object /pipeline/id_ex_enable was not found in the design.
+WARNING: Simulation object /pipeline/ex_mem_enable was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_enable was not found in the design.
+WARNING: Simulation object /pipeline/proc2Imem_addr was not found in the design.
+WARNING: Simulation object /pipeline/if_packet was not found in the design.
+WARNING: Simulation object /pipeline/if_id_packet was not found in the design.
+WARNING: Simulation object /pipeline/id_packet was not found in the design.
+WARNING: Simulation object /pipeline/id_ex_packet was not found in the design.
+WARNING: Simulation object /pipeline/ex_packet was not found in the design.
+WARNING: Simulation object /pipeline/ex_mem_packet was not found in the design.
+WARNING: Simulation object /pipeline/mem_result_out was not found in the design.
+WARNING: Simulation object /pipeline/proc2Dmem_addr was not found in the design.
+WARNING: Simulation object /pipeline/proc2Dmem_data was not found in the design.
+WARNING: Simulation object /pipeline/proc2Dmem_command was not found in the design.
+WARNING: Simulation object /pipeline/proc2Dmem_size was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_halt was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_illegal was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_dest_reg_idx was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_result was not found in the design.
+WARNING: Simulation object /pipeline/mem_wb_take_branch was not found in the design.
+WARNING: Simulation object /pipeline/wb_reg_wr_data_out was not found in the design.
+WARNING: Simulation object /pipeline/wb_reg_wr_idx_out was not found in the design.
+WARNING: Simulation object /pipeline/wb_reg_wr_en_out was not found in the design.
+source testbench.tcl
+# set curr_wave [current_wave_config]
+# if { [string length $curr_wave] == 0 } {
+#   if { [llength [get_objects]] > 0} {
+#     add_wave /
+#     set_property needs_save false [current_wave_config]
+#   } else {
+#      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+#   }
+# }
+# run 1000ns
+@@
+@@
+@@                     0  Asserting System reset......
+@@
+@@                     0 : System STILL at reset, can't show anything
+@@
+@@
+@@                 10000 : System STILL at reset, can't show anything
+@@
+@@
+@@                 20000 : System STILL at reset, can't show anything
+@@
+@@
+@@                 30000 : System STILL at reset, can't show anything
+@@
+@@                 36000  Deasserting System reset......
+@@
+@@
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'testbench_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 1000ns
+launch_simulation: Time (s): cpu = 00:00:02 ; elapsed = 00:00:16 . Memory (MB): peak = 1541.285 ; gain = 0.000
+run all
+@@@ Unified Memory contents hex on left, decimal on right: 
+@@@
+@@@ mem[    0] = 0000113700000013 : 18927920873491
+@@@ mem[    8] = 0010029380010113 : 4506432158368019
+@@@ mem[   16] = 0010031300000f93 : 4506979766636435
+@@@ mem[   24] = 00731a6300200393 : 32398634827907987
+@@@ mem[   32] = 0000001300000013 : 81604378643
+@@@ mem[   40] = 1050007300000013 : 1175439996664938515
+@@@ mem[   48] = 00000313001f8f93 : 3380141330323
+@@@ mem[   56] = 0073146300000393 : 32392037756044179
+@@@ mem[   64] = 00730663001f8f93 : 32376644595322771
+@@@ mem[   72] = 1050007300000013 : 1175439996664938515
+@@@ mem[   80] = 00130313001f8f93 : 5351404698832787
+@@@ mem[   88] = 00534e6302536063 : 23448610214731875
+@@@ mem[   96] = 0062fa630062dc63 : 27859850832829539
+@@@ mem[  104] = 00535663001f8f93 : 23457406270803859
+@@@ mem[  112] = 1050007300000013 : 1175439996664938515
+@@@ mem[  120] = 7ffff2b7fffff337 : 9223357433965966135
+@@@ mem[  128] = 0000001300537663 : 81609848419
+@@@ mem[  136] = 0062e66310500073 : 27837860867473523
+@@@ mem[  144] = 1050007300000013 : 1175439996664938515
+@@@ mem[  152] = 0000001300534663 : 81609836131
+@@@ mem[  160] = 0062d66310500073 : 27820268681429107
+@@@ mem[  168] = 1050007300000013 : 1175439996664938515
+@@@ mem[  176] = 0000001300c000ef : 81616961775
+@@@ mem[  184] = 0000029310500073 : 2830657126515
+@@@ mem[  192] = 0103031300000317 : 72905399107322647
+@@@ mem[  200] = 10500073000302e7 : 1175439996665135847
+@@@ mem[  208] = ffc3031300000317 : 18429577480269464343
+@@@ mem[  216] = 00100293fe629ae3 : 4506434278693603
+@@@ mem[  224] = 800fef9300000f93 : 9227857576144670611
+@@@ mem[  232] = 00000393fff36313 : 3934189216531
+@@@ mem[  240] = 0013f39300338393 : 5615837246620563
+@@@ mem[  248] = fffe4e1300000e13 : 18446266967267479059
+@@@ mem[  256] = 80037313106e1a63 : 9224342987502131811
+@@@ mem[  264] = 00132e9311f31663 : 5399233753716323
+@@@ mem[  272] = 01ee946300133f13 : 139211791418998547
+@@@ mem[  280] = 001003930e635e63 : 4507529763839587
+@@@ mem[  288] = 0000133700c39393 : 21126956946323
+@@@ mem[  296] = fffff3370e639663 : 18446730016522999395
+@@@ mem[  304] = 0010039301f35313 : 4507529555170067
+@@@ mem[  312] = fffff3370c639e63 : 18446730016489447011
+@@@ mem[  320] = fffff3b741f35313 : 18446730567143871251
+@@@ mem[  328] = 0c639463fff3e393 : 892720308366336915
+@@@ mem[  336] = 0ff0031300200293 : 1148421285120836243
+@@@ mem[  344] = 0001038300610023 : 285336158666787
+@@@ mem[  352] = 000143830a63da63 : 355705070803555
+@@@ mem[  360] = fff363130a731663 : 18443193832443156067
+@@@ mem[  368] = 006110230000f337 : 27320815250895671
+@@@ mem[  376] = 0863dc6300011383 : 604569092757721987
+@@@ mem[  384] = 0873986300015383 : 608997925594420099
+@@@ mem[  392] = 7ffff337fff36313 : 9223357983720956691
+@@@ mem[  400] = 0001238300612023 : 320520530763811
+@@@ mem[  408] = 0030029306731e63 : 13513629373767267
+@@@ mem[  416] = 0000039300500313 : 3929900319507
+@@@ mem[  424] = 00131313006303b3 : 5368996889297843
+@@@ mem[  432] = 0030031306731263 : 13514179129578083
+@@@ mem[  440] = 0073633300400393 : 32478693020402579
+@@@ mem[  448] = 05c3186300700e13 : 415202404136390163
+@@@ mem[  456] = 4073033300300313 : 4644059158330475283
+@@@ mem[  464] = 04731063fff00393 : 320618020155163539
+@@@ mem[  472] = 00e0031300400293 : 63053774926643859
+@@@ mem[  480] = 02638e3302800393 : 172137560506631059
+@@@ mem[  488] = 03ce946323000e93 : 274319780826058387
+@@@ mem[  496] = 555553b77ff00337 : 6148912913834836791
+@@@ mem[  504] = 02730eb302733f33 : 176500972400623411
+@@@ mem[  512] = f55553b7fff00337 : 17678127962050790199
+@@@ mem[  520] = 02730eb302731f33 : 176500972400615219
+@@@ mem[  528] = 1050007310500073 : 1175439996938616947
+@@@
+@@@ mem[ 2048] = 000000007ffff000 : 2147479552
+@@@
+@@@
+@@               1572000 : System halted
+@@
+@@@ System halted on WFI instruction
+@@@
+@@
+@@  154 cycles / 109 instrs = 1.412844 CPI
+@@
+@@  1530.00 ns total time to execute
+@@
+
+$finish called at time : 1672 ns : File "F:/Documents/GitHub/ECE4700J_SU2022/Lab4/project-v-open-beta-For-ECE4700J/optimization/testbench/testbench.sv" Line 269

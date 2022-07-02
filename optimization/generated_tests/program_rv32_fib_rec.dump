@@ -1,0 +1,59 @@
+
+program.debug_rv32_fib_rec.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <fib-0x1c>:
+   0:	00100413          	addi	s0,zero,1
+   4:	00001fb7          	lui	t6,0x1
+   8:	00e00893          	addi	a7,zero,14
+   c:	01000def          	jal	s11,1c <fib>
+  10:	40000113          	addi	sp,zero,1024
+  14:	00112023          	sw	ra,0(sp)
+  18:	10500073          	wfi
+
+0000001c <fib>:
+  1c:	04088063          	beq	a7,zero,5c <fib_ret_1>
+  20:	02888e63          	beq	a7,s0,5c <fib_ret_1>
+  24:	fe0f8f93          	addi	t6,t6,-32 # fe0 <data+0xbe0>
+  28:	01bfac23          	sw	s11,24(t6)
+  2c:	011fa023          	sw	a7,0(t6)
+  30:	fff88893          	addi	a7,a7,-1
+  34:	fe9ffdef          	jal	s11,1c <fib>
+  38:	001fa423          	sw	ra,8(t6)
+  3c:	000fa883          	lw	a7,0(t6)
+  40:	ffe88893          	addi	a7,a7,-2
+  44:	fd9ffdef          	jal	s11,1c <fib>
+  48:	008fa103          	lw	sp,8(t6)
+  4c:	001100b3          	add	ra,sp,ra
+  50:	018fad83          	lw	s11,24(t6)
+  54:	020f8f93          	addi	t6,t6,32
+  58:	000d8067          	jalr	zero,0(s11)
+
+0000005c <fib_ret_1>:
+  5c:	00100093          	addi	ra,zero,1
+  60:	000d8067          	jalr	zero,0(s11)
+	...
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	2241                	.2byte	0x2241
+   2:	0000                	.2byte	0x0
+   4:	7200                	.2byte	0x7200
+   6:	7369                	.2byte	0x7369
+   8:	01007663          	bgeu	zero,a6,14 <fib-0x8>
+   c:	0018                	.2byte	0x18
+   e:	0000                	.2byte	0x0
+  10:	7205                	.2byte	0x7205
+  12:	3376                	.2byte	0x3376
+  14:	6932                	.2byte	0x6932
+  16:	7032                	.2byte	0x7032
+  18:	5f30                	.2byte	0x5f30
+  1a:	326d                	.2byte	0x326d
+  1c:	3070                	.2byte	0x3070
+  1e:	0800                	.2byte	0x800
+  20:	0a01                	.2byte	0xa01
+  22:	0b              	Address 0x0000000000000022 is out of bounds.
+

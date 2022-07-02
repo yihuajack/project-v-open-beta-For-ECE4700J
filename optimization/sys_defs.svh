@@ -6,6 +6,10 @@
 //                 the pipeline design.                                //
 //                                                                     //
 /////////////////////////////////////////////////////////////////////////
+// Changelog
+// [Deprecated] Add BRCOND_OP_SELECT
+// Add typedef enum DH_FWD_TYPE
+// Add logics in ID_EX_PACKET
 
 
 `ifndef __SYS_DEFS_VH__
@@ -88,6 +92,15 @@ typedef enum logic [3:0] {
 } ALU_OPB_SELECT;
 
 //
+// BRCOND rs1 and rs2 input mux selects
+//
+// typedef enum logic [1:0] {
+//     OP_IS_RS   = 2'h0,
+//     OP_FWD_EX  = 2'h1,
+//     OP_FWD_MEM = 2'h2
+// } BRCOND_OP_SELECT;
+
+//
 // Destination register select
 //
 typedef enum logic [1:0] {
@@ -155,6 +168,13 @@ typedef enum logic [1:0] {
 	DOUBLE = 2'h3
 } MEM_SIZE;
 `endif
+
+typedef enum logic [1:0] {
+    NO_FWD     = 2'b00,
+    ID_EX_FWD  = 2'b01,
+    EX_MEM_FWD = 2'b10
+} DH_FWD_TYPE;
+
 //
 // useful boolean single-bit definitions
 //
@@ -283,6 +303,9 @@ typedef struct packed {
 	logic       illegal;       // is this instruction illegal?
 	logic       csr_op;        // is this a CSR operation? (we only used this as a cheap way to get return code)
 	logic       valid;         // is inst a valid instruction to be counted for CPI calculations?
+	logic       stall;
+	DH_FWD_TYPE rs1_forward_type;
+	DH_FWD_TYPE rs2_forward_type;
 } ID_EX_PACKET;
 
 typedef struct packed {

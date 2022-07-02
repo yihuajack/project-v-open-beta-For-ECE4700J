@@ -1,0 +1,2669 @@
+
+program.debug_basic_malloc.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <crt>:
+
+.global crt
+.section .text.prologue, "ax"
+.align 4
+crt:
+	nop
+   0:	00000013          	addi	zero,zero,0
+	la ra, exit
+   4:	00000097          	auipc	ra,0x0
+   8:	09c08093          	addi	ra,ra,156 # a0 <exit>
+	la sp, _sp
+   c:	00010117          	auipc	sp,0x10
+  10:	ff410113          	addi	sp,sp,-12 # 10000 <_sp>
+	mv s0, sp
+  14:	00010413          	addi	s0,sp,0
+	la gp, __global_pointer$
+  18:	00001197          	auipc	gp,0x1
+  1c:	e8818193          	addi	gp,gp,-376 # ea0 <__global_pointer$>
+	li tp, 0
+  20:	00000213          	addi	tp,zero,0
+	li t0, 0
+  24:	00000293          	addi	t0,zero,0
+	li t1, 0
+  28:	00000313          	addi	t1,zero,0
+	li t2, 0
+  2c:	00000393          	addi	t2,zero,0
+	li s1, 0
+  30:	00000493          	addi	s1,zero,0
+	li a0, 0
+  34:	00000513          	addi	a0,zero,0
+	li a1, 0
+  38:	00000593          	addi	a1,zero,0
+	li a2, 0
+  3c:	00000613          	addi	a2,zero,0
+	li a3, 0
+  40:	00000693          	addi	a3,zero,0
+	li a4, 0
+  44:	00000713          	addi	a4,zero,0
+	li a5, 0
+  48:	00000793          	addi	a5,zero,0
+	li a6, 0
+  4c:	00000813          	addi	a6,zero,0
+	li a7, 0
+  50:	00000893          	addi	a7,zero,0
+	li s2, 0
+  54:	00000913          	addi	s2,zero,0
+	li s3, 0
+  58:	00000993          	addi	s3,zero,0
+	li s4, 0
+  5c:	00000a13          	addi	s4,zero,0
+	li s5, 0
+  60:	00000a93          	addi	s5,zero,0
+	li s6, 0
+  64:	00000b13          	addi	s6,zero,0
+	li s7, 0
+  68:	00000b93          	addi	s7,zero,0
+	li s8, 0
+  6c:	00000c13          	addi	s8,zero,0
+	li s9, 0
+  70:	00000c93          	addi	s9,zero,0
+	li s10, 0
+  74:	00000d13          	addi	s10,zero,0
+	li s11, 0
+  78:	00000d93          	addi	s11,zero,0
+	li t3, 0
+  7c:	00000e13          	addi	t3,zero,0
+	li t4, 0
+  80:	00000e93          	addi	t4,zero,0
+	li t5, 0
+  84:	00000f13          	addi	t5,zero,0
+	li t6, 0
+  88:	00000f93          	addi	t6,zero,0
+	j main
+  8c:	4480006f          	jal	zero,4d4 <main>
+	...
+
+000000a0 <exit>:
+
+.global exit
+.section .text
+.align 4
+exit:
+	la sp, _sp
+  a0:	00010117          	auipc	sp,0x10
+  a4:	f6010113          	addi	sp,sp,-160 # 10000 <_sp>
+	sw a0, -8(sp)
+  a8:	fea12c23          	sw	a0,-8(sp)
+	nop
+  ac:	00000013          	addi	zero,zero,0
+	wfi
+  b0:	10500073          	wfi
+
+000000b4 <tj_free>:
+} Header;
+static Header base; //empty list to get started
+static Header *freep = NULL; //start of the free list
+
+
+void tj_free(void *mem) {
+  b4:	fd010113          	addi	sp,sp,-48
+  b8:	02112623          	sw	ra,44(sp)
+  bc:	02812423          	sw	s0,40(sp)
+  c0:	03010413          	addi	s0,sp,48
+  c4:	fca42e23          	sw	a0,-36(s0)
+	//sanity check, we don't want to free memory that's not
+	//in the heap
+	if (mem < (void *)heap || mem > (void *)(heap + sizeof(heap)))
+  c8:	fdc42703          	lw	a4,-36(s0)
+  cc:	000007b7          	lui	a5,0x0
+  d0:	6e078793          	addi	a5,a5,1760 # 6e0 <heap>
+  d4:	00f76a63          	bltu	a4,a5,e8 <tj_free+0x34>
+  d8:	000047b7          	lui	a5,0x4
+  dc:	6e078793          	addi	a5,a5,1760 # 46e0 <base>
+  e0:	fdc42703          	lw	a4,-36(s0)
+  e4:	00e7f863          	bgeu	a5,a4,f4 <tj_free+0x40>
+		exit(1);
+  e8:	00100513          	addi	a0,zero,1
+  ec:	00000097          	auipc	ra,0x0
+  f0:	fb4080e7          	jalr	ra,-76(ra) # a0 <exit>
+
+	Header *bp, *p;
+	bp = (Header *)mem - 1; //point to block header
+  f4:	fdc42783          	lw	a5,-36(s0)
+  f8:	ff878793          	addi	a5,a5,-8
+  fc:	fef42423          	sw	a5,-24(s0)
+	//scan the free list to see where the current block should sit in between
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 100:	000047b7          	lui	a5,0x4
+ 104:	6e87a783          	lw	a5,1768(a5) # 46e8 <freep>
+ 108:	fef42623          	sw	a5,-20(s0)
+ 10c:	03c0006f          	jal	zero,148 <tj_free+0x94>
+		// self wrapped free list with only one entry
+		//                  or you are just at the very beginning/end
+		if (p >= p->next && (bp > p || bp < p->next))
+ 110:	fec42783          	lw	a5,-20(s0)
+ 114:	0007a783          	lw	a5,0(a5)
+ 118:	fec42703          	lw	a4,-20(s0)
+ 11c:	02f76063          	bltu	a4,a5,13c <tj_free+0x88>
+ 120:	fe842703          	lw	a4,-24(s0)
+ 124:	fec42783          	lw	a5,-20(s0)
+ 128:	02e7ee63          	bltu	a5,a4,164 <tj_free+0xb0>
+ 12c:	fec42783          	lw	a5,-20(s0)
+ 130:	0007a783          	lw	a5,0(a5)
+ 134:	fe842703          	lw	a4,-24(s0)
+ 138:	02f76663          	bltu	a4,a5,164 <tj_free+0xb0>
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 13c:	fec42783          	lw	a5,-20(s0)
+ 140:	0007a783          	lw	a5,0(a5)
+ 144:	fef42623          	sw	a5,-20(s0)
+ 148:	fe842703          	lw	a4,-24(s0)
+ 14c:	fec42783          	lw	a5,-20(s0)
+ 150:	fce7f0e3          	bgeu	a5,a4,110 <tj_free+0x5c>
+ 154:	fec42783          	lw	a5,-20(s0)
+ 158:	0007a783          	lw	a5,0(a5)
+ 15c:	fe842703          	lw	a4,-24(s0)
+ 160:	faf778e3          	bgeu	a4,a5,110 <tj_free+0x5c>
+			break; //freed block at start of end of the arena
+		//we can merge the 2 free blocks if they are adjacent to each other
+		//or we just can append a new entry into the free list
+	if (bp + bp->size == p->next) { //join to upper nbr
+ 164:	fe842783          	lw	a5,-24(s0)
+ 168:	0047a783          	lw	a5,4(a5)
+ 16c:	00379793          	slli	a5,a5,0x3
+ 170:	fe842703          	lw	a4,-24(s0)
+ 174:	00f70733          	add	a4,a4,a5
+ 178:	fec42783          	lw	a5,-20(s0)
+ 17c:	0007a783          	lw	a5,0(a5)
+ 180:	02f71e63          	bne	a4,a5,1bc <tj_free+0x108>
+		//merge if exactly adjacent
+		bp->size += p->next->size;
+ 184:	fe842783          	lw	a5,-24(s0)
+ 188:	0047a703          	lw	a4,4(a5)
+ 18c:	fec42783          	lw	a5,-20(s0)
+ 190:	0007a783          	lw	a5,0(a5)
+ 194:	0047a783          	lw	a5,4(a5)
+ 198:	00f70733          	add	a4,a4,a5
+ 19c:	fe842783          	lw	a5,-24(s0)
+ 1a0:	00e7a223          	sw	a4,4(a5)
+		bp->next = p->next->next;
+ 1a4:	fec42783          	lw	a5,-20(s0)
+ 1a8:	0007a783          	lw	a5,0(a5)
+ 1ac:	0007a703          	lw	a4,0(a5)
+ 1b0:	fe842783          	lw	a5,-24(s0)
+ 1b4:	00e7a023          	sw	a4,0(a5)
+ 1b8:	0140006f          	jal	zero,1cc <tj_free+0x118>
+	} else
+		bp->next = p->next; //insert bp after p in the linked list
+ 1bc:	fec42783          	lw	a5,-20(s0)
+ 1c0:	0007a703          	lw	a4,0(a5)
+ 1c4:	fe842783          	lw	a5,-24(s0)
+ 1c8:	00e7a023          	sw	a4,0(a5)
+		//if p is freep which is base, then this will make the newly
+		//allocated block point to base
+
+	if (p + p->size == bp) { //join to lower nbr
+ 1cc:	fec42783          	lw	a5,-20(s0)
+ 1d0:	0047a783          	lw	a5,4(a5)
+ 1d4:	00379793          	slli	a5,a5,0x3
+ 1d8:	fec42703          	lw	a4,-20(s0)
+ 1dc:	00f707b3          	add	a5,a4,a5
+ 1e0:	fe842703          	lw	a4,-24(s0)
+ 1e4:	02f71a63          	bne	a4,a5,218 <tj_free+0x164>
+		//merge if exactly adjacent
+		p->size += bp->size;
+ 1e8:	fec42783          	lw	a5,-20(s0)
+ 1ec:	0047a703          	lw	a4,4(a5)
+ 1f0:	fe842783          	lw	a5,-24(s0)
+ 1f4:	0047a783          	lw	a5,4(a5)
+ 1f8:	00f70733          	add	a4,a4,a5
+ 1fc:	fec42783          	lw	a5,-20(s0)
+ 200:	00e7a223          	sw	a4,4(a5)
+		p->next = bp->next;
+ 204:	fe842783          	lw	a5,-24(s0)
+ 208:	0007a703          	lw	a4,0(a5)
+ 20c:	fec42783          	lw	a5,-20(s0)
+ 210:	00e7a023          	sw	a4,0(a5)
+ 214:	0100006f          	jal	zero,224 <tj_free+0x170>
+	} else //or just append to linked list
+		p->next = bp; //again, if the free list is just the base
+ 218:	fec42783          	lw	a5,-20(s0)
+ 21c:	fe842703          	lw	a4,-24(s0)
+ 220:	00e7a023          	sw	a4,0(a5)
+		//then effectively we just created a new entry
+		//and make it point to the base which has a size of 0
+	freep = p;
+ 224:	000047b7          	lui	a5,0x4
+ 228:	fec42703          	lw	a4,-20(s0)
+ 22c:	6ee7a423          	sw	a4,1768(a5) # 46e8 <freep>
+}
+ 230:	00000013          	addi	zero,zero,0
+ 234:	02c12083          	lw	ra,44(sp)
+ 238:	02812403          	lw	s0,40(sp)
+ 23c:	03010113          	addi	sp,sp,48
+ 240:	00008067          	jalr	zero,0(ra)
+
+00000244 <getmoremem>:
+
+static Header* getmoremem(unsigned int total_size) {
+ 244:	fd010113          	addi	sp,sp,-48
+ 248:	02112623          	sw	ra,44(sp)
+ 24c:	02812423          	sw	s0,40(sp)
+ 250:	03010413          	addi	s0,sp,48
+ 254:	fca42e23          	sw	a0,-36(s0)
+	if (avail_mem < total_size) return NULL; //gg, we ran out of mem :P
+ 258:	000007b7          	lui	a5,0x0
+ 25c:	6c47a783          	lw	a5,1732(a5) # 6c4 <avail_mem>
+ 260:	fdc42703          	lw	a4,-36(s0)
+ 264:	00e7f663          	bgeu	a5,a4,270 <getmoremem+0x2c>
+ 268:	00000793          	addi	a5,zero,0
+ 26c:	0700006f          	jal	zero,2dc <getmoremem+0x98>
+	Header* up = (Header *)next_index;
+ 270:	000007b7          	lui	a5,0x0
+ 274:	6c07a783          	lw	a5,1728(a5) # 6c0 <next_index>
+ 278:	fef42623          	sw	a5,-20(s0)
+	next_index += total_size; //allocate the block
+ 27c:	000007b7          	lui	a5,0x0
+ 280:	6c07a703          	lw	a4,1728(a5) # 6c0 <next_index>
+ 284:	fdc42783          	lw	a5,-36(s0)
+ 288:	00f70733          	add	a4,a4,a5
+ 28c:	000007b7          	lui	a5,0x0
+ 290:	6ce7a023          	sw	a4,1728(a5) # 6c0 <next_index>
+	avail_mem -= total_size; //deduct from avail mem;
+ 294:	000007b7          	lui	a5,0x0
+ 298:	6c47a703          	lw	a4,1732(a5) # 6c4 <avail_mem>
+ 29c:	fdc42783          	lw	a5,-36(s0)
+ 2a0:	40f70733          	sub	a4,a4,a5
+ 2a4:	000007b7          	lui	a5,0x0
+ 2a8:	6ce7a223          	sw	a4,1732(a5) # 6c4 <avail_mem>
+	up->size = total_size - sizeof(Header); //set the size right
+ 2ac:	fdc42783          	lw	a5,-36(s0)
+ 2b0:	ff878713          	addi	a4,a5,-8
+ 2b4:	fec42783          	lw	a5,-20(s0)
+ 2b8:	00e7a223          	sw	a4,4(a5)
+	tj_free((void *)(++up)); //append the new block to the free list first
+ 2bc:	fec42783          	lw	a5,-20(s0)
+ 2c0:	00878793          	addi	a5,a5,8
+ 2c4:	fef42623          	sw	a5,-20(s0)
+ 2c8:	fec42503          	lw	a0,-20(s0)
+ 2cc:	00000097          	auipc	ra,0x0
+ 2d0:	de8080e7          	jalr	ra,-536(ra) # b4 <tj_free>
+	return freep;
+ 2d4:	000047b7          	lui	a5,0x4
+ 2d8:	6e87a783          	lw	a5,1768(a5) # 46e8 <freep>
+}
+ 2dc:	00078513          	addi	a0,a5,0
+ 2e0:	02c12083          	lw	ra,44(sp)
+ 2e4:	02812403          	lw	s0,40(sp)
+ 2e8:	03010113          	addi	sp,sp,48
+ 2ec:	00008067          	jalr	zero,0(ra)
+
+000002f0 <tj_malloc>:
+
+void *tj_malloc(unsigned int size) {
+ 2f0:	fd010113          	addi	sp,sp,-48
+ 2f4:	02112623          	sw	ra,44(sp)
+ 2f8:	02812423          	sw	s0,40(sp)
+ 2fc:	03010413          	addi	s0,sp,48
+ 300:	fca42e23          	sw	a0,-36(s0)
+	//sanity check, so that you don't blow the memory space
+	if (size > sizeof(heap)) return NULL;
+ 304:	fdc42703          	lw	a4,-36(s0)
+ 308:	000047b7          	lui	a5,0x4
+ 30c:	00e7f663          	bgeu	a5,a4,318 <tj_malloc+0x28>
+ 310:	00000793          	addi	a5,zero,0
+ 314:	15c0006f          	jal	zero,470 <tj_malloc+0x180>
+	//we want strict word alignment just to make things easier
+	//and so that we don't have improper alignment issues
+	if ((size & 3) != 0) {
+ 318:	fdc42783          	lw	a5,-36(s0)
+ 31c:	0037f793          	andi	a5,a5,3
+ 320:	00078a63          	beq	a5,zero,334 <tj_malloc+0x44>
+		size = size + 4 - (size & 3);
+ 324:	fdc42783          	lw	a5,-36(s0)
+ 328:	ffc7f793          	andi	a5,a5,-4
+ 32c:	00478793          	addi	a5,a5,4 # 4004 <__global_pointer$+0x3164>
+ 330:	fcf42e23          	sw	a5,-36(s0)
+	}
+
+	//we want to build a linked list of the existing blocks and free blocks
+	Header *p, *prevp; //iterators
+	
+	unsigned int total_size = size + sizeof(Header); //need to include the header size as well
+ 334:	fdc42783          	lw	a5,-36(s0)
+ 338:	00878793          	addi	a5,a5,8
+ 33c:	fef42223          	sw	a5,-28(s0)
+	//check the linked list
+	prevp = freep;
+ 340:	000047b7          	lui	a5,0x4
+ 344:	6e87a783          	lw	a5,1768(a5) # 46e8 <freep>
+ 348:	fef42423          	sw	a5,-24(s0)
+	//if there's no linked list yet
+	if (prevp == NULL) {
+ 34c:	fe842783          	lw	a5,-24(s0)
+ 350:	02079e63          	bne	a5,zero,38c <tj_malloc+0x9c>
+		prevp = &base;
+ 354:	000047b7          	lui	a5,0x4
+ 358:	6e078793          	addi	a5,a5,1760 # 46e0 <base>
+ 35c:	fef42423          	sw	a5,-24(s0)
+		freep = prevp;
+ 360:	000047b7          	lui	a5,0x4
+ 364:	fe842703          	lw	a4,-24(s0)
+ 368:	6ee7a423          	sw	a4,1768(a5) # 46e8 <freep>
+		base.next = freep;
+ 36c:	000047b7          	lui	a5,0x4
+ 370:	6e87a703          	lw	a4,1768(a5) # 46e8 <freep>
+ 374:	000047b7          	lui	a5,0x4
+ 378:	6e078793          	addi	a5,a5,1760 # 46e0 <base>
+ 37c:	00e7a023          	sw	a4,0(a5)
+		base.size = 0;
+ 380:	000047b7          	lui	a5,0x4
+ 384:	6e078793          	addi	a5,a5,1760 # 46e0 <base>
+ 388:	0007a223          	sw	zero,4(a5)
+	}
+	//traverse through the linked list, note there's no stopping condition
+	for (p = prevp->next; ;prevp = p, p = p->next) {
+ 38c:	fe842783          	lw	a5,-24(s0)
+ 390:	0007a783          	lw	a5,0(a5)
+ 394:	fef42623          	sw	a5,-20(s0)
+		if (p->size >= size) { //big enough
+ 398:	fec42783          	lw	a5,-20(s0)
+ 39c:	0047a783          	lw	a5,4(a5)
+ 3a0:	fdc42703          	lw	a4,-36(s0)
+ 3a4:	08e7e263          	bltu	a5,a4,428 <tj_malloc+0x138>
+			if (p->size == size) // exact size
+ 3a8:	fec42783          	lw	a5,-20(s0)
+ 3ac:	0047a783          	lw	a5,4(a5)
+ 3b0:	fdc42703          	lw	a4,-36(s0)
+ 3b4:	00f71c63          	bne	a4,a5,3cc <tj_malloc+0xdc>
+				prevp->next = p->next; // just return that block
+ 3b8:	fec42783          	lw	a5,-20(s0)
+ 3bc:	0007a703          	lw	a4,0(a5)
+ 3c0:	fe842783          	lw	a5,-24(s0)
+ 3c4:	00e7a023          	sw	a4,0(a5)
+ 3c8:	0400006f          	jal	zero,408 <tj_malloc+0x118>
+			else {
+				p->size -= total_size; //break up the block
+ 3cc:	fec42783          	lw	a5,-20(s0)
+ 3d0:	0047a703          	lw	a4,4(a5)
+ 3d4:	fe442783          	lw	a5,-28(s0)
+ 3d8:	40f70733          	sub	a4,a4,a5
+ 3dc:	fec42783          	lw	a5,-20(s0)
+ 3e0:	00e7a223          	sw	a4,4(a5)
+				p += p->size;
+ 3e4:	fec42783          	lw	a5,-20(s0)
+ 3e8:	0047a783          	lw	a5,4(a5)
+ 3ec:	00379793          	slli	a5,a5,0x3
+ 3f0:	fec42703          	lw	a4,-20(s0)
+ 3f4:	00f707b3          	add	a5,a4,a5
+ 3f8:	fef42623          	sw	a5,-20(s0)
+				p->size = size;
+ 3fc:	fec42783          	lw	a5,-20(s0)
+ 400:	fdc42703          	lw	a4,-36(s0)
+ 404:	00e7a223          	sw	a4,4(a5)
+			}
+			freep = prevp;
+ 408:	000047b7          	lui	a5,0x4
+ 40c:	fe842703          	lw	a4,-24(s0)
+ 410:	6ee7a423          	sw	a4,1768(a5) # 46e8 <freep>
+#ifdef DEBUG
+			printf("returned pointer is %i\n", (int)p + 1);
+#endif
+			return (void *)(++p);
+ 414:	fec42783          	lw	a5,-20(s0)
+ 418:	00878793          	addi	a5,a5,8
+ 41c:	fef42623          	sw	a5,-20(s0)
+ 420:	fec42783          	lw	a5,-20(s0)
+ 424:	04c0006f          	jal	zero,470 <tj_malloc+0x180>
+		}
+		if (p == freep) //wrapped around free list
+ 428:	000047b7          	lui	a5,0x4
+ 42c:	6e87a783          	lw	a5,1768(a5) # 46e8 <freep>
+ 430:	fec42703          	lw	a4,-20(s0)
+ 434:	02f71263          	bne	a4,a5,458 <tj_malloc+0x168>
+			if ((p = getmoremem(total_size)) == NULL) //if the heap runs out
+ 438:	fe442503          	lw	a0,-28(s0)
+ 43c:	00000097          	auipc	ra,0x0
+ 440:	e08080e7          	jalr	ra,-504(ra) # 244 <getmoremem>
+ 444:	fea42623          	sw	a0,-20(s0)
+ 448:	fec42783          	lw	a5,-20(s0)
+ 44c:	00079663          	bne	a5,zero,458 <tj_malloc+0x168>
+				return NULL; //well, you got nothing left, gg
+ 450:	00000793          	addi	a5,zero,0
+ 454:	01c0006f          	jal	zero,470 <tj_malloc+0x180>
+	for (p = prevp->next; ;prevp = p, p = p->next) {
+ 458:	fec42783          	lw	a5,-20(s0)
+ 45c:	fef42423          	sw	a5,-24(s0)
+ 460:	fec42783          	lw	a5,-20(s0)
+ 464:	0007a783          	lw	a5,0(a5)
+ 468:	fef42623          	sw	a5,-20(s0)
+		if (p->size >= size) { //big enough
+ 46c:	f2dff06f          	jal	zero,398 <tj_malloc+0xa8>
+	}
+}
+ 470:	00078513          	addi	a0,a5,0
+ 474:	02c12083          	lw	ra,44(sp)
+ 478:	02812403          	lw	s0,40(sp)
+ 47c:	03010113          	addi	sp,sp,48
+ 480:	00008067          	jalr	zero,0(ra)
+
+00000484 <tj_calloc>:
+
+void *tj_calloc(unsigned int size) {
+ 484:	fd010113          	addi	sp,sp,-48
+ 488:	02112623          	sw	ra,44(sp)
+ 48c:	02812423          	sw	s0,40(sp)
+ 490:	03010413          	addi	s0,sp,48
+ 494:	fca42e23          	sw	a0,-36(s0)
+	void *mem = tj_malloc(size);
+ 498:	fdc42503          	lw	a0,-36(s0)
+ 49c:	00000097          	auipc	ra,0x0
+ 4a0:	e54080e7          	jalr	ra,-428(ra) # 2f0 <tj_malloc>
+ 4a4:	fea42623          	sw	a0,-20(s0)
+	memset(mem, 0, size);
+ 4a8:	fdc42603          	lw	a2,-36(s0)
+ 4ac:	00000593          	addi	a1,zero,0
+ 4b0:	fec42503          	lw	a0,-20(s0)
+ 4b4:	00000097          	auipc	ra,0x0
+ 4b8:	124080e7          	jalr	ra,292(ra) # 5d8 <memset>
+	return mem;
+ 4bc:	fec42783          	lw	a5,-20(s0)
+}
+ 4c0:	00078513          	addi	a0,a5,0
+ 4c4:	02c12083          	lw	ra,44(sp)
+ 4c8:	02812403          	lw	s0,40(sp)
+ 4cc:	03010113          	addi	sp,sp,48
+ 4d0:	00008067          	jalr	zero,0(ra)
+
+000004d4 <main>:
+	bool goat;
+	int gronk;
+	int edelman;
+} example_t;
+
+int main() {
+ 4d4:	fe010113          	addi	sp,sp,-32
+ 4d8:	00112e23          	sw	ra,28(sp)
+ 4dc:	00812c23          	sw	s0,24(sp)
+ 4e0:	02010413          	addi	s0,sp,32
+	example_t* pats = (example_t*)tj_malloc(sizeof(example_t));
+ 4e4:	01000513          	addi	a0,zero,16
+ 4e8:	00000097          	auipc	ra,0x0
+ 4ec:	e08080e7          	jalr	ra,-504(ra) # 2f0 <tj_malloc>
+ 4f0:	fea42623          	sw	a0,-20(s0)
+#ifdef DEBUG
+	printf("pts is %i\n", (int)pats);
+	printf("what\n");
+#endif
+	pats->brady = 12; // as of 02/2019
+ 4f4:	fec42783          	lw	a5,-20(s0)
+ 4f8:	00c00713          	addi	a4,zero,12
+ 4fc:	00e7a023          	sw	a4,0(a5)
+	pats->rings = 6;
+ 500:	fec42783          	lw	a5,-20(s0)
+ 504:	00600713          	addi	a4,zero,6
+ 508:	00e79223          	sh	a4,4(a5)
+	pats->goat = 1; // hands down the goat
+ 50c:	fec42783          	lw	a5,-20(s0)
+ 510:	00100713          	addi	a4,zero,1
+ 514:	00e78323          	sb	a4,6(a5)
+	pats->gronk = 87; // tide pods
+ 518:	fec42783          	lw	a5,-20(s0)
+ 51c:	05700713          	addi	a4,zero,87
+ 520:	00e7a423          	sw	a4,8(a5)
+	pats->edelman = 11; // the ironman, superbowl 53 mvp
+ 524:	fec42783          	lw	a5,-20(s0)
+ 528:	00b00713          	addi	a4,zero,11
+ 52c:	00e7a623          	sw	a4,12(a5)
+#ifdef DEBUG
+	printf("%i\n", pats->edelman);
+#endif
+	example_t* another = (example_t*)tj_malloc(sizeof(example_t));
+ 530:	01000513          	addi	a0,zero,16
+ 534:	00000097          	auipc	ra,0x0
+ 538:	dbc080e7          	jalr	ra,-580(ra) # 2f0 <tj_malloc>
+ 53c:	fea42423          	sw	a0,-24(s0)
+#ifdef DEBUG
+	printf("pts is %i\n", (int)another);
+#endif
+	tj_free(pats);
+ 540:	fec42503          	lw	a0,-20(s0)
+ 544:	00000097          	auipc	ra,0x0
+ 548:	b70080e7          	jalr	ra,-1168(ra) # b4 <tj_free>
+	example_t* third = (example_t*)tj_malloc(sizeof(example_t));
+ 54c:	01000513          	addi	a0,zero,16
+ 550:	00000097          	auipc	ra,0x0
+ 554:	da0080e7          	jalr	ra,-608(ra) # 2f0 <tj_malloc>
+ 558:	fea42223          	sw	a0,-28(s0)
+	another->rings = 2003;
+ 55c:	fe842783          	lw	a5,-24(s0)
+ 560:	7d300713          	addi	a4,zero,2003
+ 564:	00e79223          	sh	a4,4(a5)
+	third->rings = 2004;
+ 568:	fe442783          	lw	a5,-28(s0)
+ 56c:	7d400713          	addi	a4,zero,2004
+ 570:	00e79223          	sh	a4,4(a5)
+#ifdef DEBUG
+	printf("created third %i\n", (int)third);
+#endif
+	//let's make this test calloc
+	example_t* latest = (example_t*)tj_calloc(sizeof(example_t));
+ 574:	01000513          	addi	a0,zero,16
+ 578:	00000097          	auipc	ra,0x0
+ 57c:	f0c080e7          	jalr	ra,-244(ra) # 484 <tj_calloc>
+ 580:	fea42023          	sw	a0,-32(s0)
+	latest->rings = 2019;
+ 584:	fe042783          	lw	a5,-32(s0)
+ 588:	7e300713          	addi	a4,zero,2019
+ 58c:	00e79223          	sh	a4,4(a5)
+	if (latest->goat != 0) exit(2);
+ 590:	fe042783          	lw	a5,-32(s0)
+ 594:	0067c783          	lbu	a5,6(a5)
+ 598:	00078863          	beq	a5,zero,5a8 <main+0xd4>
+ 59c:	00200513          	addi	a0,zero,2
+ 5a0:	00000097          	auipc	ra,0x0
+ 5a4:	b00080e7          	jalr	ra,-1280(ra) # a0 <exit>
+	tj_free(another);
+ 5a8:	fe842503          	lw	a0,-24(s0)
+ 5ac:	00000097          	auipc	ra,0x0
+ 5b0:	b08080e7          	jalr	ra,-1272(ra) # b4 <tj_free>
+	tj_free(latest);
+ 5b4:	fe042503          	lw	a0,-32(s0)
+ 5b8:	00000097          	auipc	ra,0x0
+ 5bc:	afc080e7          	jalr	ra,-1284(ra) # b4 <tj_free>
+	return 0;
+ 5c0:	00000793          	addi	a5,zero,0
+}
+ 5c4:	00078513          	addi	a0,a5,0
+ 5c8:	01c12083          	lw	ra,28(sp)
+ 5cc:	01812403          	lw	s0,24(sp)
+ 5d0:	02010113          	addi	sp,sp,32
+ 5d4:	00008067          	jalr	zero,0(ra)
+
+000005d8 <memset>:
+ 5d8:	433d                	c.li	t1,15
+ 5da:	872a                	c.mv	a4,a0
+ 5dc:	02c37363          	bgeu	t1,a2,602 <memset+0x2a>
+ 5e0:	00f77793          	andi	a5,a4,15
+ 5e4:	efbd                	c.bnez	a5,662 <memset+0x8a>
+ 5e6:	e5ad                	c.bnez	a1,650 <memset+0x78>
+ 5e8:	ff067693          	andi	a3,a2,-16
+ 5ec:	8a3d                	c.andi	a2,15
+ 5ee:	96ba                	c.add	a3,a4
+ 5f0:	c30c                	c.sw	a1,0(a4)
+ 5f2:	c34c                	c.sw	a1,4(a4)
+ 5f4:	c70c                	c.sw	a1,8(a4)
+ 5f6:	c74c                	c.sw	a1,12(a4)
+ 5f8:	0741                	c.addi	a4,16
+ 5fa:	fed76be3          	bltu	a4,a3,5f0 <memset+0x18>
+ 5fe:	e211                	c.bnez	a2,602 <memset+0x2a>
+ 600:	8082                	c.jr	ra
+ 602:	40c306b3          	sub	a3,t1,a2
+ 606:	068a                	c.slli	a3,0x2
+ 608:	00000297          	auipc	t0,0x0
+ 60c:	9696                	c.add	a3,t0
+ 60e:	00a68067          	jalr	zero,10(a3)
+ 612:	00b70723          	sb	a1,14(a4)
+ 616:	00b706a3          	sb	a1,13(a4)
+ 61a:	00b70623          	sb	a1,12(a4)
+ 61e:	00b705a3          	sb	a1,11(a4)
+ 622:	00b70523          	sb	a1,10(a4)
+ 626:	00b704a3          	sb	a1,9(a4)
+ 62a:	00b70423          	sb	a1,8(a4)
+ 62e:	00b703a3          	sb	a1,7(a4)
+ 632:	00b70323          	sb	a1,6(a4)
+ 636:	00b702a3          	sb	a1,5(a4)
+ 63a:	00b70223          	sb	a1,4(a4)
+ 63e:	00b701a3          	sb	a1,3(a4)
+ 642:	00b70123          	sb	a1,2(a4)
+ 646:	00b700a3          	sb	a1,1(a4)
+ 64a:	00b70023          	sb	a1,0(a4)
+ 64e:	8082                	c.jr	ra
+ 650:	0ff5f593          	andi	a1,a1,255
+ 654:	00859693          	slli	a3,a1,0x8
+ 658:	8dd5                	c.or	a1,a3
+ 65a:	01059693          	slli	a3,a1,0x10
+ 65e:	8dd5                	c.or	a1,a3
+ 660:	b761                	c.j	5e8 <memset+0x10>
+ 662:	00279693          	slli	a3,a5,0x2
+ 666:	00000297          	auipc	t0,0x0
+ 66a:	9696                	c.add	a3,t0
+ 66c:	8286                	c.mv	t0,ra
+ 66e:	fa8680e7          	jalr	ra,-88(a3)
+ 672:	8096                	c.mv	ra,t0
+ 674:	17c1                	c.addi	a5,-16
+ 676:	8f1d                	c.sub	a4,a5
+ 678:	963e                	c.add	a2,a5
+ 67a:	f8c374e3          	bgeu	t1,a2,602 <memset+0x2a>
+ 67e:	b7a5                	c.j	5e6 <memset+0xe>
+	...
+
+Disassembly of section .sdata:
+
+000006c0 <next_index>:
+static void* next_index = (void *)heap; //the next place to be allocated
+ 6c0:	06e0                	c.addi4spn	s0,sp,844
+	...
+
+000006c4 <avail_mem>:
+static unsigned int avail_mem = sizeof(heap); //the most CONTIGUOUS memory available
+ 6c4:	4000                	c.lw	s0,0(s0)
+	...
+
+Disassembly of section .bss:
+
+000006e0 <heap>:
+	...
+
+00000ea0 <__global_pointer$>:
+	...
+
+000046e0 <base>:
+	...
+
+000046e8 <freep>:
+static Header *freep = NULL; //start of the free list
+    46e8:	0000                	c.unimp
+	...
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+	nop
+   0:	2941                	c.jal	490 <tj_calloc+0xc>
+   2:	0000                	c.unimp
+	la ra, exit
+   4:	7200                	.2byte	0x7200
+   6:	7369                	c.lui	t1,0xffffa
+   8:	01007663          	bgeu	zero,a6,14 <crt+0x14>
+	la sp, _sp
+   c:	001f 0000 1004      	.byte	0x1f, 0x00, 0x00, 0x00, 0x04, 0x10
+  12:	7205                	c.lui	tp,0xfffe1
+	mv s0, sp
+  14:	3376                	.2byte	0x3376
+  16:	6932                	.2byte	0x6932
+	la gp, __global_pointer$
+  18:	7032                	.2byte	0x7032
+  1a:	5f30                	c.lw	a2,120(a4)
+  1c:	326d                	c.jal	fffff9c6 <_sp+0xfffef9c6>
+  1e:	3070                	.2byte	0x3070
+	li tp, 0
+  20:	635f 7032 0030      	.byte	0x5f, 0x63, 0x32, 0x70, 0x30, 0x00
+	li t0, 0
+  26:	0108                	c.addi4spn	a0,sp,128
+	li t1, 0
+  28:	0b0a                	c.slli	s6,0x2
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+	nop
+   0:	3a434347          	.4byte	0x3a434347
+	la ra, exit
+   4:	2820                	.2byte	0x2820
+   6:	31202967          	.4byte	0x31202967
+   a:	2e31                	c.jal	326 <tj_malloc+0x36>
+	la sp, _sp
+   c:	2e31                	c.jal	328 <tj_malloc+0x38>
+   e:	0030                	c.addi4spn	a2,sp,8
+
+Disassembly of section .debug_line:
+
+00000000 <.debug_line>:
+	nop
+   0:	0124                	c.addi4spn	s1,sp,136
+   2:	0000                	c.unimp
+	la ra, exit
+   4:	0005                	c.addi	zero,1
+   6:	0004                	.2byte	0x4
+   8:	002a                	c.slli	zero,0xa
+   a:	0000                	c.unimp
+	la sp, _sp
+   c:	0101                	c.addi	sp,0
+   e:	fb01                	c.bnez	a4,ffffff1e <_sp+0xfffeff1e>
+  10:	0d0e                	c.slli	s10,0x3
+  12:	0100                	c.addi4spn	s0,sp,128
+	mv s0, sp
+  14:	0101                	c.addi	sp,0
+  16:	0001                	c.addi	zero,0
+	la gp, __global_pointer$
+  18:	0000                	c.unimp
+  1a:	0001                	c.addi	zero,0
+  1c:	0100                	c.addi4spn	s0,sp,128
+  1e:	0101                	c.addi	sp,0
+	li tp, 0
+  20:	011f 0000 0000      	.byte	0x1f, 0x01, 0x00, 0x00, 0x00, 0x00
+	li t0, 0
+  26:	0102                	c.slli64	sp
+	li t1, 0
+  28:	021f 020f 004b      	.byte	0x1f, 0x02, 0x0f, 0x02, 0x4b, 0x00
+	li t2, 0
+  2e:	0000                	c.unimp
+	li s1, 0
+  30:	4b00                	c.lw	s0,16(a4)
+  32:	0000                	c.unimp
+	li a0, 0
+  34:	0000                	c.unimp
+  36:	0500                	c.addi4spn	s0,sp,640
+	li a1, 0
+  38:	0002                	c.slli64	zero
+  3a:	0000                	c.unimp
+	li a2, 0
+  3c:	0300                	c.addi4spn	s0,sp,384
+  3e:	010d                	c.addi	sp,3
+	li a3, 0
+  40:	04090103          	lb	sp,64(s2)
+	li a4, 0
+  44:	0100                	c.addi4spn	s0,sp,128
+  46:	08090103          	lb	sp,128(s2)
+	li a5, 0
+  4a:	0100                	c.addi4spn	s0,sp,128
+	li a6, 0
+  4c:	08090103          	lb	sp,128(s2)
+	li a7, 0
+  50:	0100                	c.addi4spn	s0,sp,128
+  52:	04090103          	lb	sp,64(s2)
+	li s2, 0
+  56:	0100                	c.addi4spn	s0,sp,128
+	li s3, 0
+  58:	08090103          	lb	sp,128(s2)
+	li s4, 0
+  5c:	0100                	c.addi4spn	s0,sp,128
+  5e:	04090103          	lb	sp,64(s2)
+	li s5, 0
+  62:	0100                	c.addi4spn	s0,sp,128
+	li s6, 0
+  64:	04090103          	lb	sp,64(s2)
+	li s7, 0
+  68:	0100                	c.addi4spn	s0,sp,128
+  6a:	04090103          	lb	sp,64(s2)
+	li s8, 0
+  6e:	0100                	c.addi4spn	s0,sp,128
+	li s9, 0
+  70:	04090103          	lb	sp,64(s2)
+	li s10, 0
+  74:	0100                	c.addi4spn	s0,sp,128
+  76:	04090103          	lb	sp,64(s2)
+	li s11, 0
+  7a:	0100                	c.addi4spn	s0,sp,128
+	li t3, 0
+  7c:	04090103          	lb	sp,64(s2)
+	li t4, 0
+  80:	0100                	c.addi4spn	s0,sp,128
+  82:	04090103          	lb	sp,64(s2)
+	li t5, 0
+  86:	0100                	c.addi4spn	s0,sp,128
+	li t6, 0
+  88:	04090103          	lb	sp,64(s2)
+	j main
+  8c:	0100                	c.addi4spn	s0,sp,128
+  8e:	04090103          	lb	sp,64(s2)
+  92:	0100                	c.addi4spn	s0,sp,128
+  94:	04090103          	lb	sp,64(s2)
+  98:	0100                	c.addi4spn	s0,sp,128
+  9a:	04090103          	lb	sp,64(s2)
+  9e:	0100                	c.addi4spn	s0,sp,128
+	la sp, _sp
+  a0:	04090103          	lb	sp,64(s2)
+  a4:	0100                	c.addi4spn	s0,sp,128
+  a6:	04090103          	lb	sp,64(s2)
+	sw a0, -8(sp)
+  aa:	0100                	c.addi4spn	s0,sp,128
+	nop
+  ac:	04090103          	lb	sp,64(s2)
+	wfi
+  b0:	0100                	c.addi4spn	s0,sp,128
+  b2:	04090103          	lb	sp,64(s2)
+void tj_free(void *mem) {
+  b6:	0100                	c.addi4spn	s0,sp,128
+  b8:	04090103          	lb	sp,64(s2)
+  bc:	0100                	c.addi4spn	s0,sp,128
+  be:	04090103          	lb	sp,64(s2)
+  c2:	0100                	c.addi4spn	s0,sp,128
+  c4:	04090103          	lb	sp,64(s2)
+	if (mem < (void *)heap || mem > (void *)(heap + sizeof(heap)))
+  c8:	0100                	c.addi4spn	s0,sp,128
+  ca:	04090103          	lb	sp,64(s2)
+  ce:	0100                	c.addi4spn	s0,sp,128
+  d0:	04090103          	lb	sp,64(s2)
+  d4:	0100                	c.addi4spn	s0,sp,128
+  d6:	04090103          	lb	sp,64(s2)
+  da:	0100                	c.addi4spn	s0,sp,128
+  dc:	04090103          	lb	sp,64(s2)
+  e0:	0100                	c.addi4spn	s0,sp,128
+  e2:	04090103          	lb	sp,64(s2)
+  e6:	0100                	c.addi4spn	s0,sp,128
+		exit(1);
+  e8:	04090103          	lb	sp,64(s2)
+  ec:	0100                	c.addi4spn	s0,sp,128
+  ee:	04090103          	lb	sp,64(s2)
+  f2:	0100                	c.addi4spn	s0,sp,128
+	bp = (Header *)mem - 1; //point to block header
+  f4:	04090103          	lb	sp,64(s2)
+  f8:	0100                	c.addi4spn	s0,sp,128
+  fa:	04090103          	lb	sp,64(s2)
+  fe:	0100                	c.addi4spn	s0,sp,128
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 100:	0409                	c.addi	s0,2
+ 102:	0000                	c.unimp
+ 104:	0101                	c.addi	sp,0
+ 106:	0500                	c.addi4spn	s0,sp,640
+ 108:	a002                	.2byte	0xa002
+ 10a:	0000                	c.unimp
+ 10c:	0300                	c.addi4spn	s0,sp,384
+ 10e:	01030133          	add	sp,t1,a6
+		if (p >= p->next && (bp > p || bp < p->next))
+ 112:	0809                	c.addi	a6,2
+ 114:	0100                	c.addi4spn	s0,sp,128
+ 116:	04090103          	lb	sp,64(s2)
+ 11a:	0100                	c.addi4spn	s0,sp,128
+ 11c:	04090103          	lb	sp,64(s2)
+ 120:	0100                	c.addi4spn	s0,sp,128
+ 122:	0409                	c.addi	s0,2
+ 124:	0000                	c.unimp
+ 126:	0101                	c.addi	sp,0
+ 128:	0000042f          	.4byte	0x42f
+ 12c:	0005                	c.addi	zero,1
+ 12e:	0004                	.2byte	0x4
+ 130:	005c                	c.addi4spn	a5,sp,4
+ 132:	0000                	c.unimp
+ 134:	0101                	c.addi	sp,0
+ 136:	fb01                	c.bnez	a4,46 <crt+0x46>
+ 138:	0d0e                	c.slli	s10,0x3
+ 13a:	0100                	c.addi4spn	s0,sp,128
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 13c:	0101                	c.addi	sp,0
+ 13e:	0001                	c.addi	zero,0
+ 140:	0000                	c.unimp
+ 142:	0001                	c.addi	zero,0
+ 144:	0100                	c.addi4spn	s0,sp,128
+ 146:	0101                	c.addi	sp,0
+ 148:	061f 0000 0000      	.byte	0x1f, 0x06, 0x00, 0x00, 0x00, 0x00
+ 14e:	0000006b          	.4byte	0x6b
+ 152:	0076                	c.slli	zero,0x1d
+ 154:	0000                	c.unimp
+ 156:	000000a7          	.4byte	0xa7
+ 15a:	00d4                	c.addi4spn	a3,sp,68
+ 15c:	0000                	c.unimp
+ 15e:	010c                	c.addi4spn	a1,sp,128
+ 160:	0000                	c.unimp
+ 162:	0102                	c.slli64	sp
+	if (bp + bp->size == p->next) { //join to upper nbr
+ 164:	021f 080f 005c      	.byte	0x1f, 0x02, 0x0f, 0x08, 0x5c, 0x00
+ 16a:	0000                	c.unimp
+ 16c:	3501                	c.jal	ffffff6c <_sp+0xfffeff6c>
+ 16e:	0001                	c.addi	zero,0
+ 170:	0100                	c.addi4spn	s0,sp,128
+ 172:	005c                	c.addi4spn	a5,sp,4
+ 174:	0000                	c.unimp
+ 176:	4101                	c.li	sp,0
+ 178:	0001                	c.addi	zero,0
+ 17a:	0200                	c.addi4spn	s0,sp,256
+ 17c:	0152                	c.slli	sp,0x14
+ 17e:	0000                	c.unimp
+ 180:	00015c03          	lhu	s8,0(sp)
+		bp->size += p->next->size;
+ 184:	0400                	c.addi4spn	s0,sp,512
+ 186:	0165                	c.addi	sp,25
+ 188:	0000                	c.unimp
+ 18a:	6e05                	c.lui	t3,0x1
+ 18c:	0001                	c.addi	zero,0
+ 18e:	0500                	c.addi4spn	s0,sp,640
+ 190:	1905                	c.addi	s2,-31
+ 192:	0500                	c.addi4spn	s0,sp,640
+ 194:	b402                	.2byte	0xb402
+ 196:	0000                	c.unimp
+ 198:	0300                	c.addi4spn	s0,sp,384
+ 19a:	0129                	c.addi	sp,10
+ 19c:	0505                	c.addi	a0,1
+ 19e:	14090303          	lb	t1,320(s2)
+ 1a2:	0100                	c.addi4spn	s0,sp,128
+		bp->next = p->next->next;
+ 1a4:	2205                	c.jal	2c4 <getmoremem+0x80>
+ 1a6:	0200                	c.addi4spn	s0,sp,256
+ 1a8:	0104                	c.addi4spn	s1,sp,128
+ 1aa:	10090003          	lb	zero,256(s2)
+ 1ae:	0100                	c.addi4spn	s0,sp,128
+ 1b0:	1905                	c.addi	s2,-31
+ 1b2:	0200                	c.addi4spn	s0,sp,256
+ 1b4:	0104                	c.addi4spn	s1,sp,128
+ 1b6:	08090003          	lb	zero,128(s2)
+ 1ba:	0100                	c.addi4spn	s0,sp,128
+		bp->next = p->next; //insert bp after p in the linked list
+ 1bc:	0305                	c.addi	t1,1 # ffffa001 <_sp+0xfffea001>
+ 1be:	08090103          	lb	sp,128(s2)
+ 1c2:	0100                	c.addi4spn	s0,sp,128
+ 1c4:	0505                	c.addi	a0,1
+ 1c6:	0c090303          	lb	t1,192(s2)
+ 1ca:	0100                	c.addi4spn	s0,sp,128
+	if (p + p->size == bp) { //join to lower nbr
+ 1cc:	0905                	c.addi	s2,1
+ 1ce:	0c090203          	lb	tp,192(s2)
+ 1d2:	0100                	c.addi4spn	s0,sp,128
+ 1d4:	0205                	c.addi	tp,1 # fffe1001 <_sp+0xfffd1001>
+ 1d6:	0c090003          	lb	zero,192(s2)
+ 1da:	0100                	c.addi4spn	s0,sp,128
+ 1dc:	0d05                	c.addi	s10,1
+ 1de:	04090303          	lb	t1,64(s2)
+ 1e2:	0100                	c.addi4spn	s0,sp,128
+ 1e4:	0605                	c.addi	a2,1
+ 1e6:	08090003          	lb	zero,128(s2)
+		p->size += bp->size;
+ 1ea:	0100                	c.addi4spn	s0,sp,128
+ 1ec:	1405                	c.addi	s0,-31
+ 1ee:	0200                	c.addi4spn	s0,sp,256
+ 1f0:	0104                	c.addi4spn	s1,sp,128
+ 1f2:	08090003          	lb	zero,128(s2)
+ 1f6:	0100                	c.addi4spn	s0,sp,128
+ 1f8:	2805                	c.jal	228 <tj_free+0x174>
+ 1fa:	0200                	c.addi4spn	s0,sp,256
+ 1fc:	0204                	c.addi4spn	s1,sp,256
+ 1fe:	0c090003          	lb	zero,192(s2)
+ 202:	0100                	c.addi4spn	s0,sp,128
+		p->next = bp->next;
+ 204:	1f05                	c.addi	t5,-31
+ 206:	0200                	c.addi4spn	s0,sp,256
+ 208:	0204                	c.addi4spn	s1,sp,256
+ 20a:	08090003          	lb	zero,128(s2)
+ 20e:	0100                	c.addi4spn	s0,sp,128
+ 210:	2f05                	c.jal	940 <heap+0x260>
+ 212:	0200                	c.addi4spn	s0,sp,256
+ 214:	0204                	c.addi4spn	s1,sp,256
+ 216:	08097d03          	.4byte	0x8097d03
+		p->next = bp; //again, if the free list is just the base
+ 21a:	0100                	c.addi4spn	s0,sp,128
+ 21c:	1205                	c.addi	tp,-31 # ffffffe1 <_sp+0xfffeffe1>
+ 21e:	0200                	c.addi4spn	s0,sp,256
+ 220:	0104                	c.addi4spn	s1,sp,128
+ 222:	0c090003          	lb	zero,192(s2)
+	freep = p;
+ 226:	0100                	c.addi4spn	s0,sp,128
+ 228:	2405                	c.jal	448 <tj_malloc+0x158>
+ 22a:	0200                	c.addi4spn	s0,sp,256
+ 22c:	0304                	c.addi4spn	s1,sp,384
+ 22e:	0c090003          	lb	zero,192(s2)
+}
+ 232:	0100                	c.addi4spn	s0,sp,128
+ 234:	1205                	c.addi	tp,-31 # ffffffe1 <_sp+0xfffeffe1>
+ 236:	0200                	c.addi4spn	s0,sp,256
+ 238:	0304                	c.addi4spn	s1,sp,384
+ 23a:	08090003          	lb	zero,128(s2)
+ 23e:	0100                	c.addi4spn	s0,sp,128
+ 240:	0d05                	c.addi	s10,1
+ 242:	08090703          	lb	a4,128(s2)
+static Header* getmoremem(unsigned int total_size) {
+ 246:	0100                	c.addi4spn	s0,sp,128
+ 248:	0905                	c.addi	s2,1
+ 24a:	08090003          	lb	zero,128(s2)
+ 24e:	0100                	c.addi4spn	s0,sp,128
+ 250:	1805                	c.addi	a6,-31
+ 252:	0c090003          	lb	zero,192(s2)
+ 256:	0100                	c.addi4spn	s0,sp,128
+	if (avail_mem < total_size) return NULL; //gg, we ran out of mem :P
+ 258:	0505                	c.addi	a0,1
+ 25a:	08090003          	lb	zero,128(s2)
+ 25e:	0100                	c.addi4spn	s0,sp,128
+ 260:	0c05                	c.addi	s8,1
+ 262:	04090203          	lb	tp,64(s2)
+ 266:	0100                	c.addi4spn	s0,sp,128
+ 268:	1005                	c.addi	zero,-31
+ 26a:	08090003          	lb	zero,128(s2)
+ 26e:	0100                	c.addi4spn	s0,sp,128
+	Header* up = (Header *)next_index;
+ 270:	1605                	c.addi	a2,-31
+ 272:	08090003          	lb	zero,128(s2)
+ 276:	0100                	c.addi4spn	s0,sp,128
+ 278:	0c05                	c.addi	s8,1
+ 27a:	04090003          	lb	zero,64(s2)
+	next_index += total_size; //allocate the block
+ 27e:	0100                	c.addi4spn	s0,sp,128
+ 280:	0f05                	c.addi	t5,1
+ 282:	0c090103          	lb	sp,192(s2)
+ 286:	0100                	c.addi4spn	s0,sp,128
+ 288:	1505                	c.addi	a0,-31
+ 28a:	08090003          	lb	zero,128(s2)
+ 28e:	0100                	c.addi4spn	s0,sp,128
+ 290:	0c05                	c.addi	s8,1
+ 292:	04090003          	lb	zero,64(s2)
+	avail_mem -= total_size; //deduct from avail mem;
+ 296:	0100                	c.addi4spn	s0,sp,128
+ 298:	0f05                	c.addi	t5,1
+ 29a:	0c090203          	lb	tp,192(s2)
+ 29e:	0100                	c.addi4spn	s0,sp,128
+ 2a0:	0c05                	c.addi	s8,1
+ 2a2:	08090003          	lb	zero,128(s2)
+ 2a6:	0100                	c.addi4spn	s0,sp,128
+ 2a8:	0b05                	c.addi	s6,1
+ 2aa:	08090403          	lb	s0,128(s2)
+	up->size = total_size - sizeof(Header); //set the size right
+ 2ae:	0100                	c.addi4spn	s0,sp,128
+ 2b0:	0805                	c.addi	a6,1
+ 2b2:	08090003          	lb	zero,128(s2)
+ 2b6:	0100                	c.addi4spn	s0,sp,128
+ 2b8:	0505                	c.addi	a0,1
+ 2ba:	0c090003          	lb	zero,192(s2)
+	tj_free((void *)(++up)); //append the new block to the free list first
+ 2be:	0100                	c.addi4spn	s0,sp,128
+ 2c0:	0b05                	c.addi	s6,1
+ 2c2:	08090203          	lb	tp,128(s2)
+ 2c6:	0100                	c.addi4spn	s0,sp,128
+ 2c8:	1005                	c.addi	zero,-31
+ 2ca:	08090003          	lb	zero,128(s2)
+ 2ce:	0100                	c.addi4spn	s0,sp,128
+ 2d0:	0b05                	c.addi	s6,1
+ 2d2:	08090003          	lb	zero,128(s2)
+	return freep;
+ 2d6:	0100                	c.addi4spn	s0,sp,128
+ 2d8:	0f05                	c.addi	t5,1
+ 2da:	0c090103          	lb	sp,192(s2)
+}
+ 2de:	0100                	c.addi4spn	s0,sp,128
+ 2e0:	0b05                	c.addi	s6,1
+ 2e2:	08090003          	lb	zero,128(s2)
+ 2e6:	0100                	c.addi4spn	s0,sp,128
+ 2e8:	0c090203          	lb	tp,192(s2)
+ 2ec:	0100                	c.addi4spn	s0,sp,128
+ 2ee:	0805                	c.addi	a6,1
+void *tj_malloc(unsigned int size) {
+ 2f0:	0c090303          	lb	t1,192(s2)
+ 2f4:	0100                	c.addi4spn	s0,sp,128
+ 2f6:	0105                	c.addi	sp,1
+ 2f8:	0c090103          	lb	sp,192(s2)
+ 2fc:	0100                	c.addi4spn	s0,sp,128
+ 2fe:	3405                	c.jal	fffffd1e <_sp+0xfffefd1e>
+ 300:	14090203          	lb	tp,320(s2)
+	if (size > sizeof(heap)) return NULL;
+ 304:	0100                	c.addi4spn	s0,sp,128
+ 306:	1005                	c.addi	zero,-31
+ 308:	14090103          	lb	sp,320(s2)
+ 30c:	0100                	c.addi4spn	s0,sp,128
+ 30e:	0505                	c.addi	a0,1
+ 310:	08090003          	lb	zero,128(s2)
+ 314:	0100                	c.addi4spn	s0,sp,128
+ 316:	2505                	c.jal	936 <heap+0x256>
+	if ((size & 3) != 0) {
+ 318:	0200                	c.addi4spn	s0,sp,256
+ 31a:	0104                	c.addi4spn	s1,sp,128
+ 31c:	08090003          	lb	zero,128(s2)
+ 320:	0100                	c.addi4spn	s0,sp,128
+ 322:	0a05                	c.addi	s4,1
+		size = size + 4 - (size & 3);
+ 324:	08090103          	lb	sp,128(s2)
+ 328:	0100                	c.addi4spn	s0,sp,128
+ 32a:	0d05                	c.addi	s10,1
+ 32c:	0c090103          	lb	sp,192(s2)
+ 330:	0100                	c.addi4spn	s0,sp,128
+ 332:	0c05                	c.addi	s8,1
+	unsigned int total_size = size + sizeof(Header); //need to include the header size as well
+ 334:	18090103          	lb	sp,384(s2)
+ 338:	0100                	c.addi4spn	s0,sp,128
+ 33a:	1805                	c.addi	a6,-31
+ 33c:	18090103          	lb	sp,384(s2)
+	prevp = freep;
+ 340:	0100                	c.addi4spn	s0,sp,128
+ 342:	0b05                	c.addi	s6,1
+ 344:	08090003          	lb	zero,128(s2)
+ 348:	0100                	c.addi4spn	s0,sp,128
+ 34a:	0205                	c.addi	tp,1 # 1 <crt+0x1>
+	if (prevp == NULL) {
+ 34c:	08090103          	lb	sp,128(s2)
+ 350:	0100                	c.addi4spn	s0,sp,128
+ 352:	0905                	c.addi	s2,1
+		prevp = &base;
+ 354:	18090103          	lb	sp,384(s2)
+ 358:	0100                	c.addi4spn	s0,sp,128
+ 35a:	0105                	c.addi	sp,1
+ 35c:	08090103          	lb	sp,128(s2)
+		freep = prevp;
+ 360:	0100                	c.addi4spn	s0,sp,128
+ 362:	2405                	c.jal	582 <main+0xae>
+ 364:	14090203          	lb	tp,320(s2)
+ 368:	0100                	c.addi4spn	s0,sp,128
+ 36a:	0505                	c.addi	a0,1
+		base.next = freep;
+ 36c:	14090203          	lb	tp,320(s2)
+ 370:	0100                	c.addi4spn	s0,sp,128
+ 372:	2205                	c.jal	492 <tj_calloc+0xe>
+ 374:	0200                	c.addi4spn	s0,sp,256
+ 376:	0104                	c.addi4spn	s1,sp,128
+ 378:	0c090003          	lb	zero,192(s2)
+ 37c:	0100                	c.addi4spn	s0,sp,128
+ 37e:	0c05                	c.addi	s8,1
+		base.size = 0;
+ 380:	08090303          	lb	t1,128(s2)
+ 384:	0100                	c.addi4spn	s0,sp,128
+ 386:	0505                	c.addi	a0,1
+ 388:	08090003          	lb	zero,128(s2)
+	for (p = prevp->next; ;prevp = p, p = p->next) {
+ 38c:	0100                	c.addi4spn	s0,sp,128
+ 38e:	1305                	c.addi	t1,-31
+ 390:	04090103          	lb	sp,64(s2)
+ 394:	0100                	c.addi4spn	s0,sp,128
+ 396:	0805                	c.addi	a6,1
+		if (p->size >= size) { //big enough
+ 398:	08090003          	lb	zero,128(s2)
+ 39c:	0100                	c.addi4spn	s0,sp,128
+ 39e:	0f05                	c.addi	t5,1
+ 3a0:	08090603          	lb	a2,128(s2)
+ 3a4:	0100                	c.addi4spn	s0,sp,128
+ 3a6:	0805                	c.addi	a6,1
+			if (p->size == size) // exact size
+ 3a8:	0c090203          	lb	tp,192(s2)
+ 3ac:	0100                	c.addi4spn	s0,sp,128
+ 3ae:	0505                	c.addi	a0,1
+ 3b0:	0c090203          	lb	tp,192(s2)
+ 3b4:	0100                	c.addi4spn	s0,sp,128
+ 3b6:	0905                	c.addi	s2,1
+				prevp->next = p->next; // just return that block
+ 3b8:	08090103          	lb	sp,128(s2)
+ 3bc:	0100                	c.addi4spn	s0,sp,128
+ 3be:	0c090103          	lb	sp,192(s2)
+ 3c2:	0100                	c.addi4spn	s0,sp,128
+ 3c4:	0d05                	c.addi	s10,1
+ 3c6:	0c090103          	lb	sp,192(s2)
+ 3ca:	0100                	c.addi4spn	s0,sp,128
+				p->size -= total_size; //break up the block
+ 3cc:	14090103          	lb	sp,320(s2)
+ 3d0:	0100                	c.addi4spn	s0,sp,128
+ 3d2:	0905                	c.addi	s2,1
+ 3d4:	0c090303          	lb	t1,192(s2)
+ 3d8:	0100                	c.addi4spn	s0,sp,128
+ 3da:	0805                	c.addi	a6,1
+ 3dc:	0c090103          	lb	sp,192(s2)
+ 3e0:	0100                	c.addi4spn	s0,sp,128
+ 3e2:	0605                	c.addi	a2,1
+				p += p->size;
+ 3e4:	08090003          	lb	zero,128(s2)
+ 3e8:	0100                	c.addi4spn	s0,sp,128
+ 3ea:	0905                	c.addi	s2,1
+ 3ec:	08090103          	lb	sp,128(s2)
+ 3f0:	0100                	c.addi4spn	s0,sp,128
+ 3f2:	0705                	c.addi	a4,1
+ 3f4:	08090003          	lb	zero,128(s2)
+ 3f8:	0100                	c.addi4spn	s0,sp,128
+ 3fa:	1405                	c.addi	s0,-31
+				p->size = size;
+ 3fc:	08090103          	lb	sp,128(s2)
+ 400:	0100                	c.addi4spn	s0,sp,128
+ 402:	1105                	c.addi	sp,-31
+ 404:	08090003          	lb	zero,128(s2)
+			freep = prevp;
+ 408:	0100                	c.addi4spn	s0,sp,128
+ 40a:	0d05                	c.addi	s10,1
+ 40c:	0c090203          	lb	tp,192(s2)
+ 410:	0100                	c.addi4spn	s0,sp,128
+ 412:	0b05                	c.addi	s6,1
+			return (void *)(++p);
+ 414:	18090103          	lb	sp,384(s2)
+ 418:	0100                	c.addi4spn	s0,sp,128
+ 41a:	0705                	c.addi	a4,1
+ 41c:	08090003          	lb	zero,128(s2)
+ 420:	0100                	c.addi4spn	s0,sp,128
+ 422:	0d05                	c.addi	s10,1
+ 424:	10090103          	lb	sp,256(s2)
+		if (p == freep) //wrapped around free list
+ 428:	0100                	c.addi4spn	s0,sp,128
+ 42a:	0a05                	c.addi	s4,1
+ 42c:	0c090203          	lb	tp,192(s2)
+ 430:	0100                	c.addi4spn	s0,sp,128
+ 432:	0b05                	c.addi	s6,1
+ 434:	0c090403          	lb	s0,192(s2)
+			if ((p = getmoremem(total_size)) == NULL) //if the heap runs out
+ 438:	0100                	c.addi4spn	s0,sp,128
+ 43a:	0905                	c.addi	s2,1
+ 43c:	14090203          	lb	tp,320(s2)
+ 440:	0100                	c.addi4spn	s0,sp,128
+ 442:	0605                	c.addi	a2,1
+ 444:	08090003          	lb	zero,128(s2)
+ 448:	0100                	c.addi4spn	s0,sp,128
+ 44a:	0d05                	c.addi	s10,1
+ 44c:	08090103          	lb	sp,128(s2)
+				return NULL; //well, you got nothing left, gg
+ 450:	0100                	c.addi4spn	s0,sp,128
+ 452:	0705                	c.addi	a4,1
+ 454:	10090003          	lb	zero,256(s2)
+	for (p = prevp->next; ;prevp = p, p = p->next) {
+ 458:	0100                	c.addi4spn	s0,sp,128
+ 45a:	0c05                	c.addi	s8,1
+ 45c:	08090103          	lb	sp,128(s2)
+ 460:	0100                	c.addi4spn	s0,sp,128
+ 462:	1f05                	c.addi	t5,-31
+ 464:	08096f03          	.4byte	0x8096f03
+ 468:	0100                	c.addi4spn	s0,sp,128
+ 46a:	2605                	c.jal	78a <heap+0xaa>
+		if (p->size >= size) { //big enough
+ 46c:	08090003          	lb	zero,128(s2)
+}
+ 470:	0100                	c.addi4spn	s0,sp,128
+ 472:	0605                	c.addi	a2,1
+ 474:	0c090103          	lb	sp,192(s2)
+ 478:	0100                	c.addi4spn	s0,sp,128
+ 47a:	0105                	c.addi	sp,1
+ 47c:	04091203          	lh	tp,64(s2)
+ 480:	0100                	c.addi4spn	s0,sp,128
+ 482:	2405                	c.jal	6a2 <memset+0xca>
+void *tj_calloc(unsigned int size) {
+ 484:	14090203          	lb	tp,320(s2)
+ 488:	0100                	c.addi4spn	s0,sp,128
+ 48a:	0e05                	c.addi	t3,1 # 1001 <__global_pointer$+0x161>
+ 48c:	14090103          	lb	sp,320(s2)
+ 490:	0100                	c.addi4spn	s0,sp,128
+ 492:	0205                	c.addi	tp,1 # 1 <crt+0x1>
+ 494:	10090103          	lb	sp,256(s2)
+	void *mem = tj_malloc(size);
+ 498:	0100                	c.addi4spn	s0,sp,128
+ 49a:	0905                	c.addi	s2,1
+ 49c:	14090103          	lb	sp,320(s2)
+ 4a0:	0100                	c.addi4spn	s0,sp,128
+ 4a2:	0105                	c.addi	sp,1
+ 4a4:	04090103          	lb	sp,64(s2)
+	memset(mem, 0, size);
+ 4a8:	0100                	c.addi4spn	s0,sp,128
+ 4aa:	0204                	c.addi4spn	s1,sp,256
+ 4ac:	0c05                	c.addi	s8,1
+ 4ae:	097f8d03          	lb	s10,151(t6)
+ 4b2:	0014                	.2byte	0x14
+ 4b4:	0501                	c.addi	a0,0
+ 4b6:	0320                	c.addi4spn	s0,sp,392
+ 4b8:	0901                	c.addi	s2,0
+ 4ba:	0010                	.2byte	0x10
+	return mem;
+ 4bc:	0501                	c.addi	a0,0
+ 4be:	030e                	c.slli	t1,0x3
+}
+ 4c0:	0905                	c.addi	s2,1
+ 4c2:	0010                	.2byte	0x10
+ 4c4:	0301                	c.addi	t1,0
+ 4c6:	0901                	c.addi	s2,0
+ 4c8:	000c                	.2byte	0xc
+ 4ca:	0501                	c.addi	a0,0
+ 4cc:	030d                	c.addi	t1,3
+ 4ce:	0901                	c.addi	s2,0
+ 4d0:	000c                	.2byte	0xc
+ 4d2:	0501                	c.addi	a0,0
+int main() {
+ 4d4:	030e                	c.slli	t1,0x3
+ 4d6:	0901                	c.addi	s2,0
+ 4d8:	000c                	.2byte	0xc
+ 4da:	0501                	c.addi	a0,0
+ 4dc:	0310                	c.addi4spn	a2,sp,384
+ 4de:	0901                	c.addi	s2,0
+ 4e0:	000c                	.2byte	0xc
+ 4e2:	0501                	c.addi	a0,0
+	example_t* pats = (example_t*)tj_malloc(sizeof(example_t));
+ 4e4:	09040323          	sb	a6,134(s0)
+ 4e8:	000c                	.2byte	0xc
+ 4ea:	0501                	c.addi	a0,0
+ 4ec:	0302                	c.slli64	t1
+ 4ee:	0904                	c.addi4spn	s1,sp,144
+ 4f0:	0010                	.2byte	0x10
+ 4f2:	0501                	c.addi	a0,0
+	pats->brady = 12; // as of 02/2019
+ 4f4:	0321                	c.addi	t1,8
+ 4f6:	0901                	c.addi	s2,0
+ 4f8:	000c                	.2byte	0xc
+ 4fa:	0501                	c.addi	a0,0
+ 4fc:	0311                	c.addi	t1,4
+ 4fe:	0901                	c.addi	s2,0
+	pats->rings = 6;
+ 500:	0010                	.2byte	0x10
+ 502:	0501                	c.addi	a0,0
+ 504:	0901030f          	.4byte	0x901030f
+ 508:	000c                	.2byte	0xc
+ 50a:	0501                	c.addi	a0,0
+	pats->goat = 1; // hands down the goat
+ 50c:	0322                	c.slli	t1,0x8
+ 50e:	0905                	c.addi	s2,1
+ 510:	000c                	.2byte	0xc
+ 512:	0501                	c.addi	a0,0
+ 514:	0310                	c.addi4spn	a2,sp,384
+ 516:	0901                	c.addi	s2,0
+	pats->gronk = 87; // tide pods
+ 518:	0010                	.2byte	0x10
+ 51a:	0501                	c.addi	a0,0
+ 51c:	030c                	c.addi4spn	a1,sp,384
+ 51e:	0901                	c.addi	s2,0
+ 520:	000c                	.2byte	0xc
+ 522:	0501                	c.addi	a0,0
+	pats->edelman = 11; // the ironman, superbowl 53 mvp
+ 524:	0305                	c.addi	t1,1
+ 526:	0900                	c.addi4spn	s0,sp,144
+ 528:	0008                	.2byte	0x8
+ 52a:	0501                	c.addi	a0,0
+ 52c:	0019                	c.addi	zero,6
+ 52e:	0402                	c.slli64	s0
+	example_t* another = (example_t*)tj_malloc(sizeof(example_t));
+ 530:	0301                	c.addi	t1,0
+ 532:	0900                	c.addi4spn	s0,sp,144
+ 534:	0004                	.2byte	0x4
+ 536:	0501                	c.addi	a0,0
+ 538:	0302                	c.slli64	t1
+ 53a:	0901                	c.addi	s2,0
+ 53c:	000c                	.2byte	0xc
+ 53e:	0301                	c.addi	t1,0
+	tj_free(pats);
+ 540:	0901                	c.addi	s2,0
+ 542:	000c                	.2byte	0xc
+ 544:	0501                	c.addi	a0,0
+ 546:	0309                	c.addi	t1,2
+ 548:	0901                	c.addi	s2,0
+ 54a:	000c                	.2byte	0xc
+	example_t* third = (example_t*)tj_malloc(sizeof(example_t));
+ 54c:	0501                	c.addi	a0,0
+ 54e:	0301                	c.addi	t1,0
+ 550:	0901                	c.addi	s2,0
+ 552:	0004                	.2byte	0x4
+ 554:	0901                	c.addi	s2,0
+ 556:	0014                	.2byte	0x14
+ 558:	0100                	c.addi4spn	s0,sp,128
+ 55a:	01              	Address 0x000000000000055a is out of bounds.
+
+
+Disassembly of section .debug_line_str:
+
+00000000 <.debug_line_str>:
+	nop
+   0:	6d6f682f          	.4byte	0x6d6f682f
+	la ra, exit
+   4:	2f65                	c.jal	7bc <heap+0xdc>
+   6:	7961                	c.lui	s2,0xffff8
+   8:	742d616b          	.4byte	0x742d616b
+	la sp, _sp
+   c:	757a7573          	csrrci	a0,0x757,20
+  10:	442f696b          	.4byte	0x442f696b
+	mv s0, sp
+  14:	6d75636f          	jal	t1,56eea <_sp+0x46eea>
+	la gp, __global_pointer$
+  18:	6e65                	c.lui	t3,0x19
+  1a:	7374                	.2byte	0x7374
+  1c:	6f72702f          	.4byte	0x6f72702f
+	li tp, 0
+  20:	656a                	.2byte	0x656a
+  22:	762d7463          	bgeu	s10,sp,78a <heap+0xaa>
+	li t0, 0
+  26:	6f2d                	c.lui	t5,0xb
+	li t1, 0
+  28:	6570                	.2byte	0x6570
+  2a:	2d6e                	.2byte	0x2d6e
+	li t2, 0
+  2c:	6562                	.2byte	0x6562
+  2e:	6174                	.2byte	0x6174
+	li s1, 0
+  30:	462d                	c.li	a2,11
+  32:	452d726f          	jal	tp,d7484 <_sp+0xc7484>
+	li a0, 0
+  36:	37344543          	.4byte	0x37344543
+	li a1, 0
+  3a:	3030                	.2byte	0x3030
+	li a2, 0
+  3c:	2f4a                	.2byte	0x2f4a
+  3e:	6974706f          	jal	zero,47ed4 <_sp+0x37ed4>
+	li a3, 0
+  42:	696d                	c.lui	s2,0x1b
+	li a4, 0
+  44:	617a                	.2byte	0x617a
+  46:	6974                	.2byte	0x6974
+	li a5, 0
+  48:	63006e6f          	jal	t3,6678 <_ebss+0x1f8c>
+	li a6, 0
+  4c:	7472                	.2byte	0x7472
+  4e:	732e                	.2byte	0x732e
+	li a7, 0
+  50:	7400                	.2byte	0x7400
+  52:	7365                	c.lui	t1,0xffff9
+	li s2, 0
+  54:	5f74                	c.lw	a3,124(a4)
+  56:	7270                	.2byte	0x7270
+	li s3, 0
+  58:	2f73676f          	jal	a4,36b4e <_sp+0x26b4e>
+	li s4, 0
+  5c:	6162                	.2byte	0x6162
+  5e:	5f636973          	csrrsi	s2,0x5f6,6
+	li s5, 0
+  62:	616d                	c.addi16sp	sp,240
+	li s6, 0
+  64:	6c6c                	.2byte	0x6c6c
+  66:	632e636f          	jal	t1,e6698 <_sp+0xd6698>
+	li s7, 0
+  6a:	7400                	.2byte	0x7400
+	li s8, 0
+  6c:	7365                	c.lui	t1,0xffff9
+  6e:	5f74                	c.lw	a3,124(a4)
+	li s9, 0
+  70:	7270                	.2byte	0x7270
+  72:	0073676f          	jal	a4,36878 <_sp+0x26878>
+	li s10, 0
+  76:	74706f2f          	.4byte	0x74706f2f
+	li s11, 0
+  7a:	7369722f          	.4byte	0x7369722f
+	li t3, 0
+  7e:	32337663          	bgeu	t1,gp,3aa <tj_malloc+0xba>
+	li t4, 0
+  82:	7369722f          	.4byte	0x7369722f
+	li t5, 0
+  86:	32337663          	bgeu	t1,gp,3b2 <tj_malloc+0xc2>
+	li t6, 0
+  8a:	752d                	c.lui	a0,0xfffeb
+	j main
+  8c:	6b6e                	.2byte	0x6b6e
+  8e:	6f6e                	.2byte	0x6f6e
+  90:	652d6e77          	.4byte	0x652d6e77
+  94:	666c                	.2byte	0x666c
+  96:	636e692f          	.4byte	0x636e692f
+  9a:	756c                	.2byte	0x756c
+  9c:	6564                	.2byte	0x6564
+  9e:	63616d2f          	.4byte	0x63616d2f
+	la sp, _sp
+  a2:	6968                	.2byte	0x6968
+  a4:	656e                	.2byte	0x656e
+  a6:	2f00                	.2byte	0x2f00
+	sw a0, -8(sp)
+  a8:	2f74706f          	jal	zero,47b9e <_sp+0x37b9e>
+	nop
+  ac:	6972                	.2byte	0x6972
+  ae:	33766373          	csrrsi	t1,mhpmevent23,12
+	wfi
+  b2:	2f32                	.2byte	0x2f32
+void tj_free(void *mem) {
+  b4:	6972                	.2byte	0x6972
+  b6:	33766373          	csrrsi	t1,mhpmevent23,12
+  ba:	2d32                	.2byte	0x2d32
+  bc:	6e75                	c.lui	t3,0x1d
+  be:	776f6e6b          	.4byte	0x776f6e6b
+  c2:	2d6e                	.2byte	0x2d6e
+  c4:	6c65                	c.lui	s8,0x19
+  c6:	2f66                	.2byte	0x2f66
+	if (mem < (void *)heap || mem > (void *)(heap + sizeof(heap)))
+  c8:	6e69                	c.lui	t3,0x1a
+  ca:	64756c63          	bltu	a0,t2,722 <heap+0x42>
+  ce:	2f65                	c.jal	886 <heap+0x1a6>
+  d0:	00737973          	csrrci	s2,0x7,6
+  d4:	74706f2f          	.4byte	0x74706f2f
+  d8:	7369722f          	.4byte	0x7369722f
+  dc:	32337663          	bgeu	t1,gp,408 <tj_malloc+0x118>
+  e0:	62696c2f          	.4byte	0x62696c2f
+  e4:	6363672f          	.4byte	0x6363672f
+		exit(1);
+  e8:	7369722f          	.4byte	0x7369722f
+  ec:	32337663          	bgeu	t1,gp,418 <tj_malloc+0x128>
+  f0:	752d                	c.lui	a0,0xfffeb
+  f2:	6b6e                	.2byte	0x6b6e
+	bp = (Header *)mem - 1; //point to block header
+  f4:	6f6e                	.2byte	0x6f6e
+  f6:	652d6e77          	.4byte	0x652d6e77
+  fa:	666c                	.2byte	0x666c
+  fc:	2e31312f          	.4byte	0x2e31312f
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 100:	2e31                	c.jal	41c <tj_malloc+0x12c>
+ 102:	2f30                	.2byte	0x2f30
+ 104:	6e69                	c.lui	t3,0x1a
+ 106:	64756c63          	bltu	a0,t2,75e <heap+0x7e>
+ 10a:	0065                	c.addi	zero,25
+ 10c:	74706f2f          	.4byte	0x74706f2f
+		if (p >= p->next && (bp > p || bp < p->next))
+ 110:	7369722f          	.4byte	0x7369722f
+ 114:	32337663          	bgeu	t1,gp,440 <tj_malloc+0x150>
+ 118:	7369722f          	.4byte	0x7369722f
+ 11c:	32337663          	bgeu	t1,gp,448 <tj_malloc+0x158>
+ 120:	752d                	c.lui	a0,0xfffeb
+ 122:	6b6e                	.2byte	0x6b6e
+ 124:	6f6e                	.2byte	0x6f6e
+ 126:	652d6e77          	.4byte	0x652d6e77
+ 12a:	666c                	.2byte	0x666c
+ 12c:	636e692f          	.4byte	0x636e692f
+ 130:	756c                	.2byte	0x756c
+ 132:	6564                	.2byte	0x6564
+ 134:	7400                	.2byte	0x7400
+ 136:	5f6a                	c.lwsp	t5,184(sp)
+ 138:	616d                	c.addi16sp	sp,240
+ 13a:	6c6c                	.2byte	0x6c6c
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 13c:	682e636f          	jal	t1,e67be <_sp+0xd67be>
+ 140:	5f00                	c.lw	s0,56(a4)
+ 142:	6564                	.2byte	0x6564
+ 144:	6166                	.2byte	0x6166
+ 146:	6c75                	c.lui	s8,0x1d
+ 148:	5f74                	c.lw	a3,124(a4)
+ 14a:	7974                	.2byte	0x7974
+ 14c:	6570                	.2byte	0x6570
+ 14e:	00682e73          	csrrs	t3,0x6,a6
+ 152:	735f 6474 6e69      	.byte	0x5f, 0x73, 0x74, 0x64, 0x69, 0x6e
+ 158:	2e74                	.2byte	0x2e74
+ 15a:	0068                	c.addi4spn	a0,sp,12
+ 15c:	64647473          	csrrci	s0,0x646,8
+ 160:	6665                	c.lui	a2,0x19
+ 162:	682e                	.2byte	0x682e
+	if (bp + bp->size == p->next) { //join to upper nbr
+ 164:	7300                	.2byte	0x7300
+ 166:	7274                	.2byte	0x7274
+ 168:	6e69                	c.lui	t3,0x1a
+ 16a:	00682e67          	.4byte	0x682e67
+ 16e:	6c647473          	csrrci	s0,0x6c6,8
+ 172:	6269                	c.lui	tp,0x1a
+ 174:	682e                	.2byte	0x682e
+	...
+
+Disassembly of section .debug_info:
+
+00000000 <.debug_info>:
+	nop
+   0:	001f 0000 0005      	.byte	0x1f, 0x00, 0x00, 0x00, 0x05, 0x00
+	la ra, exit
+   6:	0401                	c.addi	s0,0
+   8:	0000                	c.unimp
+   a:	0000                	c.unimp
+	la sp, _sp
+   c:	0001                	c.addi	zero,0
+   e:	0000                	c.unimp
+  10:	0c00                	c.addi4spn	s0,sp,528
+  12:	0000                	c.unimp
+	mv s0, sp
+  14:	0000                	c.unimp
+  16:	0000                	c.unimp
+	la gp, __global_pointer$
+  18:	0600                	c.addi4spn	s0,sp,768
+  1a:	0000                	c.unimp
+  1c:	5100                	c.lw	s0,32(a0)
+  1e:	0000                	c.unimp
+	li tp, 0
+  20:	0100                	c.addi4spn	s0,sp,128
+  22:	2b80                	.2byte	0x2b80
+	li t0, 0
+  24:	05000003          	lb	zero,80(zero) # 50 <crt+0x50>
+	li t1, 0
+  28:	0100                	c.addi4spn	s0,sp,128
+  2a:	1204                	c.addi4spn	s1,sp,288
+	li t2, 0
+  2c:	0000                	c.unimp
+  2e:	0b00                	c.addi4spn	s0,sp,400
+	li s1, 0
+  30:	00000193          	addi	gp,zero,0
+	li a0, 0
+  34:	511d                	c.li	sp,-25
+  36:	0000                	c.unimp
+	li a1, 0
+  38:	0000                	c.unimp
+  3a:	0000                	c.unimp
+	li a2, 0
+  3c:	b400                	.2byte	0xb400
+  3e:	0000                	c.unimp
+	li a3, 0
+  40:	2400                	.2byte	0x2400
+  42:	0005                	c.addi	zero,1
+	li a4, 0
+  44:	2800                	.2byte	0x2800
+  46:	0001                	c.addi	zero,0
+	li a5, 0
+  48:	0100                	c.addi4spn	s0,sp,128
+  4a:	0601                	c.addi	a2,0 # 19000 <_sp+0x9000>
+	li a6, 0
+  4c:	00e9                	c.addi	ra,26
+  4e:	0000                	c.unimp
+	li a7, 0
+  50:	0101                	c.addi	sp,0
+  52:	e708                	.2byte	0xe708
+	li s2, 0
+  54:	0000                	c.unimp
+  56:	0100                	c.addi4spn	s0,sp,128
+	li s3, 0
+  58:	0502                	c.slli64	a0
+  5a:	0170                	c.addi4spn	a2,sp,140
+	li s4, 0
+  5c:	0000                	c.unimp
+  5e:	fc04                	.2byte	0xfc04
+	li s5, 0
+  60:	0000                	c.unimp
+  62:	0300                	c.addi4spn	s0,sp,384
+	li s6, 0
+  64:	1939                	c.addi	s2,-18 # 1afee <_sp+0xafee>
+  66:	00000047          	.4byte	0x47
+	li s7, 0
+  6a:	0201                	c.addi	tp,0 # 1a000 <_sp+0xa000>
+	li s8, 0
+  6c:	0000cc07          	.4byte	0xcc07
+	li s9, 0
+  70:	0100                	c.addi4spn	s0,sp,128
+  72:	0504                	c.addi4spn	s1,sp,640
+	li s10, 0
+  74:	0152                	c.slli	sp,0x14
+  76:	0000                	c.unimp
+	li s11, 0
+  78:	0401                	c.addi	s0,0
+  7a:	00013607          	.4byte	0x13607
+	li t3, 0
+  7e:	0100                	c.addi4spn	s0,sp,128
+	li t4, 0
+  80:	0508                	c.addi4spn	a0,sp,640
+  82:	014d                	c.addi	sp,19
+	li t5, 0
+  84:	0000                	c.unimp
+  86:	0801                	c.addi	a6,0
+	li t6, 0
+  88:	00013107          	.4byte	0x13107
+	j main
+  8c:	0c00                	c.addi4spn	s0,sp,528
+  8e:	0504                	c.addi4spn	s1,sp,640
+  90:	6e69                	c.lui	t3,0x1a
+  92:	0074                	c.addi4spn	a3,sp,12
+  94:	0401                	c.addi	s0,0
+  96:	00013b07          	.4byte	0x13b07
+  9a:	0400                	c.addi4spn	s0,sp,512
+  9c:	00fe                	c.slli	ra,0x1f
+  9e:	0000                	c.unimp
+	la sp, _sp
+  a0:	2404                	.2byte	0x2404
+  a2:	3b14                	.2byte	0x3b14
+  a4:	0000                	c.unimp
+  a6:	0400                	c.addi4spn	s0,sp,512
+	sw a0, -8(sp)
+  a8:	0064                	c.addi4spn	s1,sp,12
+  aa:	0000                	c.unimp
+	nop
+  ac:	d105                	c.beqz	a0,ffffffcc <_sp+0xfffeffcc>
+  ae:	00007117          	auipc	sp,0x7
+	wfi
+  b2:	0100                	c.addi4spn	s0,sp,128
+void tj_free(void *mem) {
+  b4:	0410                	c.addi4spn	a2,sp,512
+  b6:	00000187          	.4byte	0x187
+  ba:	040d                	c.addi	s0,3
+  bc:	0101                	c.addi	sp,0 # 70ae <_ebss+0x29c2>
+  be:	f008                	.2byte	0xf008
+  c0:	0000                	c.unimp
+  c2:	0e00                	c.addi4spn	s0,sp,784
+  c4:	002d                	c.addi	zero,11
+  c6:	0000                	c.unimp
+	if (mem < (void *)heap || mem > (void *)(heap + sizeof(heap)))
+  c8:	00b1                	c.addi	ra,12
+  ca:	0000                	c.unimp
+  cc:	0000710f          	.4byte	0x710f
+  d0:	ff00                	.2byte	0xff00
+  d2:	4802003f 01000001 	.8byte	0x10000014802003f
+  da:	161e                	c.slli	a2,0x27
+  dc:	00a0                	c.addi4spn	s0,sp,72
+  de:	0000                	c.unimp
+  e0:	0305                	c.addi	t1,1 # ffff9001 <_sp+0xfffe9001>
+  e2:	06e0                	c.addi4spn	s0,sp,844
+  e4:	0000                	c.unimp
+  e6:	6502                	.2byte	0x6502
+		exit(1);
+  e8:	0001                	c.addi	zero,0
+  ea:	0100                	c.addi4spn	s0,sp,128
+  ec:	0e1f 0097 0000      	.byte	0x1f, 0x0e, 0x97, 0x00, 0x00, 0x00
+  f2:	0305                	c.addi	t1,1
+	bp = (Header *)mem - 1; //point to block header
+  f4:	06c0                	c.addi4spn	s0,sp,836
+  f6:	0000                	c.unimp
+  f8:	9502                	c.jalr	a0
+  fa:	0000                	c.unimp
+  fc:	0100                	c.addi4spn	s0,sp,128
+  fe:	1520                	c.addi4spn	s0,sp,680
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 100:	0071                	c.addi	zero,28
+ 102:	0000                	c.unimp
+ 104:	0305                	c.addi	t1,1
+ 106:	06c4                	c.addi4spn	s1,sp,836
+ 108:	0000                	c.unimp
+ 10a:	5d09                	c.li	s10,-30
+ 10c:	0000                	c.unimp
+ 10e:	0800                	c.addi4spn	s0,sp,16
+		if (p >= p->next && (bp > p || bp < p->next))
+ 110:	2201                	c.jal	210 <tj_free+0x15c>
+ 112:	010e                	c.slli	sp,0x3
+ 114:	0000                	c.unimp
+ 116:	00006b03          	.4byte	0x6b03
+ 11a:	0100                	c.addi4spn	s0,sp,128
+ 11c:	010e1123          	sh	a6,2(t3) # 1a002 <_sp+0xa002>
+ 120:	0000                	c.unimp
+ 122:	0300                	c.addi4spn	s0,sp,384
+ 124:	00b6                	c.slli	ra,0xd
+ 126:	0000                	c.unimp
+ 128:	2401                	c.jal	328 <tj_malloc+0x38>
+ 12a:	0000710f          	.4byte	0x710f
+ 12e:	0400                	c.addi4spn	s0,sp,512
+ 130:	0700                	c.addi4spn	s0,sp,896
+ 132:	000000e7          	jalr	ra,0(zero) # 0 <crt>
+ 136:	0d04                	c.addi4spn	s1,sp,656
+ 138:	0002                	c.slli64	zero
+ 13a:	0100                	c.addi4spn	s0,sp,128
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 13c:	0325                	c.addi	t1,9
+ 13e:	000000e7          	jalr	ra,0(zero) # 0 <crt>
+ 142:	2602                	.2byte	0x2602
+ 144:	0001                	c.addi	zero,0
+ 146:	0100                	c.addi4spn	s0,sp,128
+ 148:	0f26                	c.slli	t5,0x9
+ 14a:	00000113          	addi	sp,zero,0
+ 14e:	0305                	c.addi	t1,1
+ 150:	46e0                	c.lw	s0,76(a3)
+ 152:	0000                	c.unimp
+ 154:	8702                	c.jr	a4
+ 156:	0000                	c.unimp
+ 158:	0100                	c.addi4spn	s0,sp,128
+ 15a:	01431027          	.4byte	0x1431027
+ 15e:	0000                	c.unimp
+ 160:	0305                	c.addi	t1,1
+ 162:	46e8                	c.lw	a0,76(a3)
+	if (bp + bp->size == p->next) { //join to upper nbr
+ 164:	0000                	c.unimp
+ 166:	00011307          	.4byte	0x11307
+ 16a:	0900                	c.addi4spn	s0,sp,144
+ 16c:	0112                	c.slli	sp,0x4
+ 16e:	0000                	c.unimp
+ 170:	0210                	c.addi4spn	a2,sp,256
+ 172:	960d                	c.srai	a2,0x23
+ 174:	0001                	c.addi	zero,0
+ 176:	0300                	c.addi4spn	s0,sp,384
+ 178:	00c6                	c.slli	ra,0x11
+ 17a:	0000                	c.unimp
+ 17c:	0e02                	c.slli64	t3
+ 17e:	6a06                	.2byte	0x6a06
+ 180:	0000                	c.unimp
+ 182:	0000                	c.unimp
+		bp->size += p->next->size;
+ 184:	0000aa03          	lw	s4,0(ra)
+ 188:	0200                	c.addi4spn	s0,sp,256
+ 18a:	00780b0f          	.4byte	0x780b0f
+ 18e:	0000                	c.unimp
+ 190:	0304                	c.addi4spn	s1,sp,384
+ 192:	0182                	c.slli64	gp
+ 194:	0000                	c.unimp
+ 196:	1002                	c.slli	zero,0x20
+ 198:	00019607          	.4byte	0x19607
+ 19c:	0600                	c.addi4spn	s0,sp,768
+ 19e:	00012b03          	lw	s6,0(sp)
+ 1a2:	0200                	c.addi4spn	s0,sp,256
+		bp->next = p->next->next;
+ 1a4:	0611                	c.addi	a2,4
+ 1a6:	006a                	c.slli	zero,0x1a
+ 1a8:	0000                	c.unimp
+ 1aa:	0308                	c.addi4spn	a0,sp,384
+ 1ac:	017a                	c.slli	sp,0x1e
+ 1ae:	0000                	c.unimp
+ 1b0:	1202                	c.slli	tp,0x20
+ 1b2:	6a06                	.2byte	0x6a06
+ 1b4:	0000                	c.unimp
+ 1b6:	0c00                	c.addi4spn	s0,sp,528
+ 1b8:	0100                	c.addi4spn	s0,sp,128
+ 1ba:	0201                	c.addi	tp,0 # 0 <crt>
+		bp->next = p->next; //insert bp after p in the linked list
+ 1bc:	0070                	c.addi4spn	a2,sp,12
+ 1be:	0000                	c.unimp
+ 1c0:	1c04                	c.addi4spn	s1,sp,560
+ 1c2:	0001                	c.addi	zero,0
+ 1c4:	0200                	c.addi4spn	s0,sp,256
+ 1c6:	01480313          	addi	t1,a6,20
+ 1ca:	0000                	c.unimp
+	if (p + p->size == bp) { //join to lower nbr
+ 1cc:	f510                	.2byte	0xf510
+ 1ce:	0000                	c.unimp
+ 1d0:	0600                	c.addi4spn	s0,sp,768
+ 1d2:	0921                	c.addi	s2,8
+ 1d4:	00000097          	auipc	ra,0x0
+ 1d8:	01c9                	c.addi	gp,18 # eb2 <__global_pointer$+0x12>
+ 1da:	0000                	c.unimp
+ 1dc:	9706                	c.add	a4,ra
+ 1de:	0000                	c.unimp
+ 1e0:	0600                	c.addi4spn	s0,sp,768
+ 1e2:	006a                	c.slli	zero,0x1a
+ 1e4:	0000                	c.unimp
+ 1e6:	8406                	c.mv	s0,ra
+		p->size += bp->size;
+ 1e8:	0000                	c.unimp
+ 1ea:	0000                	c.unimp
+ 1ec:	c111                	c.beqz	a0,1f0 <tj_free+0x13c>
+ 1ee:	0000                	c.unimp
+ 1f0:	0700                	c.addi4spn	s0,sp,896
+ 1f2:	065d                	c.addi	a2,23
+ 1f4:	000001db          	.4byte	0x1db
+ 1f8:	6a06                	.2byte	0x6a06
+ 1fa:	0000                	c.unimp
+ 1fc:	0000                	c.unimp
+ 1fe:	0d12                	c.slli	s10,0x4
+ 200:	0001                	c.addi	zero,0
+ 202:	0200                	c.addi4spn	s0,sp,256
+		p->next = bp->next;
+ 204:	0515                	c.addi	a0,5 # fffeb005 <_sp+0xfffdb005>
+ 206:	006a                	c.slli	zero,0x1a
+ 208:	0000                	c.unimp
+ 20a:	04d4                	c.addi4spn	a3,sp,580
+ 20c:	0000                	c.unimp
+ 20e:	0104                	c.addi4spn	s1,sp,128
+ 210:	0000                	c.unimp
+ 212:	9c01                	.2byte	0x9c01
+ 214:	0232                	c.slli	tp,0xc
+ 216:	0000                	c.unimp
+		p->next = bp; //again, if the free list is just the base
+ 218:	1402                	c.slli	s0,0x20
+ 21a:	0002                	c.slli64	zero
+ 21c:	0200                	c.addi4spn	s0,sp,256
+ 21e:	0d16                	c.slli	s10,0x5
+ 220:	0232                	c.slli	tp,0xc
+ 222:	0000                	c.unimp
+	freep = p;
+ 224:	9102                	c.jalr	sp
+ 226:	026c                	c.addi4spn	a1,sp,268
+ 228:	00df 0000 2302      	.byte	0xdf, 0x00, 0x00, 0x00, 0x02, 0x23
+ 22e:	320d                	c.jal	fffffb50 <_sp+0xfffefb50>
+}
+ 230:	0002                	c.slli64	zero
+ 232:	0200                	c.addi4spn	s0,sp,256
+ 234:	6891                	c.lui	a7,0x4
+ 236:	0702                	c.slli64	a4
+ 238:	0001                	c.addi	zero,0
+ 23a:	0200                	c.addi4spn	s0,sp,256
+ 23c:	0d28                	c.addi4spn	a0,sp,664
+ 23e:	0232                	c.slli	tp,0xc
+ 240:	0000                	c.unimp
+ 242:	9102                	c.jalr	sp
+static Header* getmoremem(unsigned int total_size) {
+ 244:	0264                	c.addi4spn	s1,sp,268
+ 246:	0076                	c.slli	zero,0x1d
+ 248:	0000                	c.unimp
+ 24a:	2f02                	.2byte	0x2f02
+ 24c:	320d                	c.jal	fffffb6e <_sp+0xfffefb6e>
+ 24e:	0002                	c.slli64	zero
+ 250:	0200                	c.addi4spn	s0,sp,256
+ 252:	6091                	c.lui	ra,0x4
+ 254:	0700                	c.addi4spn	s0,sp,896
+ 256:	019d                	c.addi	gp,7 # ea7 <__global_pointer$+0x7>
+	if (avail_mem < total_size) return NULL; //gg, we ran out of mem :P
+ 258:	0000                	c.unimp
+ 25a:	5b0a                	c.lwsp	s6,160(sp)
+ 25c:	0001                	c.addi	zero,0
+ 25e:	8400                	.2byte	0x8400
+ 260:	00000097          	auipc	ra,0x0
+ 264:	0484                	c.addi4spn	s1,sp,576
+ 266:	0000                	c.unimp
+ 268:	0050                	c.addi4spn	a2,sp,4
+ 26a:	0000                	c.unimp
+ 26c:	9c01                	.2byte	0x9c01
+ 26e:	026c                	c.addi4spn	a1,sp,268
+	Header* up = (Header *)next_index;
+ 270:	0000                	c.unimp
+ 272:	b608                	.2byte	0xb608
+ 274:	0000                	c.unimp
+ 276:	8400                	.2byte	0x8400
+ 278:	711e                	.2byte	0x711e
+ 27a:	0000                	c.unimp
+	next_index += total_size; //allocate the block
+ 27c:	0200                	c.addi4spn	s0,sp,256
+ 27e:	5c91                	c.li	s9,-28
+ 280:	6d05                	c.lui	s10,0x1
+ 282:	6d65                	c.lui	s10,0x19
+ 284:	8500                	.2byte	0x8500
+ 286:	9708                	.2byte	0x9708
+ 288:	0000                	c.unimp
+ 28a:	0200                	c.addi4spn	s0,sp,256
+ 28c:	6c91                	c.lui	s9,0x4
+ 28e:	0a00                	c.addi4spn	s0,sp,272
+ 290:	007d                	c.addi	zero,31
+ 292:	0000                	c.unimp
+	avail_mem -= total_size; //deduct from avail mem;
+ 294:	9758                	.2byte	0x9758
+ 296:	0000                	c.unimp
+ 298:	f000                	.2byte	0xf000
+ 29a:	0002                	c.slli64	zero
+ 29c:	9400                	.2byte	0x9400
+ 29e:	0001                	c.addi	zero,0
+ 2a0:	0100                	c.addi4spn	s0,sp,128
+ 2a2:	bd9c                	.2byte	0xbd9c
+ 2a4:	0002                	c.slli64	zero
+ 2a6:	0800                	c.addi4spn	s0,sp,16
+ 2a8:	00b6                	c.slli	ra,0xd
+ 2aa:	0000                	c.unimp
+	up->size = total_size - sizeof(Header); //set the size right
+ 2ac:	1e58                	c.addi4spn	a4,sp,820
+ 2ae:	0071                	c.addi	zero,28
+ 2b0:	0000                	c.unimp
+ 2b2:	9102                	c.jalr	sp
+ 2b4:	055c                	c.addi4spn	a5,sp,644
+ 2b6:	0070                	c.addi4spn	a2,sp,12
+ 2b8:	0a62                	c.slli	s4,0x18
+ 2ba:	00000143          	.4byte	0x143
+	tj_free((void *)(++up)); //append the new block to the free list first
+ 2be:	9102                	c.jalr	sp
+ 2c0:	026c                	c.addi4spn	a1,sp,268
+ 2c2:	000000bb          	.4byte	0xbb
+ 2c6:	6201                	.2byte	0x6201
+ 2c8:	430e                	c.lwsp	t1,192(sp)
+ 2ca:	0001                	c.addi	zero,0
+ 2cc:	0200                	c.addi4spn	s0,sp,256
+ 2ce:	6891                	c.lui	a7,0x4
+ 2d0:	b002                	.2byte	0xb002
+ 2d2:	0000                	c.unimp
+	return freep;
+ 2d4:	0100                	c.addi4spn	s0,sp,128
+ 2d6:	0f64                	c.addi4spn	s1,sp,924
+ 2d8:	0071                	c.addi	zero,28
+ 2da:	0000                	c.unimp
+}
+ 2dc:	9102                	c.jalr	sp
+ 2de:	0064                	c.addi4spn	s1,sp,12
+ 2e0:	00009f13          	slli	t5,ra,0x0
+ 2e4:	0100                	c.addi4spn	s0,sp,128
+ 2e6:	104e                	c.slli	zero,0x33
+ 2e8:	00000143          	.4byte	0x143
+ 2ec:	0244                	c.addi4spn	s1,sp,260
+ 2ee:	0000                	c.unimp
+void *tj_malloc(unsigned int size) {
+ 2f0:	00ac                	c.addi4spn	a1,sp,72
+ 2f2:	0000                	c.unimp
+ 2f4:	9c01                	.2byte	0x9c01
+ 2f6:	000002f3          	.4byte	0x2f3
+ 2fa:	b008                	.2byte	0xb008
+ 2fc:	0000                	c.unimp
+ 2fe:	4e00                	c.lw	s0,24(a2)
+ 300:	7128                	.2byte	0x7128
+ 302:	0000                	c.unimp
+	if (size > sizeof(heap)) return NULL;
+ 304:	0200                	c.addi4spn	s0,sp,256
+ 306:	5c91                	c.li	s9,-28
+ 308:	7505                	c.lui	a0,0xfffe1
+ 30a:	0070                	c.addi4spn	a2,sp,12
+ 30c:	0a50                	c.addi4spn	a2,sp,276
+ 30e:	00000143          	.4byte	0x143
+ 312:	9102                	c.jalr	sp
+ 314:	006c                	c.addi4spn	a1,sp,12
+ 316:	8d14                	.2byte	0x8d14
+	if ((size & 3) != 0) {
+ 318:	0000                	c.unimp
+ 31a:	0100                	c.addi4spn	s0,sp,128
+ 31c:	062a                	c.slli	a2,0xa
+ 31e:	00b4                	c.addi4spn	a3,sp,72
+ 320:	0000                	c.unimp
+ 322:	0190                	c.addi4spn	a2,sp,192
+		size = size + 4 - (size & 3);
+ 324:	0000                	c.unimp
+ 326:	9c01                	.2byte	0x9c01
+ 328:	6d15                	c.lui	s10,0x5
+ 32a:	6d65                	c.lui	s10,0x19
+ 32c:	0100                	c.addi4spn	s0,sp,128
+ 32e:	142a                	c.slli	s0,0x2a
+ 330:	00000097          	auipc	ra,0x0
+	unsigned int total_size = size + sizeof(Header); //need to include the header size as well
+ 334:	9102                	c.jalr	sp
+ 336:	055c                	c.addi4spn	a5,sp,644
+ 338:	7062                	.2byte	0x7062
+ 33a:	3000                	.2byte	0x3000
+ 33c:	430a                	c.lwsp	t1,128(sp)
+ 33e:	0001                	c.addi	zero,0
+	prevp = freep;
+ 340:	0200                	c.addi4spn	s0,sp,256
+ 342:	6891                	c.lui	a7,0x4
+ 344:	7005                	c.lui	zero,0xfffe1
+ 346:	3000                	.2byte	0x3000
+ 348:	0001430f          	.4byte	0x1430f
+	if (prevp == NULL) {
+ 34c:	0200                	c.addi4spn	s0,sp,256
+ 34e:	6c91                	c.lui	s9,0x4
+	...
+
+Disassembly of section .debug_abbrev:
+
+00000000 <.debug_abbrev>:
+	nop
+   0:	1101                	c.addi	sp,-32
+   2:	1000                	c.addi4spn	s0,sp,32
+	la ra, exit
+   4:	03175517          	auipc	a0,0x3175
+   8:	1b0e                	c.slli	s6,0x23
+   a:	250e                	.2byte	0x250e
+	la sp, _sp
+   c:	130e                	c.slli	t1,0x23
+   e:	0005                	c.addi	zero,1
+  10:	0000                	c.unimp
+  12:	2401                	c.jal	212 <tj_free+0x15e>
+	mv s0, sp
+  14:	0b00                	c.addi4spn	s0,sp,400
+  16:	030b3e0b          	.4byte	0x30b3e0b
+	la gp, __global_pointer$
+  1a:	000e                	c.slli	zero,0x3
+  1c:	0200                	c.addi4spn	s0,sp,256
+  1e:	0034                	c.addi4spn	a3,sp,8
+	li tp, 0
+  20:	0b3a0e03          	lb	t3,179(s4)
+	li t0, 0
+  24:	0b390b3b          	.4byte	0xb390b3b
+	li t1, 0
+  28:	1349                	c.addi	t1,-14
+  2a:	1802                	c.slli	a6,0x20
+	li t2, 0
+  2c:	0000                	c.unimp
+  2e:	03000d03          	lb	s10,48(zero) # 30 <crt+0x30>
+	li s1, 0
+  32:	3a0e                	.2byte	0x3a0e
+	li a0, 0
+  34:	390b3b0b          	.4byte	0x390b3b0b
+	li a1, 0
+  38:	3813490b          	.4byte	0x3813490b
+	li a2, 0
+  3c:	0400000b          	.4byte	0x400000b
+	li a3, 0
+  40:	0016                	c.slli	zero,0x5
+  42:	0b3a0e03          	lb	t3,179(s4)
+	li a4, 0
+  46:	0b390b3b          	.4byte	0xb390b3b
+	li a5, 0
+  4a:	1349                	c.addi	t1,-14
+	li a6, 0
+  4c:	0000                	c.unimp
+  4e:	3405                	c.jal	fffffa6e <_sp+0xfffefa6e>
+	li a7, 0
+  50:	0300                	c.addi4spn	s0,sp,384
+  52:	3a08                	.2byte	0x3a08
+	li s2, 0
+  54:	0121                	c.addi	sp,8
+  56:	0b390b3b          	.4byte	0xb390b3b
+	li s3, 0
+  5a:	1349                	c.addi	t1,-14
+	li s4, 0
+  5c:	1802                	c.slli	a6,0x20
+  5e:	0000                	c.unimp
+	li s5, 0
+  60:	0506                	c.slli	a0,0x1
+  62:	4900                	c.lw	s0,16(a0)
+	li s6, 0
+  64:	07000013          	addi	zero,zero,112
+	li s7, 0
+  68:	210b000f          	.4byte	0x210b000f
+	li s8, 0
+  6c:	4904                	c.lw	s1,16(a0)
+  6e:	08000013          	addi	zero,zero,128
+	li s9, 0
+  72:	0005                	c.addi	zero,1
+	li s10, 0
+  74:	213a0e03          	lb	t3,531(s4)
+	li s11, 0
+  78:	3b01                	c.jal	fffffd88 <_sp+0xfffefd88>
+  7a:	490b390b          	.4byte	0x490b390b
+	li t3, 0
+  7e:	00180213          	addi	tp,a6,1
+	li t4, 0
+  82:	0900                	c.addi4spn	s0,sp,144
+	li t5, 0
+  84:	0e030113          	addi	sp,t1,224
+	li t6, 0
+  88:	0b3a0b0b          	.4byte	0xb3a0b0b
+	j main
+  8c:	21390b3b          	.4byte	0x21390b3b
+  90:	0110                	c.addi4spn	a2,sp,128
+  92:	0a000013          	addi	zero,zero,160
+  96:	012e                	c.slli	sp,0xb
+  98:	0e03193f 3b01213a 	.8byte	0x3b01213a0e03193f
+	la sp, _sp
+  a0:	0721390b          	.4byte	0x721390b
+  a4:	13491927          	.4byte	0x13491927
+	sw a0, -8(sp)
+  a8:	0111                	c.addi	sp,4
+  aa:	0612                	c.slli	a2,0x4
+	nop
+  ac:	1840                	c.addi4spn	s0,sp,52
+  ae:	197c                	c.addi4spn	a5,sp,188
+	wfi
+  b0:	1301                	c.addi	t1,-32
+  b2:	0000                	c.unimp
+void tj_free(void *mem) {
+  b4:	2501110b          	.4byte	0x2501110b
+  b8:	130e                	c.slli	t1,0x23
+  ba:	1b1f030b          	.4byte	0x1b1f030b
+  be:	111f 1201 1006      	.byte	0x1f, 0x11, 0x01, 0x12, 0x06, 0x10
+  c4:	0c000017          	auipc	zero,0xc000
+	if (mem < (void *)heap || mem > (void *)(heap + sizeof(heap)))
+  c8:	0024                	c.addi4spn	s1,sp,8
+  ca:	0b3e0b0b          	.4byte	0xb3e0b0b
+  ce:	00000803          	lb	a6,0(zero) # 0 <crt>
+  d2:	0f0d                	c.addi	t5,3 # b003 <_ebss+0x6917>
+  d4:	0b00                	c.addi4spn	s0,sp,400
+  d6:	0e00000b          	.4byte	0xe00000b
+  da:	0101                	c.addi	sp,0
+  dc:	1349                	c.addi	t1,-14
+  de:	1301                	c.addi	t1,-32
+  e0:	0000                	c.unimp
+  e2:	4900210f          	.4byte	0x4900210f
+  e6:	00052f13          	slti	t5,a0,0
+		exit(1);
+  ea:	1000                	c.addi4spn	s0,sp,32
+  ec:	012e                	c.slli	sp,0xb
+  ee:	0e03193f 0b3b0b3a 	.8byte	0xb3b0b3a0e03193f
+	bp = (Header *)mem - 1; //point to block header
+  f6:	0b39                	c.addi	s6,14
+  f8:	13491927          	.4byte	0x13491927
+  fc:	193c                	c.addi4spn	a5,sp,184
+  fe:	1301                	c.addi	t1,-32
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 100:	0000                	c.unimp
+ 102:	2e11                	c.jal	416 <tj_malloc+0x126>
+ 104:	3f01                	c.jal	14 <crt+0x14>
+ 106:	0319                	c.addi	t1,6
+ 108:	3a0e                	.2byte	0x3a0e
+ 10a:	390b3b0b          	.4byte	0x390b3b0b
+ 10e:	8719270b          	.4byte	0x8719270b
+		if (p >= p->next && (bp > p || bp < p->next))
+ 112:	1901                	c.addi	s2,-32
+ 114:	193c                	c.addi4spn	a5,sp,184
+ 116:	1301                	c.addi	t1,-32
+ 118:	0000                	c.unimp
+ 11a:	2e12                	.2byte	0x2e12
+ 11c:	3f01                	c.jal	2c <crt+0x2c>
+ 11e:	0319                	c.addi	t1,6
+ 120:	3a0e                	.2byte	0x3a0e
+ 122:	390b3b0b          	.4byte	0x390b3b0b
+ 126:	1113490b          	.4byte	0x1113490b
+ 12a:	1201                	c.addi	tp,-32 # ffffffe0 <_sp+0xfffeffe0>
+ 12c:	4006                	.2byte	0x4006
+ 12e:	7c18                	.2byte	0x7c18
+ 130:	0119                	c.addi	sp,6
+ 132:	13000013          	addi	zero,zero,304
+ 136:	012e                	c.slli	sp,0xb
+ 138:	0b3a0e03          	lb	t3,179(s4)
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 13c:	0b390b3b          	.4byte	0xb390b3b
+ 140:	13491927          	.4byte	0x13491927
+ 144:	0111                	c.addi	sp,4
+ 146:	0612                	c.slli	a2,0x4
+ 148:	1840                	c.addi4spn	s0,sp,52
+ 14a:	197c                	c.addi4spn	a5,sp,188
+ 14c:	1301                	c.addi	t1,-32
+ 14e:	0000                	c.unimp
+ 150:	2e14                	.2byte	0x2e14
+ 152:	3f01                	c.jal	62 <crt+0x62>
+ 154:	0319                	c.addi	t1,6
+ 156:	3a0e                	.2byte	0x3a0e
+ 158:	390b3b0b          	.4byte	0x390b3b0b
+ 15c:	1119270b          	.4byte	0x1119270b
+ 160:	1201                	c.addi	tp,-32 # ffffffe0 <_sp+0xfffeffe0>
+ 162:	4006                	.2byte	0x4006
+	if (bp + bp->size == p->next) { //join to upper nbr
+ 164:	7c18                	.2byte	0x7c18
+ 166:	0019                	c.addi	zero,6
+ 168:	1500                	c.addi4spn	s0,sp,672
+ 16a:	0005                	c.addi	zero,1
+ 16c:	0b3a0803          	lb	a6,179(s4)
+ 170:	0b390b3b          	.4byte	0xb390b3b
+ 174:	1349                	c.addi	t1,-14
+ 176:	1802                	c.slli	a6,0x20
+ 178:	0000                	c.unimp
+	...
+
+Disassembly of section .debug_aranges:
+
+00000000 <.debug_aranges>:
+	nop
+   0:	0024                	c.addi4spn	s1,sp,8
+   2:	0000                	c.unimp
+	la ra, exit
+   4:	0002                	c.slli64	zero
+   6:	0000                	c.unimp
+   8:	0000                	c.unimp
+   a:	0004                	.2byte	0x4
+	...
+	mv s0, sp
+  14:	0090                	c.addi4spn	a2,sp,64
+  16:	0000                	c.unimp
+	la gp, __global_pointer$
+  18:	00a0                	c.addi4spn	s0,sp,72
+  1a:	0000                	c.unimp
+  1c:	0014                	.2byte	0x14
+	...
+	li t0, 0
+  26:	0000                	c.unimp
+	li t1, 0
+  28:	001c                	.2byte	0x1c
+  2a:	0000                	c.unimp
+	li t2, 0
+  2c:	0002                	c.slli64	zero
+  2e:	00000023          	sb	zero,0(zero) # 0 <crt>
+	li s1, 0
+  32:	0004                	.2byte	0x4
+	li a0, 0
+  34:	0000                	c.unimp
+  36:	0000                	c.unimp
+	li a1, 0
+  38:	00b4                	c.addi4spn	a3,sp,72
+  3a:	0000                	c.unimp
+	li a2, 0
+  3c:	0524                	c.addi4spn	s1,sp,648
+	...
+
+Disassembly of section .debug_str:
+
+00000000 <.debug_str>:
+	nop
+   0:	2e747263          	bgeu	s0,t2,2e4 <getmoremem+0xa0>
+	la ra, exit
+   4:	682f0073          	.4byte	0x682f0073
+   8:	2f656d6f          	jal	s10,562fe <_sp+0x462fe>
+	la sp, _sp
+   c:	7961                	c.lui	s2,0xffff8
+   e:	742d616b          	.4byte	0x742d616b
+  12:	757a7573          	csrrci	a0,0x757,20
+	mv s0, sp
+  16:	442f696b          	.4byte	0x442f696b
+	la gp, __global_pointer$
+  1a:	6d75636f          	jal	t1,56ef0 <_sp+0x46ef0>
+  1e:	6e65                	c.lui	t3,0x19
+	li tp, 0
+  20:	7374                	.2byte	0x7374
+  22:	6f72702f          	.4byte	0x6f72702f
+	li t0, 0
+  26:	656a                	.2byte	0x656a
+	li t1, 0
+  28:	762d7463          	bgeu	s10,sp,790 <heap+0xb0>
+	li t2, 0
+  2c:	6f2d                	c.lui	t5,0xb
+  2e:	6570                	.2byte	0x6570
+	li s1, 0
+  30:	2d6e                	.2byte	0x2d6e
+  32:	6562                	.2byte	0x6562
+	li a0, 0
+  34:	6174                	.2byte	0x6174
+  36:	462d                	c.li	a2,11
+	li a1, 0
+  38:	452d726f          	jal	tp,d748a <_sp+0xc748a>
+	li a2, 0
+  3c:	37344543          	.4byte	0x37344543
+	li a3, 0
+  40:	3030                	.2byte	0x3030
+  42:	2f4a                	.2byte	0x2f4a
+	li a4, 0
+  44:	6974706f          	jal	zero,47eda <_sp+0x37eda>
+	li a5, 0
+  48:	696d                	c.lui	s2,0x1b
+  4a:	617a                	.2byte	0x617a
+	li a6, 0
+  4c:	6974                	.2byte	0x6974
+  4e:	47006e6f          	jal	t3,64be <_ebss+0x1dd2>
+	li a7, 0
+  52:	554e                	c.lwsp	a0,240(sp)
+	li s2, 0
+  54:	4120                	c.lw	s0,64(a0)
+  56:	2e322053          	.4byte	0x2e322053
+	li s3, 0
+  5a:	68003833          	.4byte	0x68003833
+	li s4, 0
+  5e:	6165                	c.addi16sp	sp,112
+	li s5, 0
+  60:	6564                	.2byte	0x6564
+  62:	0072                	c.slli	zero,0x1c
+	li s6, 0
+  64:	657a6973          	csrrsi	s2,0x657,20
+	li s7, 0
+  68:	745f 6e00 7865      	.byte	0x5f, 0x74, 0x00, 0x6e, 0x65, 0x78
+	li s8, 0
+  6e:	0074                	c.addi4spn	a3,sp,12
+	li s9, 0
+  70:	425f 6f6f 006c      	.byte	0x5f, 0x42, 0x6f, 0x6f, 0x6c, 0x00
+	li s10, 0
+  76:	616c                	.2byte	0x616c
+	li s11, 0
+  78:	6574                	.2byte	0x6574
+  7a:	74007473          	csrrci	s0,0x740,0
+	li t3, 0
+  7e:	5f6a                	c.lwsp	t5,184(sp)
+	li t4, 0
+  80:	616d                	c.addi16sp	sp,240
+  82:	6c6c                	.2byte	0x6c6c
+	li t5, 0
+  84:	6600636f          	jal	t1,66e4 <_ebss+0x1ff8>
+	li t6, 0
+  88:	6572                	.2byte	0x6572
+  8a:	7065                	c.lui	zero,0xffff9
+	j main
+  8c:	7400                	.2byte	0x7400
+  8e:	5f6a                	c.lwsp	t5,184(sp)
+  90:	7266                	.2byte	0x7266
+  92:	6565                	c.lui	a0,0x19
+  94:	6100                	.2byte	0x6100
+  96:	6176                	.2byte	0x6176
+  98:	6c69                	c.lui	s8,0x1a
+  9a:	6d5f 6d65 6700      	.byte	0x5f, 0x6d, 0x65, 0x6d, 0x00, 0x67
+	la sp, _sp
+  a0:	7465                	c.lui	s0,0xffff9
+  a2:	6f6d                	c.lui	t5,0x1b
+  a4:	6572                	.2byte	0x6572
+  a6:	656d                	c.lui	a0,0x1b
+	sw a0, -8(sp)
+  a8:	006d                	c.addi	zero,27
+  aa:	6972                	.2byte	0x6972
+	nop
+  ac:	676e                	.2byte	0x676e
+  ae:	6f740073          	.4byte	0x6f740073
+	wfi
+  b2:	6174                	.2byte	0x6174
+void tj_free(void *mem) {
+  b4:	5f6c                	c.lw	a1,124(a4)
+  b6:	657a6973          	csrrsi	s2,0x657,20
+  ba:	7000                	.2byte	0x7000
+  bc:	6572                	.2byte	0x6572
+  be:	7076                	.2byte	0x7076
+  c0:	6500                	.2byte	0x6500
+  c2:	6978                	.2byte	0x6978
+  c4:	0074                	c.addi4spn	a3,sp,12
+  c6:	7262                	.2byte	0x7262
+	if (mem < (void *)heap || mem > (void *)(heap + sizeof(heap)))
+  c8:	6461                	c.lui	s0,0x18
+  ca:	0079                	c.addi	zero,30
+  cc:	726f6873          	csrrsi	a6,0x726,30
+  d0:	2074                	.2byte	0x2074
+  d2:	6e75                	c.lui	t3,0x1d
+  d4:	6e676973          	csrrsi	s2,0x6e6,14
+  d8:	6465                	c.lui	s0,0x19
+  da:	6920                	.2byte	0x6920
+  dc:	746e                	.2byte	0x746e
+  de:	6100                	.2byte	0x6100
+  e0:	6f6e                	.2byte	0x6f6e
+  e2:	6874                	.2byte	0x6874
+  e4:	7265                	c.lui	tp,0xffff9
+  e6:	7500                	.2byte	0x7500
+		exit(1);
+  e8:	736e                	.2byte	0x736e
+  ea:	6769                	c.lui	a4,0x1a
+  ec:	656e                	.2byte	0x656e
+  ee:	2064                	.2byte	0x2064
+  f0:	72616863          	bltu	sp,t1,820 <heap+0x140>
+	bp = (Header *)mem - 1; //point to block header
+  f4:	6d00                	.2byte	0x6d00
+  f6:	6d65                	c.lui	s10,0x19
+  f8:	00746573          	csrrsi	a0,0x7,8
+  fc:	5f5f 6975 746e      	.byte	0x5f, 0x5f, 0x75, 0x69, 0x6e, 0x74
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 102:	3631                	c.jal	fffffc0e <_sp+0xfffefc0e>
+ 104:	745f 7400 6968      	.byte	0x5f, 0x74, 0x00, 0x74, 0x68, 0x69
+ 10a:	6472                	.2byte	0x6472
+ 10c:	6d00                	.2byte	0x6d00
+ 10e:	6961                	c.lui	s2,0x18
+		if (p >= p->next && (bp > p || bp < p->next))
+ 110:	006e                	c.slli	zero,0x1b
+ 112:	7865                	c.lui	a6,0xffff9
+ 114:	6d61                	c.lui	s10,0x18
+ 116:	6c70                	.2byte	0x6c70
+ 118:	5f65                	c.li	t5,-7
+ 11a:	78650073          	.4byte	0x78650073
+ 11e:	6d61                	c.lui	s10,0x18
+ 120:	6c70                	.2byte	0x6c70
+ 122:	5f65                	c.li	t5,-7
+ 124:	0074                	c.addi4spn	a3,sp,12
+ 126:	6162                	.2byte	0x6162
+ 128:	67006573          	csrrsi	a0,0x670,0
+ 12c:	6f72                	.2byte	0x6f72
+ 12e:	6b6e                	.2byte	0x6b6e
+ 130:	6c00                	.2byte	0x6c00
+ 132:	20676e6f          	jal	t3,76338 <_sp+0x66338>
+ 136:	6f6c                	.2byte	0x6f6c
+ 138:	676e                	.2byte	0x676e
+ 13a:	7520                	.2byte	0x7520
+	for (p = freep; !(bp > p && bp < p->next); p = p->next) 
+ 13c:	736e                	.2byte	0x736e
+ 13e:	6769                	c.lui	a4,0x1a
+ 140:	656e                	.2byte	0x656e
+ 142:	2064                	.2byte	0x2064
+ 144:	6e69                	c.lui	t3,0x1a
+ 146:	0074                	c.addi4spn	a3,sp,12
+ 148:	6568                	.2byte	0x6568
+ 14a:	7061                	c.lui	zero,0xffff8
+ 14c:	6c00                	.2byte	0x6c00
+ 14e:	20676e6f          	jal	t3,76354 <_sp+0x66354>
+ 152:	6f6c                	.2byte	0x6f6c
+ 154:	676e                	.2byte	0x676e
+ 156:	6920                	.2byte	0x6920
+ 158:	746e                	.2byte	0x746e
+ 15a:	7400                	.2byte	0x7400
+ 15c:	5f6a                	c.lwsp	t5,184(sp)
+ 15e:	6c6c6163          	bltu	s8,t1,820 <heap+0x140>
+ 162:	6e00636f          	jal	t1,6842 <_ebss+0x2156>
+	if (bp + bp->size == p->next) { //join to upper nbr
+ 166:	7865                	c.lui	a6,0xffff9
+ 168:	5f74                	c.lw	a3,124(a4)
+ 16a:	6e69                	c.lui	t3,0x1a
+ 16c:	6564                	.2byte	0x6564
+ 16e:	0078                	c.addi4spn	a4,sp,12
+ 170:	726f6873          	csrrsi	a6,0x726,30
+ 174:	2074                	.2byte	0x2074
+ 176:	6e69                	c.lui	t3,0x1a
+ 178:	0074                	c.addi4spn	a3,sp,12
+ 17a:	6465                	c.lui	s0,0x19
+ 17c:	6c65                	c.lui	s8,0x19
+ 17e:	616d                	c.addi16sp	sp,240
+ 180:	006e                	c.slli	zero,0x1b
+ 182:	74616f67          	.4byte	0x74616f67
+		bp->size += p->next->size;
+ 186:	6c00                	.2byte	0x6c00
+ 188:	20676e6f          	jal	t3,7638e <_sp+0x6638e>
+ 18c:	6f64                	.2byte	0x6f64
+ 18e:	6275                	c.lui	tp,0x1d
+ 190:	656c                	.2byte	0x656c
+ 192:	4700                	c.lw	s0,8(a4)
+ 194:	554e                	c.lwsp	a0,240(sp)
+ 196:	4320                	c.lw	s0,64(a4)
+ 198:	3131                	c.jal	fffffda4 <_sp+0xfffefda4>
+ 19a:	3120                	.2byte	0x3120
+ 19c:	2e31                	c.jal	4b8 <tj_calloc+0x34>
+ 19e:	2e31                	c.jal	4ba <tj_calloc+0x36>
+ 1a0:	2030                	.2byte	0x2030
+ 1a2:	6d2d                	c.lui	s10,0xb
+		bp->next = p->next->next;
+ 1a4:	6f6e                	.2byte	0x6f6e
+ 1a6:	722d                	c.lui	tp,0xfffeb
+ 1a8:	6c65                	c.lui	s8,0x19
+ 1aa:	7861                	c.lui	a6,0xffff8
+ 1ac:	2d20                	.2byte	0x2d20
+ 1ae:	616d                	c.addi16sp	sp,240
+ 1b0:	6372                	.2byte	0x6372
+ 1b2:	3d68                	.2byte	0x3d68
+ 1b4:	7672                	.2byte	0x7672
+ 1b6:	6d693233          	.4byte	0x6d693233
+ 1ba:	2d20                	.2byte	0x2d20
+		bp->next = p->next; //insert bp after p in the linked list
+ 1bc:	616d                	c.addi16sp	sp,240
+ 1be:	6962                	.2byte	0x6962
+ 1c0:	693d                	c.lui	s2,0xf
+ 1c2:	706c                	.2byte	0x706c
+ 1c4:	2d203233          	.4byte	0x2d203233
+ 1c8:	736d                	c.lui	t1,0xffffb
+ 1ca:	7274                	.2byte	0x7274
+	if (p + p->size == bp) { //join to lower nbr
+ 1cc:	6369                	c.lui	t1,0x1a
+ 1ce:	2d74                	.2byte	0x2d74
+ 1d0:	6c61                	c.lui	s8,0x18
+ 1d2:	6769                	c.lui	a4,0x1a
+ 1d4:	206e                	.2byte	0x206e
+ 1d6:	6d2d                	c.lui	s10,0xb
+ 1d8:	6f6e                	.2byte	0x6f6e
+ 1da:	642d                	c.lui	s0,0xb
+ 1dc:	7669                	c.lui	a2,0xffffa
+ 1de:	2d20                	.2byte	0x2d20
+ 1e0:	746d                	c.lui	s0,0xffffb
+ 1e2:	6e75                	c.lui	t3,0x1d
+ 1e4:	3d65                	c.jal	9c <crt+0x9c>
+ 1e6:	6f72                	.2byte	0x6f72
+		p->size += bp->size;
+ 1e8:	74656b63          	bltu	a0,t1,93e <heap+0x25e>
+ 1ec:	2d20                	.2byte	0x2d20
+ 1ee:	616d                	c.addi16sp	sp,240
+ 1f0:	6372                	.2byte	0x6372
+ 1f2:	3d68                	.2byte	0x3d68
+ 1f4:	7672                	.2byte	0x7672
+ 1f6:	6d693233          	.4byte	0x6d693233
+ 1fa:	2d20                	.2byte	0x2d20
+ 1fc:	4f2d2067          	.4byte	0x4f2d2067
+ 200:	2030                	.2byte	0x2030
+ 202:	732d                	c.lui	t1,0xfffeb
+		p->next = bp->next;
+ 204:	6474                	.2byte	0x6474
+ 206:	673d                	c.lui	a4,0xf
+ 208:	756e                	.2byte	0x756e
+ 20a:	3131                	c.jal	fffffe16 <_sp+0xfffefe16>
+ 20c:	4800                	c.lw	s0,16(s0)
+ 20e:	6165                	c.addi16sp	sp,112
+ 210:	6564                	.2byte	0x6564
+ 212:	0072                	c.slli	zero,0x1c
+ 214:	6170                	.2byte	0x6170
+ 216:	7374                	.2byte	0x7374
+	...
+
+Disassembly of section .debug_rnglists:
+
+00000000 <.debug_rnglists>:
+	nop
+   0:	0016                	c.slli	zero,0x5
+   2:	0000                	c.unimp
+	la ra, exit
+   4:	0005                	c.addi	zero,1
+   6:	0004                	.2byte	0x4
+   8:	0000                	c.unimp
+   a:	0000                	c.unimp
+	la sp, _sp
+   c:	00000007          	.4byte	0x7
+  10:	9c00                	.2byte	0x9c00
+  12:	0701                	c.addi	a4,0 # f000 <_ebss+0xa914>
+	mv s0, sp
+  14:	00a0                	c.addi4spn	s0,sp,72
+  16:	0000                	c.unimp
+	la gp, __global_pointer$
+  18:	0020                	c.addi4spn	s0,sp,8
+
+Disassembly of section .debug_frame:
+
+00000000 <.debug_frame>:
+	nop
+   0:	000c                	.2byte	0xc
+   2:	0000                	c.unimp
+	la ra, exit
+   4:	ffff                	.2byte	0xffff
+   6:	ffff                	.2byte	0xffff
+   8:	7c010003          	lb	zero,1984(sp)
+	la sp, _sp
+   c:	0d01                	c.addi	s10,0 # b000 <_ebss+0x6914>
+   e:	0002                	c.slli64	zero
+  10:	0024                	c.addi4spn	s1,sp,8
+  12:	0000                	c.unimp
+	mv s0, sp
+  14:	0000                	c.unimp
+  16:	0000                	c.unimp
+	la gp, __global_pointer$
+  18:	00b4                	c.addi4spn	a3,sp,72
+  1a:	0000                	c.unimp
+  1c:	0190                	c.addi4spn	a2,sp,192
+  1e:	0000                	c.unimp
+	li tp, 0
+  20:	0e44                	c.addi4spn	s1,sp,788
+  22:	4830                	c.lw	a2,80(s0)
+	li t0, 0
+  24:	0181                	c.addi	gp,0 # ea0 <__global_pointer$>
+  26:	0288                	c.addi4spn	a0,sp,320
+	li t1, 0
+  28:	0c44                	c.addi4spn	s1,sp,532
+  2a:	0008                	.2byte	0x8
+	li t2, 0
+  2c:	c1017403          	.4byte	0xc1017403
+	li s1, 0
+  30:	c844                	c.sw	s1,20(s0)
+  32:	020c                	c.addi4spn	a1,sp,256
+	li a0, 0
+  34:	4430                	c.lw	a2,72(s0)
+  36:	000e                	c.slli	zero,0x3
+	li a1, 0
+  38:	0024                	c.addi4spn	s1,sp,8
+  3a:	0000                	c.unimp
+	li a2, 0
+  3c:	0000                	c.unimp
+  3e:	0000                	c.unimp
+	li a3, 0
+  40:	0244                	c.addi4spn	s1,sp,260
+  42:	0000                	c.unimp
+	li a4, 0
+  44:	00ac                	c.addi4spn	a1,sp,72
+  46:	0000                	c.unimp
+	li a5, 0
+  48:	0e44                	c.addi4spn	s1,sp,788
+  4a:	4830                	c.lw	a2,80(s0)
+	li a6, 0
+  4c:	0181                	c.addi	gp,0 # ea0 <__global_pointer$>
+  4e:	0288                	c.addi4spn	a0,sp,320
+	li a7, 0
+  50:	0c44                	c.addi4spn	s1,sp,532
+  52:	0008                	.2byte	0x8
+	li s2, 0
+  54:	9002                	c.ebreak
+  56:	44c1                	c.li	s1,16
+	li s3, 0
+  58:	0cc8                	c.addi4spn	a0,sp,596
+  5a:	3002                	.2byte	0x3002
+	li s4, 0
+  5c:	0e44                	c.addi4spn	s1,sp,788
+  5e:	0000                	c.unimp
+	li s5, 0
+  60:	0024                	c.addi4spn	s1,sp,8
+  62:	0000                	c.unimp
+	li s6, 0
+  64:	0000                	c.unimp
+  66:	0000                	c.unimp
+	li s7, 0
+  68:	02f0                	c.addi4spn	a2,sp,332
+  6a:	0000                	c.unimp
+	li s8, 0
+  6c:	0194                	c.addi4spn	a3,sp,192
+  6e:	0000                	c.unimp
+	li s9, 0
+  70:	0e44                	c.addi4spn	s1,sp,788
+  72:	4830                	c.lw	a2,80(s0)
+	li s10, 0
+  74:	0181                	c.addi	gp,0 # ea0 <__global_pointer$>
+  76:	0288                	c.addi4spn	a0,sp,320
+	li s11, 0
+  78:	0c44                	c.addi4spn	s1,sp,532
+  7a:	0008                	.2byte	0x8
+	li t3, 0
+  7c:	c1017803          	.4byte	0xc1017803
+	li t4, 0
+  80:	c844                	c.sw	s1,20(s0)
+  82:	020c                	c.addi4spn	a1,sp,256
+	li t5, 0
+  84:	4430                	c.lw	a2,72(s0)
+  86:	000e                	c.slli	zero,0x3
+	li t6, 0
+  88:	0024                	c.addi4spn	s1,sp,8
+  8a:	0000                	c.unimp
+	j main
+  8c:	0000                	c.unimp
+  8e:	0000                	c.unimp
+  90:	0484                	c.addi4spn	s1,sp,576
+  92:	0000                	c.unimp
+  94:	0050                	c.addi4spn	a2,sp,4
+  96:	0000                	c.unimp
+  98:	0e44                	c.addi4spn	s1,sp,788
+  9a:	4830                	c.lw	a2,80(s0)
+  9c:	0181                	c.addi	gp,0 # ea0 <__global_pointer$>
+  9e:	0288                	c.addi4spn	a0,sp,320
+	la sp, _sp
+  a0:	0c44                	c.addi4spn	s1,sp,532
+  a2:	0008                	.2byte	0x8
+  a4:	c174                	c.sw	a3,68(a0)
+  a6:	c844                	c.sw	s1,20(s0)
+	sw a0, -8(sp)
+  a8:	020c                	c.addi4spn	a1,sp,256
+  aa:	4430                	c.lw	a2,72(s0)
+	nop
+  ac:	000e                	c.slli	zero,0x3
+  ae:	0000                	c.unimp
+	wfi
+  b0:	0024                	c.addi4spn	s1,sp,8
+  b2:	0000                	c.unimp
+void tj_free(void *mem) {
+  b4:	0000                	c.unimp
+  b6:	0000                	c.unimp
+  b8:	04d4                	c.addi4spn	a3,sp,580
+  ba:	0000                	c.unimp
+  bc:	0104                	c.addi4spn	s1,sp,128
+  be:	0000                	c.unimp
+  c0:	0e44                	c.addi4spn	s1,sp,788
+  c2:	4820                	c.lw	s0,80(s0)
+  c4:	0181                	c.addi	gp,0 # ea0 <__global_pointer$>
+  c6:	0288                	c.addi4spn	a0,sp,320
+	if (mem < (void *)heap || mem > (void *)(heap + sizeof(heap)))
+  c8:	0c44                	c.addi4spn	s1,sp,532
+  ca:	0008                	.2byte	0x8
+  cc:	e802                	.2byte	0xe802
+  ce:	44c1                	c.li	s1,16
+  d0:	0cc8                	c.addi4spn	a0,sp,596
+  d2:	2002                	.2byte	0x2002
+  d4:	0e44                	c.addi4spn	s1,sp,788
+	...

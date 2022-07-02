@@ -1,0 +1,1807 @@
+
+program.debug_backtrack.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <crt>:
+
+.global crt
+.section .text.prologue, "ax"
+.align 4
+crt:
+	nop
+   0:	00000013          	addi	x0,x0,0
+	la ra, exit
+   4:	00000097          	auipc	x1,0x0
+   8:	09c08093          	addi	x1,x1,156 # a0 <exit>
+	la sp, _sp
+   c:	00010117          	auipc	x2,0x10
+  10:	ff410113          	addi	x2,x2,-12 # 10000 <_sp>
+	mv s0, sp
+  14:	00010413          	addi	x8,x2,0
+	la gp, __global_pointer$
+  18:	00001197          	auipc	x3,0x1
+  1c:	c6818193          	addi	x3,x3,-920 # c80 <__global_pointer$>
+	li tp, 0
+  20:	00000213          	addi	x4,x0,0
+	li t0, 0
+  24:	00000293          	addi	x5,x0,0
+	li t1, 0
+  28:	00000313          	addi	x6,x0,0
+	li t2, 0
+  2c:	00000393          	addi	x7,x0,0
+	li s1, 0
+  30:	00000493          	addi	x9,x0,0
+	li a0, 0
+  34:	00000513          	addi	x10,x0,0
+	li a1, 0
+  38:	00000593          	addi	x11,x0,0
+	li a2, 0
+  3c:	00000613          	addi	x12,x0,0
+	li a3, 0
+  40:	00000693          	addi	x13,x0,0
+	li a4, 0
+  44:	00000713          	addi	x14,x0,0
+	li a5, 0
+  48:	00000793          	addi	x15,x0,0
+	li a6, 0
+  4c:	00000813          	addi	x16,x0,0
+	li a7, 0
+  50:	00000893          	addi	x17,x0,0
+	li s2, 0
+  54:	00000913          	addi	x18,x0,0
+	li s3, 0
+  58:	00000993          	addi	x19,x0,0
+	li s4, 0
+  5c:	00000a13          	addi	x20,x0,0
+	li s5, 0
+  60:	00000a93          	addi	x21,x0,0
+	li s6, 0
+  64:	00000b13          	addi	x22,x0,0
+	li s7, 0
+  68:	00000b93          	addi	x23,x0,0
+	li s8, 0
+  6c:	00000c13          	addi	x24,x0,0
+	li s9, 0
+  70:	00000c93          	addi	x25,x0,0
+	li s10, 0
+  74:	00000d13          	addi	x26,x0,0
+	li s11, 0
+  78:	00000d93          	addi	x27,x0,0
+	li t3, 0
+  7c:	00000e13          	addi	x28,x0,0
+	li t4, 0
+  80:	00000e93          	addi	x29,x0,0
+	li t5, 0
+  84:	00000f13          	addi	x30,x0,0
+	li t6, 0
+  88:	00000f93          	addi	x31,x0,0
+	j main
+  8c:	3840006f          	jal	x0,410 <main>
+	...
+
+000000a0 <exit>:
+
+.global exit
+.section .text
+.align 4
+exit:
+	la sp, _sp
+  a0:	00010117          	auipc	x2,0x10
+  a4:	f6010113          	addi	x2,x2,-160 # 10000 <_sp>
+	sw a0, -8(sp)
+  a8:	fea12c23          	sw	x10,-8(x2)
+	nop
+  ac:	00000013          	addi	x0,x0,0
+	wfi
+  b0:	10500073          	wfi
+
+000000b4 <isSafe>:
+
+int solveKTUtil(int x, int y, int movei, int sol[N][N],int xMove[],  int yMove[]);
+
+/* A utility function to check if i,j are valid indexes
+   for N*N chessboard */
+int isSafe(int x, int y, int sol[N][N]) {
+  b4:	fe010113          	addi	x2,x2,-32
+  b8:	00812e23          	sw	x8,28(x2)
+  bc:	02010413          	addi	x8,x2,32
+  c0:	fea42623          	sw	x10,-20(x8)
+  c4:	feb42423          	sw	x11,-24(x8)
+  c8:	fec42223          	sw	x12,-28(x8)
+    return ( x >= 0 && x < N && y >= 0 && y < N && sol[x][y] == -1);
+  cc:	fec42783          	lw	x15,-20(x8)
+  d0:	0607c263          	blt	x15,x0,134 <isSafe+0x80>
+  d4:	fec42703          	lw	x14,-20(x8)
+  d8:	00200793          	addi	x15,x0,2
+  dc:	04e7cc63          	blt	x15,x14,134 <isSafe+0x80>
+  e0:	fe842783          	lw	x15,-24(x8)
+  e4:	0407c863          	blt	x15,x0,134 <isSafe+0x80>
+  e8:	fe842703          	lw	x14,-24(x8)
+  ec:	00200793          	addi	x15,x0,2
+  f0:	04e7c263          	blt	x15,x14,134 <isSafe+0x80>
+  f4:	fec42703          	lw	x14,-20(x8)
+  f8:	00070793          	addi	x15,x14,0
+  fc:	00179793          	slli	x15,x15,0x1
+ 100:	00e787b3          	add	x15,x15,x14
+ 104:	00279793          	slli	x15,x15,0x2
+ 108:	00078713          	addi	x14,x15,0
+ 10c:	fe442783          	lw	x15,-28(x8)
+ 110:	00e78733          	add	x14,x15,x14
+ 114:	fe842783          	lw	x15,-24(x8)
+ 118:	00279793          	slli	x15,x15,0x2
+ 11c:	00f707b3          	add	x15,x14,x15
+ 120:	0007a703          	lw	x14,0(x15)
+ 124:	fff00793          	addi	x15,x0,-1
+ 128:	00f71663          	bne	x14,x15,134 <isSafe+0x80>
+ 12c:	00100793          	addi	x15,x0,1
+ 130:	0080006f          	jal	x0,138 <isSafe+0x84>
+ 134:	00000793          	addi	x15,x0,0
+}
+ 138:	00078513          	addi	x10,x15,0
+ 13c:	01c12403          	lw	x8,28(x2)
+ 140:	02010113          	addi	x2,x2,32
+ 144:	00008067          	jalr	x0,0(x1)
+
+00000148 <solveKT>:
+   Backtracking.  This function mainly uses solveKTUtil()
+   to solve the problem. It returns false if no complete
+   tour is possible, otherwise return true and prints the
+   tour.
+*/
+int solveKT() {
+ 148:	f8010113          	addi	x2,x2,-128
+ 14c:	06112e23          	sw	x1,124(x2)
+ 150:	06812c23          	sw	x8,120(x2)
+ 154:	08010413          	addi	x8,x2,128
+    int sol[N][N];
+
+    /* Initialization of solution matrix */
+    for (int x = 0; x < N; x++)
+ 158:	fe042623          	sw	x0,-20(x8)
+ 15c:	05c0006f          	jal	x0,1b8 <solveKT+0x70>
+        for (int y = 0; y < N; y++)
+ 160:	fe042423          	sw	x0,-24(x8)
+ 164:	03c0006f          	jal	x0,1a0 <solveKT+0x58>
+            sol[x][y] = -1;
+ 168:	fec42703          	lw	x14,-20(x8)
+ 16c:	00070793          	addi	x15,x14,0
+ 170:	00179793          	slli	x15,x15,0x1
+ 174:	00e787b3          	add	x15,x15,x14
+ 178:	fe842703          	lw	x14,-24(x8)
+ 17c:	00e787b3          	add	x15,x15,x14
+ 180:	00279793          	slli	x15,x15,0x2
+ 184:	ff078793          	addi	x15,x15,-16
+ 188:	008787b3          	add	x15,x15,x8
+ 18c:	fff00713          	addi	x14,x0,-1
+ 190:	fce7aa23          	sw	x14,-44(x15)
+        for (int y = 0; y < N; y++)
+ 194:	fe842783          	lw	x15,-24(x8)
+ 198:	00178793          	addi	x15,x15,1
+ 19c:	fef42423          	sw	x15,-24(x8)
+ 1a0:	fe842703          	lw	x14,-24(x8)
+ 1a4:	00200793          	addi	x15,x0,2
+ 1a8:	fce7d0e3          	bge	x15,x14,168 <solveKT+0x20>
+    for (int x = 0; x < N; x++)
+ 1ac:	fec42783          	lw	x15,-20(x8)
+ 1b0:	00178793          	addi	x15,x15,1
+ 1b4:	fef42623          	sw	x15,-20(x8)
+ 1b8:	fec42703          	lw	x14,-20(x8)
+ 1bc:	00200793          	addi	x15,x0,2
+ 1c0:	fae7d0e3          	bge	x15,x14,160 <solveKT+0x18>
+
+    /* xMove[] and yMove[] define next move of Knight.
+       xMove[] is for next value of x coordinate
+       yMove[] is for next value of y coordinate */
+    int xMove[8] = {  2, 1, -1, -2, -2, -1,  1,  2 };
+ 1c4:	000007b7          	lui	x15,0x0
+ 1c8:	48078793          	addi	x15,x15,1152 # 480 <main+0x70>
+ 1cc:	0007a883          	lw	x17,0(x15)
+ 1d0:	0047a803          	lw	x16,4(x15)
+ 1d4:	0087a503          	lw	x10,8(x15)
+ 1d8:	00c7a583          	lw	x11,12(x15)
+ 1dc:	0107a603          	lw	x12,16(x15)
+ 1e0:	0147a683          	lw	x13,20(x15)
+ 1e4:	0187a703          	lw	x14,24(x15)
+ 1e8:	01c7a783          	lw	x15,28(x15)
+ 1ec:	fb142223          	sw	x17,-92(x8)
+ 1f0:	fb042423          	sw	x16,-88(x8)
+ 1f4:	faa42623          	sw	x10,-84(x8)
+ 1f8:	fab42823          	sw	x11,-80(x8)
+ 1fc:	fac42a23          	sw	x12,-76(x8)
+ 200:	fad42c23          	sw	x13,-72(x8)
+ 204:	fae42e23          	sw	x14,-68(x8)
+ 208:	fcf42023          	sw	x15,-64(x8)
+    int yMove[8] = {  1, 2,  2,  1, -1, -2, -2, -1 };
+ 20c:	000007b7          	lui	x15,0x0
+ 210:	4a078793          	addi	x15,x15,1184 # 4a0 <main+0x90>
+ 214:	0007a883          	lw	x17,0(x15)
+ 218:	0047a803          	lw	x16,4(x15)
+ 21c:	0087a503          	lw	x10,8(x15)
+ 220:	00c7a583          	lw	x11,12(x15)
+ 224:	0107a603          	lw	x12,16(x15)
+ 228:	0147a683          	lw	x13,20(x15)
+ 22c:	0187a703          	lw	x14,24(x15)
+ 230:	01c7a783          	lw	x15,28(x15)
+ 234:	f9142223          	sw	x17,-124(x8)
+ 238:	f9042423          	sw	x16,-120(x8)
+ 23c:	f8a42623          	sw	x10,-116(x8)
+ 240:	f8b42823          	sw	x11,-112(x8)
+ 244:	f8c42a23          	sw	x12,-108(x8)
+ 248:	f8d42c23          	sw	x13,-104(x8)
+ 24c:	f8e42e23          	sw	x14,-100(x8)
+ 250:	faf42023          	sw	x15,-96(x8)
+
+    // Since the Knight is initially at the first block
+    sol[0][0]  = 0;
+ 254:	fc042223          	sw	x0,-60(x8)
+
+    /* Start from 0,0 and explore all tours using
+       solveKTUtil() */
+    if (solveKTUtil(0, 0, 1, sol, xMove, yMove) == 0) {
+ 258:	f8440793          	addi	x15,x8,-124
+ 25c:	fa440713          	addi	x14,x8,-92
+ 260:	fc440693          	addi	x13,x8,-60
+ 264:	00100613          	addi	x12,x0,1
+ 268:	00000593          	addi	x11,x0,0
+ 26c:	00000513          	addi	x10,x0,0
+ 270:	00000097          	auipc	x1,0x0
+ 274:	030080e7          	jalr	x1,48(x1) # 2a0 <solveKTUtil>
+ 278:	00050793          	addi	x15,x10,0
+ 27c:	00079663          	bne	x15,x0,288 <solveKT+0x140>
+        //printf("Solution does not exist");
+        return 0;
+ 280:	00000793          	addi	x15,x0,0
+ 284:	0080006f          	jal	x0,28c <solveKT+0x144>
+    }
+    else
+        //printSolution(sol);
+
+    return 1;
+ 288:	00100793          	addi	x15,x0,1
+}
+ 28c:	00078513          	addi	x10,x15,0
+ 290:	07c12083          	lw	x1,124(x2)
+ 294:	07812403          	lw	x8,120(x2)
+ 298:	08010113          	addi	x2,x2,128
+ 29c:	00008067          	jalr	x0,0(x1)
+
+000002a0 <solveKTUtil>:
+
+/* A recursive utility function to solve Knight Tour
+   problem */
+int solveKTUtil(int x, int y, int movei, int sol[N][N], int xMove[N], int yMove[N]) {
+ 2a0:	fc010113          	addi	x2,x2,-64
+ 2a4:	02112e23          	sw	x1,60(x2)
+ 2a8:	02812c23          	sw	x8,56(x2)
+ 2ac:	04010413          	addi	x8,x2,64
+ 2b0:	fca42e23          	sw	x10,-36(x8)
+ 2b4:	fcb42c23          	sw	x11,-40(x8)
+ 2b8:	fcc42a23          	sw	x12,-44(x8)
+ 2bc:	fcd42823          	sw	x13,-48(x8)
+ 2c0:	fce42623          	sw	x14,-52(x8)
+ 2c4:	fcf42423          	sw	x15,-56(x8)
+   int k, next_x, next_y;
+   if (movei == N*N)
+ 2c8:	fd442703          	lw	x14,-44(x8)
+ 2cc:	00900793          	addi	x15,x0,9
+ 2d0:	00f71663          	bne	x14,x15,2dc <solveKTUtil+0x3c>
+       return 1;
+ 2d4:	00100793          	addi	x15,x0,1
+ 2d8:	1240006f          	jal	x0,3fc <solveKTUtil+0x15c>
+
+   /* Try all next moves from the current coordinate x, y */
+   for (k = 0; k < 8; k++) {
+ 2dc:	fe042623          	sw	x0,-20(x8)
+ 2e0:	10c0006f          	jal	x0,3ec <solveKTUtil+0x14c>
+       next_x = x + xMove[k];
+ 2e4:	fec42783          	lw	x15,-20(x8)
+ 2e8:	00279793          	slli	x15,x15,0x2
+ 2ec:	fcc42703          	lw	x14,-52(x8)
+ 2f0:	00f707b3          	add	x15,x14,x15
+ 2f4:	0007a783          	lw	x15,0(x15)
+ 2f8:	fdc42703          	lw	x14,-36(x8)
+ 2fc:	00f707b3          	add	x15,x14,x15
+ 300:	fef42423          	sw	x15,-24(x8)
+       next_y = y + yMove[k];
+ 304:	fec42783          	lw	x15,-20(x8)
+ 308:	00279793          	slli	x15,x15,0x2
+ 30c:	fc842703          	lw	x14,-56(x8)
+ 310:	00f707b3          	add	x15,x14,x15
+ 314:	0007a783          	lw	x15,0(x15)
+ 318:	fd842703          	lw	x14,-40(x8)
+ 31c:	00f707b3          	add	x15,x14,x15
+ 320:	fef42223          	sw	x15,-28(x8)
+       if (isSafe(next_x, next_y, sol)) {
+ 324:	fd042603          	lw	x12,-48(x8)
+ 328:	fe442583          	lw	x11,-28(x8)
+ 32c:	fe842503          	lw	x10,-24(x8)
+ 330:	00000097          	auipc	x1,0x0
+ 334:	d84080e7          	jalr	x1,-636(x1) # b4 <isSafe>
+ 338:	00050793          	addi	x15,x10,0
+ 33c:	0a078263          	beq	x15,x0,3e0 <solveKTUtil+0x140>
+         sol[next_x][next_y] = movei;
+ 340:	fe842703          	lw	x14,-24(x8)
+ 344:	00070793          	addi	x15,x14,0
+ 348:	00179793          	slli	x15,x15,0x1
+ 34c:	00e787b3          	add	x15,x15,x14
+ 350:	00279793          	slli	x15,x15,0x2
+ 354:	00078713          	addi	x14,x15,0
+ 358:	fd042783          	lw	x15,-48(x8)
+ 35c:	00e78733          	add	x14,x15,x14
+ 360:	fe442783          	lw	x15,-28(x8)
+ 364:	00279793          	slli	x15,x15,0x2
+ 368:	00f707b3          	add	x15,x14,x15
+ 36c:	fd442703          	lw	x14,-44(x8)
+ 370:	00e7a023          	sw	x14,0(x15)
+         if (solveKTUtil(next_x, next_y, movei+1, sol, xMove, yMove) == 1)
+ 374:	fd442783          	lw	x15,-44(x8)
+ 378:	00178613          	addi	x12,x15,1
+ 37c:	fc842783          	lw	x15,-56(x8)
+ 380:	fcc42703          	lw	x14,-52(x8)
+ 384:	fd042683          	lw	x13,-48(x8)
+ 388:	fe442583          	lw	x11,-28(x8)
+ 38c:	fe842503          	lw	x10,-24(x8)
+ 390:	00000097          	auipc	x1,0x0
+ 394:	f10080e7          	jalr	x1,-240(x1) # 2a0 <solveKTUtil>
+ 398:	00050713          	addi	x14,x10,0
+ 39c:	00100793          	addi	x15,x0,1
+ 3a0:	00f71663          	bne	x14,x15,3ac <solveKTUtil+0x10c>
+             return 1;
+ 3a4:	00100793          	addi	x15,x0,1
+ 3a8:	0540006f          	jal	x0,3fc <solveKTUtil+0x15c>
+         else
+             sol[next_x][next_y] = -1;// backtracking
+ 3ac:	fe842703          	lw	x14,-24(x8)
+ 3b0:	00070793          	addi	x15,x14,0
+ 3b4:	00179793          	slli	x15,x15,0x1
+ 3b8:	00e787b3          	add	x15,x15,x14
+ 3bc:	00279793          	slli	x15,x15,0x2
+ 3c0:	00078713          	addi	x14,x15,0
+ 3c4:	fd042783          	lw	x15,-48(x8)
+ 3c8:	00e78733          	add	x14,x15,x14
+ 3cc:	fe442783          	lw	x15,-28(x8)
+ 3d0:	00279793          	slli	x15,x15,0x2
+ 3d4:	00f707b3          	add	x15,x14,x15
+ 3d8:	fff00713          	addi	x14,x0,-1
+ 3dc:	00e7a023          	sw	x14,0(x15)
+   for (k = 0; k < 8; k++) {
+ 3e0:	fec42783          	lw	x15,-20(x8)
+ 3e4:	00178793          	addi	x15,x15,1
+ 3e8:	fef42623          	sw	x15,-20(x8)
+ 3ec:	fec42703          	lw	x14,-20(x8)
+ 3f0:	00700793          	addi	x15,x0,7
+ 3f4:	eee7d8e3          	bge	x15,x14,2e4 <solveKTUtil+0x44>
+       }
+   }
+
+   return 0;
+ 3f8:	00000793          	addi	x15,x0,0
+}
+ 3fc:	00078513          	addi	x10,x15,0
+ 400:	03c12083          	lw	x1,60(x2)
+ 404:	03812403          	lw	x8,56(x2)
+ 408:	04010113          	addi	x2,x2,64
+ 40c:	00008067          	jalr	x0,0(x1)
+
+00000410 <main>:
+
+/* Driver program to test above functions */
+int main()
+{
+ 410:	ff010113          	addi	x2,x2,-16
+ 414:	00112623          	sw	x1,12(x2)
+ 418:	00812423          	sw	x8,8(x2)
+ 41c:	01010413          	addi	x8,x2,16
+    solveKT();
+ 420:	00000097          	auipc	x1,0x0
+ 424:	d28080e7          	jalr	x1,-728(x1) # 148 <solveKT>
+    return 0;
+ 428:	00000793          	addi	x15,x0,0
+}
+ 42c:	00078513          	addi	x10,x15,0
+ 430:	00c12083          	lw	x1,12(x2)
+ 434:	00812403          	lw	x8,8(x2)
+ 438:	01010113          	addi	x2,x2,16
+ 43c:	00008067          	jalr	x0,0(x1)
+	...
+
+Disassembly of section .rodata:
+
+00000480 <.rodata>:
+ 480:	0002                	.2byte	0x2
+ 482:	0000                	.2byte	0x0
+ 484:	0001                	.2byte	0x1
+ 486:	0000                	.2byte	0x0
+ 488:	ffff                	.2byte	0xffff
+ 48a:	ffff                	.2byte	0xffff
+ 48c:	fffe                	.2byte	0xfffe
+ 48e:	ffff                	.2byte	0xffff
+ 490:	fffe                	.2byte	0xfffe
+ 492:	ffff                	.2byte	0xffff
+ 494:	ffff                	.2byte	0xffff
+ 496:	ffff                	.2byte	0xffff
+ 498:	0001                	.2byte	0x1
+ 49a:	0000                	.2byte	0x0
+ 49c:	0002                	.2byte	0x2
+ 49e:	0000                	.2byte	0x0
+ 4a0:	0001                	.2byte	0x1
+ 4a2:	0000                	.2byte	0x0
+ 4a4:	0002                	.2byte	0x2
+ 4a6:	0000                	.2byte	0x0
+ 4a8:	0002                	.2byte	0x2
+ 4aa:	0000                	.2byte	0x0
+ 4ac:	0001                	.2byte	0x1
+ 4ae:	0000                	.2byte	0x0
+ 4b0:	ffff                	.2byte	0xffff
+ 4b2:	ffff                	.2byte	0xffff
+ 4b4:	fffe                	.2byte	0xfffe
+ 4b6:	ffff                	.2byte	0xffff
+ 4b8:	fffe                	.2byte	0xfffe
+ 4ba:	ffff                	.2byte	0xffff
+ 4bc:	ffff                	.2byte	0xffff
+ 4be:	ffff                	.2byte	0xffff
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+	nop
+   0:	2441                	.2byte	0x2441
+   2:	0000                	.2byte	0x0
+	la ra, exit
+   4:	7200                	.2byte	0x7200
+   6:	7369                	.2byte	0x7369
+   8:	01007663          	bgeu	x0,x16,14 <crt+0x14>
+	la sp, _sp
+   c:	001a                	.2byte	0x1a
+   e:	0000                	.2byte	0x0
+  10:	1004                	.2byte	0x1004
+  12:	7205                	.2byte	0x7205
+	mv s0, sp
+  14:	3376                	.2byte	0x3376
+  16:	6932                	.2byte	0x6932
+	la gp, __global_pointer$
+  18:	7032                	.2byte	0x7032
+  1a:	5f30                	.2byte	0x5f30
+  1c:	326d                	.2byte	0x326d
+  1e:	3070                	.2byte	0x3070
+	li tp, 0
+  20:	0800                	.2byte	0x800
+  22:	0a01                	.2byte	0xa01
+	li t0, 0
+  24:	0b              	Address 0x0000000000000024 is out of bounds.
+
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+	nop
+   0:	3a434347          	.4byte	0x3a434347
+	la ra, exit
+   4:	2820                	.2byte	0x2820
+   6:	31202967          	.4byte	0x31202967
+   a:	2e31                	.2byte	0x2e31
+	la sp, _sp
+   c:	2e31                	.2byte	0x2e31
+   e:	0030                	.2byte	0x30
+
+Disassembly of section .debug_line:
+
+00000000 <.debug_line>:
+	nop
+   0:	0124                	.2byte	0x124
+   2:	0000                	.2byte	0x0
+	la ra, exit
+   4:	0005                	.2byte	0x5
+   6:	0004                	.2byte	0x4
+   8:	002a                	.2byte	0x2a
+   a:	0000                	.2byte	0x0
+	la sp, _sp
+   c:	0101                	.2byte	0x101
+   e:	fb01                	.2byte	0xfb01
+  10:	0d0e                	.2byte	0xd0e
+  12:	0100                	.2byte	0x100
+	mv s0, sp
+  14:	0101                	.2byte	0x101
+  16:	0001                	.2byte	0x1
+	la gp, __global_pointer$
+  18:	0000                	.2byte	0x0
+  1a:	0001                	.2byte	0x1
+  1c:	0100                	.2byte	0x100
+  1e:	0101                	.2byte	0x101
+	li tp, 0
+  20:	011f 0000 0000      	.byte	0x1f, 0x01, 0x00, 0x00, 0x00, 0x00
+	li t0, 0
+  26:	0102                	.2byte	0x102
+	li t1, 0
+  28:	021f 020f 004b      	.byte	0x1f, 0x02, 0x0f, 0x02, 0x4b, 0x00
+	li t2, 0
+  2e:	0000                	.2byte	0x0
+	li s1, 0
+  30:	4b00                	.2byte	0x4b00
+  32:	0000                	.2byte	0x0
+	li a0, 0
+  34:	0000                	.2byte	0x0
+  36:	0500                	.2byte	0x500
+	li a1, 0
+  38:	0002                	.2byte	0x2
+  3a:	0000                	.2byte	0x0
+	li a2, 0
+  3c:	0300                	.2byte	0x300
+  3e:	010d                	.2byte	0x10d
+	li a3, 0
+  40:	04090103          	lb	x2,64(x18)
+	li a4, 0
+  44:	0100                	.2byte	0x100
+  46:	08090103          	lb	x2,128(x18)
+	li a5, 0
+  4a:	0100                	.2byte	0x100
+	li a6, 0
+  4c:	08090103          	lb	x2,128(x18)
+	li a7, 0
+  50:	0100                	.2byte	0x100
+  52:	04090103          	lb	x2,64(x18)
+	li s2, 0
+  56:	0100                	.2byte	0x100
+	li s3, 0
+  58:	08090103          	lb	x2,128(x18)
+	li s4, 0
+  5c:	0100                	.2byte	0x100
+  5e:	04090103          	lb	x2,64(x18)
+	li s5, 0
+  62:	0100                	.2byte	0x100
+	li s6, 0
+  64:	04090103          	lb	x2,64(x18)
+	li s7, 0
+  68:	0100                	.2byte	0x100
+  6a:	04090103          	lb	x2,64(x18)
+	li s8, 0
+  6e:	0100                	.2byte	0x100
+	li s9, 0
+  70:	04090103          	lb	x2,64(x18)
+	li s10, 0
+  74:	0100                	.2byte	0x100
+  76:	04090103          	lb	x2,64(x18)
+	li s11, 0
+  7a:	0100                	.2byte	0x100
+	li t3, 0
+  7c:	04090103          	lb	x2,64(x18)
+	li t4, 0
+  80:	0100                	.2byte	0x100
+  82:	04090103          	lb	x2,64(x18)
+	li t5, 0
+  86:	0100                	.2byte	0x100
+	li t6, 0
+  88:	04090103          	lb	x2,64(x18)
+	j main
+  8c:	0100                	.2byte	0x100
+  8e:	04090103          	lb	x2,64(x18)
+  92:	0100                	.2byte	0x100
+  94:	04090103          	lb	x2,64(x18)
+  98:	0100                	.2byte	0x100
+  9a:	04090103          	lb	x2,64(x18)
+  9e:	0100                	.2byte	0x100
+	la sp, _sp
+  a0:	04090103          	lb	x2,64(x18)
+  a4:	0100                	.2byte	0x100
+  a6:	04090103          	lb	x2,64(x18)
+	sw a0, -8(sp)
+  aa:	0100                	.2byte	0x100
+	nop
+  ac:	04090103          	lb	x2,64(x18)
+	wfi
+  b0:	0100                	.2byte	0x100
+  b2:	04090103          	lb	x2,64(x18)
+int isSafe(int x, int y, int sol[N][N]) {
+  b6:	0100                	.2byte	0x100
+  b8:	04090103          	lb	x2,64(x18)
+  bc:	0100                	.2byte	0x100
+  be:	04090103          	lb	x2,64(x18)
+  c2:	0100                	.2byte	0x100
+  c4:	04090103          	lb	x2,64(x18)
+  c8:	0100                	.2byte	0x100
+  ca:	04090103          	lb	x2,64(x18)
+    return ( x >= 0 && x < N && y >= 0 && y < N && sol[x][y] == -1);
+  ce:	0100                	.2byte	0x100
+  d0:	04090103          	lb	x2,64(x18)
+  d4:	0100                	.2byte	0x100
+  d6:	04090103          	lb	x2,64(x18)
+  da:	0100                	.2byte	0x100
+  dc:	04090103          	lb	x2,64(x18)
+  e0:	0100                	.2byte	0x100
+  e2:	04090103          	lb	x2,64(x18)
+  e6:	0100                	.2byte	0x100
+  e8:	04090103          	lb	x2,64(x18)
+  ec:	0100                	.2byte	0x100
+  ee:	04090103          	lb	x2,64(x18)
+  f2:	0100                	.2byte	0x100
+  f4:	04090103          	lb	x2,64(x18)
+  f8:	0100                	.2byte	0x100
+  fa:	04090103          	lb	x2,64(x18)
+  fe:	0100                	.2byte	0x100
+ 100:	0409                	.2byte	0x409
+ 102:	0000                	.2byte	0x0
+ 104:	0101                	.2byte	0x101
+ 106:	0500                	.2byte	0x500
+ 108:	a002                	.2byte	0xa002
+ 10a:	0000                	.2byte	0x0
+ 10c:	0300                	.2byte	0x300
+ 10e:	01030133          	add	x2,x6,x16
+ 112:	0809                	.2byte	0x809
+ 114:	0100                	.2byte	0x100
+ 116:	04090103          	lb	x2,64(x18)
+ 11a:	0100                	.2byte	0x100
+ 11c:	04090103          	lb	x2,64(x18)
+ 120:	0100                	.2byte	0x100
+ 122:	0409                	.2byte	0x409
+ 124:	0000                	.2byte	0x0
+ 126:	0101                	.2byte	0x101
+ 128:	0236                	.2byte	0x236
+ 12a:	0000                	.2byte	0x0
+ 12c:	0005                	.2byte	0x5
+ 12e:	0004                	.2byte	0x4
+ 130:	002e                	.2byte	0x2e
+ 132:	0000                	.2byte	0x0
+ 134:	0101                	.2byte	0x101
+ 136:	fb01                	.2byte	0xfb01
+}
+ 138:	0d0e                	.2byte	0xd0e
+ 13a:	0100                	.2byte	0x100
+ 13c:	0101                	.2byte	0x101
+ 13e:	0001                	.2byte	0x1
+ 140:	0000                	.2byte	0x0
+ 142:	0001                	.2byte	0x1
+ 144:	0100                	.2byte	0x100
+ 146:	0101                	.2byte	0x101
+int solveKT() {
+ 148:	021f 0000 0000      	.byte	0x1f, 0x02, 0x00, 0x00, 0x00, 0x00
+ 14e:	0068                	.2byte	0x68
+ 150:	0000                	.2byte	0x0
+ 152:	0102                	.2byte	0x102
+ 154:	021f 020f 005c      	.byte	0x1f, 0x02, 0x0f, 0x02, 0x5c, 0x00
+    for (int x = 0; x < N; x++)
+ 15a:	0000                	.2byte	0x0
+ 15c:	5c01                	.2byte	0x5c01
+ 15e:	0000                	.2byte	0x0
+        for (int y = 0; y < N; y++)
+ 160:	0100                	.2byte	0x100
+ 162:	2905                	.2byte	0x2905
+ 164:	0500                	.2byte	0x500
+ 166:	b402                	.2byte	0xb402
+            sol[x][y] = -1;
+ 168:	0000                	.2byte	0x0
+ 16a:	0300                	.2byte	0x300
+ 16c:	31050113          	addi	x2,x10,784
+ 170:	18090103          	lb	x2,384(x18)
+ 174:	0100                	.2byte	0x100
+ 176:	1505                	.2byte	0x1505
+ 178:	0200                	.2byte	0x200
+ 17a:	0104                	.2byte	0x104
+ 17c:	08090003          	lb	x0,128(x18)
+ 180:	0100                	.2byte	0x100
+ 182:	1e05                	.2byte	0x1e05
+ 184:	0200                	.2byte	0x200
+ 186:	0304                	.2byte	0x304
+ 188:	0c090003          	lb	x0,192(x18)
+ 18c:	0100                	.2byte	0x100
+ 18e:	2805                	.2byte	0x2805
+ 190:	0200                	.2byte	0x200
+ 192:	0504                	.2byte	0x504
+        for (int y = 0; y < N; y++)
+ 194:	08090003          	lb	x0,128(x18)
+ 198:	0100                	.2byte	0x100
+ 19a:	3705                	.2byte	0x3705
+ 19c:	0200                	.2byte	0x200
+ 19e:	0704                	.2byte	0x704
+ 1a0:	0c090003          	lb	x0,192(x18)
+ 1a4:	0100                	.2byte	0x100
+ 1a6:	3a05                	.2byte	0x3a05
+ 1a8:	0200                	.2byte	0x200
+ 1aa:	0704                	.2byte	0x704
+    for (int x = 0; x < N; x++)
+ 1ac:	20090003          	lb	x0,512(x18)
+ 1b0:	0100                	.2byte	0x100
+ 1b2:	3105                	.2byte	0x3105
+ 1b4:	0200                	.2byte	0x200
+ 1b6:	0704                	.2byte	0x704
+ 1b8:	10090003          	lb	x0,256(x18)
+ 1bc:	0100                	.2byte	0x100
+ 1be:	0200                	.2byte	0x200
+ 1c0:	0904                	.2byte	0x904
+ 1c2:	0306                	.2byte	0x306
+    int xMove[8] = {  2, 1, -1, -2, -2, -1,  1,  2 };
+ 1c4:	0900                	.2byte	0x900
+ 1c6:	0008                	.2byte	0x8
+ 1c8:	0001                	.2byte	0x1
+ 1ca:	0402                	.2byte	0x402
+ 1cc:	030a                	.2byte	0x30a
+ 1ce:	0900                	.2byte	0x900
+ 1d0:	0008                	.2byte	0x8
+ 1d2:	0501                	.2byte	0x501
+ 1d4:	0001                	.2byte	0x1
+ 1d6:	0402                	.2byte	0x402
+ 1d8:	060d                	.2byte	0x60d
+ 1da:	04090103          	lb	x2,64(x18)
+ 1de:	0100                	.2byte	0x100
+ 1e0:	0f05                	.2byte	0xf05
+ 1e2:	10091103          	lh	x2,256(x18)
+ 1e6:	0100                	.2byte	0x100
+ 1e8:	0e05                	.2byte	0xe05
+ 1ea:	10090403          	lb	x8,256(x18)
+ 1ee:	0100                	.2byte	0x100
+ 1f0:	0505                	.2byte	0x505
+ 1f2:	04090003          	lb	x0,64(x18)
+ 1f6:	0100                	.2byte	0x100
+ 1f8:	1205                	.2byte	0x1205
+ 1fa:	04090103          	lb	x2,64(x18)
+ 1fe:	0100                	.2byte	0x100
+ 200:	0905                	.2byte	0x905
+ 202:	04090003          	lb	x0,64(x18)
+ 206:	0100                	.2byte	0x100
+ 208:	1705                	.2byte	0x1705
+ 20a:	0200                	.2byte	0x200
+    int yMove[8] = {  1, 2,  2,  1, -1, -2, -2, -1 };
+ 20c:	0304                	.2byte	0x304
+ 20e:	04090103          	lb	x2,64(x18)
+ 212:	0100                	.2byte	0x100
+ 214:	2105                	.2byte	0x2105
+ 216:	0200                	.2byte	0x200
+ 218:	0304                	.2byte	0x304
+ 21a:	2c097f03          	.4byte	0x2c097f03
+ 21e:	0100                	.2byte	0x100
+ 220:	1b05                	.2byte	0x1b05
+ 222:	0200                	.2byte	0x200
+ 224:	0104                	.2byte	0x104
+ 226:	0c090003          	lb	x0,192(x18)
+ 22a:	0100                	.2byte	0x100
+ 22c:	1d05                	.2byte	0x1d05
+ 22e:	0200                	.2byte	0x200
+ 230:	0204                	.2byte	0x204
+ 232:	0c097f03          	.4byte	0xc097f03
+ 236:	0100                	.2byte	0x100
+ 238:	1705                	.2byte	0x1705
+ 23a:	0200                	.2byte	0x200
+ 23c:	0104                	.2byte	0x104
+ 23e:	0c090003          	lb	x0,192(x18)
+ 242:	0100                	.2byte	0x100
+ 244:	0905                	.2byte	0x905
+ 246:	0c090703          	lb	x14,192(x18)
+ 24a:	0100                	.2byte	0x100
+ 24c:	48090103          	lb	x2,1152(x18)
+ 250:	0100                	.2byte	0x100
+ 252:	1005                	.2byte	0x1005
+    sol[0][0]  = 0;
+ 254:	48090303          	lb	x6,1152(x18)
+    if (solveKTUtil(0, 0, 1, sol, xMove, yMove) == 0) {
+ 258:	0100                	.2byte	0x100
+ 25a:	0905                	.2byte	0x905
+ 25c:	04090403          	lb	x8,64(x18)
+ 260:	0100                	.2byte	0x100
+ 262:	0805                	.2byte	0x805
+ 264:	24090003          	lb	x0,576(x18)
+ 268:	0100                	.2byte	0x100
+ 26a:	1005                	.2byte	0x1005
+ 26c:	04090203          	lb	x4,64(x18)
+ 270:	0100                	.2byte	0x100
+ 272:	0c05                	.2byte	0xc05
+ 274:	08090503          	lb	x10,128(x18)
+ 278:	0100                	.2byte	0x100
+ 27a:	0105                	.2byte	0x105
+ 27c:	0200                	.2byte	0x200
+ 27e:	0104                	.2byte	0x104
+        return 0;
+ 280:	04090103          	lb	x2,64(x18)
+ 284:	0100                	.2byte	0x100
+ 286:	5505                	.2byte	0x5505
+    return 1;
+ 288:	14090403          	lb	x8,320(x18)
+}
+ 28c:	0100                	.2byte	0x100
+ 28e:	0705                	.2byte	0x705
+ 290:	28090203          	lb	x4,640(x18)
+ 294:	0100                	.2byte	0x100
+ 296:	0f05                	.2byte	0xf05
+ 298:	0c090103          	lb	x2,192(x18)
+ 29c:	0100                	.2byte	0x100
+ 29e:	0b05                	.2byte	0xb05
+int solveKTUtil(int x, int y, int movei, int sol[N][N], int xMove[N], int yMove[N]) {
+ 2a0:	08090303          	lb	x6,128(x18)
+ 2a4:	0100                	.2byte	0x100
+ 2a6:	0405                	.2byte	0x405
+ 2a8:	04090003          	lb	x0,64(x18)
+ 2ac:	0100                	.2byte	0x100
+ 2ae:	1a05                	.2byte	0x1a05
+ 2b0:	04090103          	lb	x2,64(x18)
+ 2b4:	0100                	.2byte	0x100
+ 2b6:	0f05                	.2byte	0xf05
+ 2b8:	14090003          	lb	x0,320(x18)
+ 2bc:	0100                	.2byte	0x100
+ 2be:	1a05                	.2byte	0x1a05
+ 2c0:	0c090103          	lb	x2,192(x18)
+ 2c4:	0100                	.2byte	0x100
+ 2c6:	0f05                	.2byte	0xf05
+   if (movei == N*N)
+ 2c8:	14090003          	lb	x0,320(x18)
+ 2cc:	0100                	.2byte	0x100
+ 2ce:	0c05                	.2byte	0xc05
+ 2d0:	0c090103          	lb	x2,192(x18)
+       return 1;
+ 2d4:	0100                	.2byte	0x100
+ 2d6:	0b05                	.2byte	0xb05
+ 2d8:	18090003          	lb	x0,384(x18)
+   for (k = 0; k < 8; k++) {
+ 2dc:	0100                	.2byte	0x100
+ 2de:	0d05                	.2byte	0xd05
+ 2e0:	04090103          	lb	x2,64(x18)
+       next_x = x + xMove[k];
+ 2e4:	0100                	.2byte	0x100
+ 2e6:	1e05                	.2byte	0x1e05
+ 2e8:	20090003          	lb	x0,512(x18)
+ 2ec:	0100                	.2byte	0x100
+ 2ee:	0e05                	.2byte	0xe05
+ 2f0:	14090103          	lb	x2,320(x18)
+ 2f4:	0100                	.2byte	0x100
+ 2f6:	0d05                	.2byte	0xd05
+ 2f8:	28090003          	lb	x0,640(x18)
+ 2fc:	0100                	.2byte	0x100
+ 2fe:	1505                	.2byte	0x1505
+ 300:	08090103          	lb	x2,128(x18)
+       next_y = y + yMove[k];
+ 304:	0100                	.2byte	0x100
+ 306:	1105                	.2byte	0x1105
+ 308:	08090203          	lb	x4,128(x18)
+ 30c:	0100                	.2byte	0x100
+ 30e:	2205                	.2byte	0x2205
+ 310:	20090003          	lb	x0,512(x18)
+ 314:	0100                	.2byte	0x100
+ 316:	1805                	.2byte	0x1805
+ 318:	0200                	.2byte	0x200
+ 31a:	0204                	.2byte	0x204
+ 31c:	14097803          	.4byte	0x14097803
+ 320:	0100                	.2byte	0x100
+ 322:	1205                	.2byte	0x1205
+       if (isSafe(next_x, next_y, sol)) {
+ 324:	0200                	.2byte	0x200
+ 326:	0104                	.2byte	0x104
+ 328:	0c090003          	lb	x0,192(x18)
+ 32c:	0100                	.2byte	0x100
+ 32e:	0b05                	.2byte	0xb05
+ 330:	0c090c03          	lb	x24,192(x18)
+ 334:	0100                	.2byte	0x100
+ 336:	0105                	.2byte	0x105
+ 338:	04090103          	lb	x2,64(x18)
+ 33c:	0100                	.2byte	0x100
+ 33e:	14090403          	lb	x8,320(x18)
+         sol[next_x][next_y] = movei;
+ 342:	0100                	.2byte	0x100
+ 344:	0505                	.2byte	0x505
+ 346:	10090103          	lb	x2,256(x18)
+ 34a:	0100                	.2byte	0x100
+ 34c:	0c05                	.2byte	0xc05
+ 34e:	08090103          	lb	x2,128(x18)
+ 352:	0100                	.2byte	0x100
+ 354:	0105                	.2byte	0x105
+ 356:	04090103          	lb	x2,64(x18)
+ 35a:	0100                	.2byte	0x100
+ 35c:	1409                	.2byte	0x1409
+ 35e:	0000                	.2byte	0x0
+ 360:	0101                	.2byte	0x101
+
+Disassembly of section .debug_line_str:
+
+00000000 <.debug_line_str>:
+	nop
+   0:	6d6f682f          	.4byte	0x6d6f682f
+	la ra, exit
+   4:	2f65                	.2byte	0x2f65
+   6:	7961                	.2byte	0x7961
+   8:	742d616b          	.4byte	0x742d616b
+	la sp, _sp
+   c:	757a7573          	csrrci	x10,0x757,20
+  10:	442f696b          	.4byte	0x442f696b
+	mv s0, sp
+  14:	6d75636f          	jal	x6,56eea <_sp+0x46eea>
+	la gp, __global_pointer$
+  18:	6e65                	.2byte	0x6e65
+  1a:	7374                	.2byte	0x7374
+  1c:	6f72702f          	.4byte	0x6f72702f
+	li tp, 0
+  20:	656a                	.2byte	0x656a
+  22:	762d7463          	bgeu	x26,x2,78a <_ebss+0x2ca>
+	li t0, 0
+  26:	6f2d                	.2byte	0x6f2d
+	li t1, 0
+  28:	6570                	.2byte	0x6570
+  2a:	2d6e                	.2byte	0x2d6e
+	li t2, 0
+  2c:	6562                	.2byte	0x6562
+  2e:	6174                	.2byte	0x6174
+	li s1, 0
+  30:	462d                	.2byte	0x462d
+  32:	452d726f          	jal	x4,d7484 <_sp+0xc7484>
+	li a0, 0
+  36:	37344543          	.4byte	0x37344543
+	li a1, 0
+  3a:	3030                	.2byte	0x3030
+	li a2, 0
+  3c:	2f4a                	.2byte	0x2f4a
+  3e:	6974706f          	jal	x0,47ed4 <_sp+0x37ed4>
+	li a3, 0
+  42:	696d                	.2byte	0x696d
+	li a4, 0
+  44:	617a                	.2byte	0x617a
+  46:	6974                	.2byte	0x6974
+	li a5, 0
+  48:	63006e6f          	jal	x28,6678 <__global_pointer$+0x59f8>
+	li a6, 0
+  4c:	7472                	.2byte	0x7472
+  4e:	732e                	.2byte	0x732e
+	li a7, 0
+  50:	7400                	.2byte	0x7400
+  52:	7365                	.2byte	0x7365
+	li s2, 0
+  54:	5f74                	.2byte	0x5f74
+  56:	7270                	.2byte	0x7270
+	li s3, 0
+  58:	2f73676f          	jal	x14,36b4e <_sp+0x26b4e>
+	li s4, 0
+  5c:	6162                	.2byte	0x6162
+  5e:	72746b63          	bltu	x8,x7,794 <_ebss+0x2d4>
+	li s5, 0
+  62:	6361                	.2byte	0x6361
+	li s6, 0
+  64:	00632e6b          	.4byte	0x632e6b
+	li s7, 0
+  68:	6574                	.2byte	0x6574
+  6a:	705f7473          	csrrci	x8,0x705,30
+	li s8, 0
+  6e:	6f72                	.2byte	0x6f72
+	li s9, 0
+  70:	67 73 00            	Address 0x0000000000000070 is out of bounds.
+
+
+Disassembly of section .debug_info:
+
+00000000 <.debug_info>:
+	nop
+   0:	001f 0000 0005      	.byte	0x1f, 0x00, 0x00, 0x00, 0x05, 0x00
+	la ra, exit
+   6:	0401                	.2byte	0x401
+   8:	0000                	.2byte	0x0
+   a:	0000                	.2byte	0x0
+	la sp, _sp
+   c:	0001                	.2byte	0x1
+   e:	0000                	.2byte	0x0
+  10:	0c00                	.2byte	0xc00
+  12:	0000                	.2byte	0x0
+	mv s0, sp
+  14:	0000                	.2byte	0x0
+  16:	0000                	.2byte	0x0
+	la gp, __global_pointer$
+  18:	0600                	.2byte	0x600
+  1a:	0000                	.2byte	0x0
+  1c:	5100                	.2byte	0x5100
+  1e:	0000                	.2byte	0x0
+	li tp, 0
+  20:	0100                	.2byte	0x100
+  22:	0d80                	.2byte	0xd80
+	li t0, 0
+  24:	0002                	.2byte	0x2
+  26:	0500                	.2byte	0x500
+	li t1, 0
+  28:	0100                	.2byte	0x100
+  2a:	1204                	.2byte	0x1204
+	li t2, 0
+  2c:	0000                	.2byte	0x0
+  2e:	0a00                	.2byte	0xa00
+	li s1, 0
+  30:	0079                	.2byte	0x79
+  32:	0000                	.2byte	0x0
+	li a0, 0
+  34:	511d                	.2byte	0x511d
+  36:	0000                	.2byte	0x0
+	li a1, 0
+  38:	0000                	.2byte	0x0
+  3a:	0000                	.2byte	0x0
+	li a2, 0
+  3c:	b400                	.2byte	0xb400
+  3e:	0000                	.2byte	0x0
+	li a3, 0
+  40:	8c00                	.2byte	0x8c00
+  42:	28000003          	lb	x0,640(x0) # 280 <solveKT+0x138>
+	li a4, 0
+  46:	0001                	.2byte	0x1
+	li a5, 0
+  48:	0100                	.2byte	0x100
+  4a:	0601                	.2byte	0x601
+	li a6, 0
+  4c:	006d                	.2byte	0x6d
+  4e:	0000                	.2byte	0x0
+	li a7, 0
+  50:	0101                	.2byte	0x101
+  52:	6b08                	.2byte	0x6b08
+	li s2, 0
+  54:	0000                	.2byte	0x0
+  56:	0100                	.2byte	0x100
+	li s3, 0
+  58:	0502                	.2byte	0x502
+  5a:	015d                	.2byte	0x15d
+	li s4, 0
+  5c:	0000                	.2byte	0x0
+  5e:	0201                	.2byte	0x201
+	li s5, 0
+  60:	00013907          	.4byte	0x13907
+	li s6, 0
+  64:	0100                	.2byte	0x100
+  66:	0504                	.2byte	0x504
+	li s7, 0
+  68:	0062                	.2byte	0x62
+  6a:	0000                	.2byte	0x0
+	li s8, 0
+  6c:	0401                	.2byte	0x401
+  6e:	0000f807          	.4byte	0xf807
+	li s9, 0
+  72:	0100                	.2byte	0x100
+	li s10, 0
+  74:	0508                	.2byte	0x508
+  76:	005d                	.2byte	0x5d
+	li s11, 0
+  78:	0000                	.2byte	0x0
+  7a:	0801                	.2byte	0x801
+	li t3, 0
+  7c:	0000f307          	.4byte	0xf307
+	li t4, 0
+  80:	0b00                	.2byte	0xb00
+  82:	0504                	.2byte	0x504
+	li t5, 0
+  84:	6e69                	.2byte	0x6e69
+  86:	0074                	.2byte	0x74
+	li t6, 0
+  88:	0401                	.2byte	0x401
+  8a:	0000fd07          	.4byte	0xfd07
+	j main
+  8e:	0100                	.2byte	0x100
+  90:	0410                	.2byte	0x410
+  92:	0151                	.2byte	0x151
+  94:	0000                	.2byte	0x0
+  96:	0101                	.2byte	0x101
+  98:	7408                	.2byte	0x7408
+  9a:	0000                	.2byte	0x0
+  9c:	0c00                	.2byte	0xc00
+  9e:	014c                	.2byte	0x14c
+	la sp, _sp
+  a0:	0000                	.2byte	0x0
+  a2:	5c01                	.2byte	0x5c01
+  a4:	5e05                	.2byte	0x5e05
+  a6:	0000                	.2byte	0x0
+	sw a0, -8(sp)
+  a8:	1000                	.2byte	0x1000
+  aa:	0004                	.2byte	0x4
+	nop
+  ac:	3000                	.2byte	0x3000
+  ae:	0000                	.2byte	0x0
+	wfi
+  b0:	0100                	.2byte	0x100
+  b2:	0d9c                	.2byte	0xd9c
+int isSafe(int x, int y, int sol[N][N]) {
+  b4:	00000167          	jalr	x2,0(x0) # 0 <crt>
+  b8:	4601                	.2byte	0x4601
+  ba:	5e05                	.2byte	0x5e05
+  bc:	0000                	.2byte	0x0
+  be:	a000                	.2byte	0xa000
+  c0:	0002                	.2byte	0x2
+  c2:	7000                	.2byte	0x7000
+  c4:	0001                	.2byte	0x1
+  c6:	0100                	.2byte	0x100
+  c8:	209c                	.2byte	0x209c
+  ca:	0001                	.2byte	0x1
+    return ( x >= 0 && x < N && y >= 0 && y < N && sol[x][y] == -1);
+  cc:	0200                	.2byte	0x200
+  ce:	0078                	.2byte	0x78
+  d0:	1546                	.2byte	0x1546
+  d2:	005e                	.2byte	0x5e
+  d4:	0000                	.2byte	0x0
+  d6:	9102                	.2byte	0x9102
+  d8:	025c                	.2byte	0x25c
+  da:	0079                	.2byte	0x79
+  dc:	1c46                	.2byte	0x1c46
+  de:	005e                	.2byte	0x5e
+  e0:	0000                	.2byte	0x0
+  e2:	9102                	.2byte	0x9102
+  e4:	0658                	.2byte	0x658
+  e6:	011e                	.2byte	0x11e
+  e8:	0000                	.2byte	0x0
+  ea:	00005e23          	.4byte	0x5e23
+  ee:	0200                	.2byte	0x200
+  f0:	5491                	.2byte	0x5491
+  f2:	7302                	.2byte	0x7302
+  f4:	46006c6f          	jal	x24,6554 <__global_pointer$+0x58d4>
+  f8:	302e                	.2byte	0x302e
+  fa:	0001                	.2byte	0x1
+  fc:	0200                	.2byte	0x200
+  fe:	5091                	.2byte	0x5091
+ 100:	0a06                	.2byte	0xa06
+ 102:	0001                	.2byte	0x1
+ 104:	3d00                	.2byte	0x3d00
+ 106:	0135                	.2byte	0x135
+ 108:	0000                	.2byte	0x0
+ 10a:	9102                	.2byte	0x9102
+ 10c:	064c                	.2byte	0x64c
+ 10e:	0000012b          	.4byte	0x12b
+ 112:	0001354b          	.4byte	0x1354b
+ 116:	0200                	.2byte	0x200
+ 118:	4891                	.2byte	0x4891
+ 11a:	47006b03          	.4byte	0x47006b03
+ 11e:	5e08                	.2byte	0x5e08
+ 120:	0000                	.2byte	0x0
+ 122:	0200                	.2byte	0x200
+ 124:	6c91                	.2byte	0x6c91
+ 126:	1004                	.2byte	0x1004
+ 128:	0001                	.2byte	0x1
+ 12a:	4700                	.2byte	0x4700
+ 12c:	00005e0b          	.4byte	0x5e0b
+ 130:	0200                	.2byte	0x200
+ 132:	6891                	.2byte	0x6891
+ 134:	1704                	.2byte	0x1704
+ 136:	0001                	.2byte	0x1
+}
+ 138:	4700                	.2byte	0x4700
+ 13a:	00005e13          	srli	x28,x0,0x0
+ 13e:	0200                	.2byte	0x200
+ 140:	6491                	.2byte	0x6491
+ 142:	0700                	.2byte	0x700
+ 144:	005e                	.2byte	0x5e
+ 146:	0000                	.2byte	0x0
+int solveKT() {
+ 148:	0130                	.2byte	0x130
+ 14a:	0000                	.2byte	0x0
+ 14c:	6505                	.2byte	0x6505
+ 14e:	0000                	.2byte	0x0
+ 150:	0200                	.2byte	0x200
+ 152:	0800                	.2byte	0x800
+ 154:	0120                	.2byte	0x120
+ 156:	0000                	.2byte	0x0
+    for (int x = 0; x < N; x++)
+ 158:	5e08                	.2byte	0x5e08
+ 15a:	0000                	.2byte	0x0
+ 15c:	0e00                	.2byte	0xe00
+ 15e:	0131                	.2byte	0x131
+        for (int y = 0; y < N; y++)
+ 160:	0000                	.2byte	0x0
+ 162:	2701                	.2byte	0x2701
+ 164:	5e05                	.2byte	0x5e05
+ 166:	0000                	.2byte	0x0
+            sol[x][y] = -1;
+ 168:	4800                	.2byte	0x4800
+ 16a:	0001                	.2byte	0x1
+ 16c:	5800                	.2byte	0x5800
+ 16e:	0001                	.2byte	0x1
+ 170:	0100                	.2byte	0x100
+ 172:	ad9c                	.2byte	0xad9c
+ 174:	0001                	.2byte	0x1
+ 176:	0300                	.2byte	0x300
+ 178:	006c6f73          	csrrsi	x30,0x6,24
+ 17c:	0928                	.2byte	0x928
+ 17e:	01ad                	.2byte	0x1ad
+ 180:	0000                	.2byte	0x0
+ 182:	9102                	.2byte	0x9102
+ 184:	0444                	.2byte	0x444
+ 186:	010a                	.2byte	0x10a
+ 188:	0000                	.2byte	0x0
+ 18a:	0932                	.2byte	0x932
+ 18c:	000001c3          	.4byte	0x1c3
+ 190:	7fa49103          	lh	x2,2042(x9)
+        for (int y = 0; y < N; y++)
+ 194:	2b04                	.2byte	0x2b04
+ 196:	0001                	.2byte	0x1
+ 198:	3300                	.2byte	0x3300
+ 19a:	c309                	.2byte	0xc309
+ 19c:	0001                	.2byte	0x1
+ 19e:	0300                	.2byte	0x300
+ 1a0:	8491                	.2byte	0x8491
+ 1a2:	097f                	.2byte	0x97f
+ 1a4:	0158                	.2byte	0x158
+ 1a6:	0000                	.2byte	0x0
+ 1a8:	006c                	.2byte	0x6c
+ 1aa:	0000                	.2byte	0x0
+    for (int x = 0; x < N; x++)
+ 1ac:	2b007803          	.4byte	0x2b007803
+ 1b0:	5e0e                	.2byte	0x5e0e
+ 1b2:	0000                	.2byte	0x0
+ 1b4:	0200                	.2byte	0x200
+ 1b6:	6c91                	.2byte	0x6c91
+ 1b8:	6009                	.2byte	0x6009
+ 1ba:	0001                	.2byte	0x1
+ 1bc:	4c00                	.2byte	0x4c00
+ 1be:	0000                	.2byte	0x0
+ 1c0:	0300                	.2byte	0x300
+ 1c2:	0079                	.2byte	0x79
+    int xMove[8] = {  2, 1, -1, -2, -2, -1,  1,  2 };
+ 1c4:	122c                	.2byte	0x122c
+ 1c6:	005e                	.2byte	0x5e
+ 1c8:	0000                	.2byte	0x0
+ 1ca:	9102                	.2byte	0x9102
+ 1cc:	0068                	.2byte	0x68
+ 1ce:	0000                	.2byte	0x0
+ 1d0:	00005e07          	.4byte	0x5e07
+ 1d4:	c300                	.2byte	0xc300
+ 1d6:	0001                	.2byte	0x1
+ 1d8:	0500                	.2byte	0x500
+ 1da:	0065                	.2byte	0x65
+ 1dc:	0000                	.2byte	0x0
+ 1de:	0502                	.2byte	0x502
+ 1e0:	0065                	.2byte	0x65
+ 1e2:	0000                	.2byte	0x0
+ 1e4:	0002                	.2byte	0x2
+ 1e6:	00005e07          	.4byte	0x5e07
+ 1ea:	d300                	.2byte	0xd300
+ 1ec:	0001                	.2byte	0x1
+ 1ee:	0500                	.2byte	0x500
+ 1f0:	0065                	.2byte	0x65
+ 1f2:	0000                	.2byte	0x0
+ 1f4:	240f0007          	.4byte	0x240f0007
+ 1f8:	0001                	.2byte	0x1
+ 1fa:	0100                	.2byte	0x100
+ 1fc:	0514                	.2byte	0x514
+ 1fe:	005e                	.2byte	0x5e
+ 200:	0000                	.2byte	0x0
+ 202:	00b4                	.2byte	0xb4
+ 204:	0000                	.2byte	0x0
+ 206:	0094                	.2byte	0x94
+ 208:	0000                	.2byte	0x0
+ 20a:	9c01                	.2byte	0x9c01
+    int yMove[8] = {  1, 2,  2,  1, -1, -2, -2, -1 };
+ 20c:	7802                	.2byte	0x7802
+ 20e:	1400                	.2byte	0x1400
+ 210:	5e10                	.2byte	0x5e10
+ 212:	0000                	.2byte	0x0
+ 214:	0200                	.2byte	0x200
+ 216:	6c91                	.2byte	0x6c91
+ 218:	7902                	.2byte	0x7902
+ 21a:	1400                	.2byte	0x1400
+ 21c:	00005e17          	auipc	x28,0x5
+ 220:	0200                	.2byte	0x200
+ 222:	6891                	.2byte	0x6891
+ 224:	7302                	.2byte	0x7302
+ 226:	14006c6f          	jal	x24,6366 <__global_pointer$+0x56e6>
+ 22a:	301e                	.2byte	0x301e
+ 22c:	0001                	.2byte	0x1
+ 22e:	0200                	.2byte	0x200
+ 230:	6491                	.2byte	0x6491
+	...
+
+Disassembly of section .debug_abbrev:
+
+00000000 <.debug_abbrev>:
+	nop
+   0:	1101                	.2byte	0x1101
+   2:	1000                	.2byte	0x1000
+	la ra, exit
+   4:	03175517          	auipc	x10,0x3175
+   8:	1b0e                	.2byte	0x1b0e
+   a:	250e                	.2byte	0x250e
+	la sp, _sp
+   c:	130e                	.2byte	0x130e
+   e:	0005                	.2byte	0x5
+  10:	0000                	.2byte	0x0
+  12:	2401                	.2byte	0x2401
+	mv s0, sp
+  14:	0b00                	.2byte	0xb00
+  16:	030b3e0b          	.4byte	0x30b3e0b
+	la gp, __global_pointer$
+  1a:	000e                	.2byte	0xe
+  1c:	0200                	.2byte	0x200
+  1e:	0005                	.2byte	0x5
+	li tp, 0
+  20:	213a0803          	lb	x16,531(x20)
+	li t0, 0
+  24:	3b01                	.2byte	0x3b01
+  26:	490b390b          	.4byte	0x490b390b
+	li t1, 0
+  2a:	00180213          	addi	x4,x16,1
+	li t2, 0
+  2e:	0300                	.2byte	0x300
+	li s1, 0
+  30:	0034                	.2byte	0x34
+  32:	213a0803          	lb	x16,531(x20)
+	li a0, 0
+  36:	3b01                	.2byte	0x3b01
+	li a1, 0
+  38:	490b390b          	.4byte	0x490b390b
+	li a2, 0
+  3c:	00180213          	addi	x4,x16,1
+	li a3, 0
+  40:	0400                	.2byte	0x400
+  42:	0034                	.2byte	0x34
+	li a4, 0
+  44:	213a0e03          	lb	x28,531(x20)
+	li a5, 0
+  48:	3b01                	.2byte	0x3b01
+  4a:	490b390b          	.4byte	0x490b390b
+	li a6, 0
+  4e:	00180213          	addi	x4,x16,1
+	li a7, 0
+  52:	0500                	.2byte	0x500
+	li s2, 0
+  54:	0021                	.2byte	0x21
+  56:	1349                	.2byte	0x1349
+	li s3, 0
+  58:	00000b2f          	.4byte	0xb2f
+	li s4, 0
+  5c:	0506                	.2byte	0x506
+  5e:	0300                	.2byte	0x300
+	li s5, 0
+  60:	3a0e                	.2byte	0x3a0e
+  62:	0121                	.2byte	0x121
+	li s6, 0
+  64:	00c6213b          	.4byte	0xc6213b
+	li s7, 0
+  68:	0b39                	.2byte	0xb39
+  6a:	1349                	.2byte	0x1349
+	li s8, 0
+  6c:	1802                	.2byte	0x1802
+  6e:	0000                	.2byte	0x0
+	li s9, 0
+  70:	49010107          	.4byte	0x49010107
+	li s10, 0
+  74:	00130113          	addi	x2,x6,1
+	li s11, 0
+  78:	0800                	.2byte	0x800
+  7a:	210b000f          	.4byte	0x210b000f
+	li t3, 0
+  7e:	4904                	.2byte	0x4904
+	li t4, 0
+  80:	09000013          	addi	x0,x0,144
+	li t5, 0
+  84:	0111010b          	.4byte	0x111010b
+	li t6, 0
+  88:	0612                	.2byte	0x612
+  8a:	0000                	.2byte	0x0
+	j main
+  8c:	110a                	.2byte	0x110a
+  8e:	2501                	.2byte	0x2501
+  90:	130e                	.2byte	0x130e
+  92:	1b1f030b          	.4byte	0x1b1f030b
+  96:	111f 1201 1006      	.byte	0x1f, 0x11, 0x01, 0x12, 0x06, 0x10
+  9c:	0b000017          	auipc	x0,0xb000
+	la sp, _sp
+  a0:	0024                	.2byte	0x24
+  a2:	0b3e0b0b          	.4byte	0xb3e0b0b
+  a6:	00000803          	lb	x16,0(x0) # 0 <crt>
+	sw a0, -8(sp)
+  aa:	2e0c                	.2byte	0x2e0c
+	nop
+  ac:	3f00                	.2byte	0x3f00
+  ae:	0319                	.2byte	0x319
+	wfi
+  b0:	3a0e                	.2byte	0x3a0e
+  b2:	390b3b0b          	.4byte	0x390b3b0b
+int isSafe(int x, int y, int sol[N][N]) {
+  b6:	1113490b          	.4byte	0x1113490b
+  ba:	1201                	.2byte	0x1201
+  bc:	4006                	.2byte	0x4006
+  be:	7c18                	.2byte	0x7c18
+  c0:	0019                	.2byte	0x19
+  c2:	0d00                	.2byte	0xd00
+  c4:	012e                	.2byte	0x12e
+  c6:	0e03193f 0b3b0b3a 	.8byte	0xb3b0b3a0e03193f
+    return ( x >= 0 && x < N && y >= 0 && y < N && sol[x][y] == -1);
+  ce:	0b39                	.2byte	0xb39
+  d0:	13491927          	.4byte	0x13491927
+  d4:	0111                	.2byte	0x111
+  d6:	0612                	.2byte	0x612
+  d8:	1840                	.2byte	0x1840
+  da:	197c                	.2byte	0x197c
+  dc:	1301                	.2byte	0x1301
+  de:	0000                	.2byte	0x0
+  e0:	2e0e                	.2byte	0x2e0e
+  e2:	3f01                	.2byte	0x3f01
+  e4:	0319                	.2byte	0x319
+  e6:	3a0e                	.2byte	0x3a0e
+  e8:	390b3b0b          	.4byte	0x390b3b0b
+  ec:	1113490b          	.4byte	0x1113490b
+  f0:	1201                	.2byte	0x1201
+  f2:	4006                	.2byte	0x4006
+  f4:	7c18                	.2byte	0x7c18
+  f6:	0119                	.2byte	0x119
+  f8:	0f000013          	addi	x0,x0,240
+  fc:	012e                	.2byte	0x12e
+  fe:	0e03193f 0b3b0b3a 	.8byte	0xb3b0b3a0e03193f
+ 106:	0b39                	.2byte	0xb39
+ 108:	13491927          	.4byte	0x13491927
+ 10c:	0111                	.2byte	0x111
+ 10e:	0612                	.2byte	0x612
+ 110:	1840                	.2byte	0x1840
+ 112:	197a                	.2byte	0x197a
+ 114:	0000                	.2byte	0x0
+	...
+
+Disassembly of section .debug_aranges:
+
+00000000 <.debug_aranges>:
+	nop
+   0:	0024                	.2byte	0x24
+   2:	0000                	.2byte	0x0
+	la ra, exit
+   4:	0002                	.2byte	0x2
+   6:	0000                	.2byte	0x0
+   8:	0000                	.2byte	0x0
+   a:	0004                	.2byte	0x4
+	...
+	mv s0, sp
+  14:	0090                	.2byte	0x90
+  16:	0000                	.2byte	0x0
+	la gp, __global_pointer$
+  18:	00a0                	.2byte	0xa0
+  1a:	0000                	.2byte	0x0
+  1c:	0014                	.2byte	0x14
+	...
+	li t0, 0
+  26:	0000                	.2byte	0x0
+	li t1, 0
+  28:	001c                	.2byte	0x1c
+  2a:	0000                	.2byte	0x0
+	li t2, 0
+  2c:	0002                	.2byte	0x2
+  2e:	00000023          	sb	x0,0(x0) # 0 <crt>
+	li s1, 0
+  32:	0004                	.2byte	0x4
+	li a0, 0
+  34:	0000                	.2byte	0x0
+  36:	0000                	.2byte	0x0
+	li a1, 0
+  38:	00b4                	.2byte	0xb4
+  3a:	0000                	.2byte	0x0
+	li a2, 0
+  3c:	038c                	.2byte	0x38c
+	...
+
+Disassembly of section .debug_str:
+
+00000000 <.debug_str>:
+	nop
+   0:	2e747263          	bgeu	x8,x7,2e4 <solveKTUtil+0x44>
+	la ra, exit
+   4:	682f0073          	.4byte	0x682f0073
+   8:	2f656d6f          	jal	x26,562fe <_sp+0x462fe>
+	la sp, _sp
+   c:	7961                	.2byte	0x7961
+   e:	742d616b          	.4byte	0x742d616b
+  12:	757a7573          	csrrci	x10,0x757,20
+	mv s0, sp
+  16:	442f696b          	.4byte	0x442f696b
+	la gp, __global_pointer$
+  1a:	6d75636f          	jal	x6,56ef0 <_sp+0x46ef0>
+  1e:	6e65                	.2byte	0x6e65
+	li tp, 0
+  20:	7374                	.2byte	0x7374
+  22:	6f72702f          	.4byte	0x6f72702f
+	li t0, 0
+  26:	656a                	.2byte	0x656a
+	li t1, 0
+  28:	762d7463          	bgeu	x26,x2,790 <_ebss+0x2d0>
+	li t2, 0
+  2c:	6f2d                	.2byte	0x6f2d
+  2e:	6570                	.2byte	0x6570
+	li s1, 0
+  30:	2d6e                	.2byte	0x2d6e
+  32:	6562                	.2byte	0x6562
+	li a0, 0
+  34:	6174                	.2byte	0x6174
+  36:	462d                	.2byte	0x462d
+	li a1, 0
+  38:	452d726f          	jal	x4,d748a <_sp+0xc748a>
+	li a2, 0
+  3c:	37344543          	.4byte	0x37344543
+	li a3, 0
+  40:	3030                	.2byte	0x3030
+  42:	2f4a                	.2byte	0x2f4a
+	li a4, 0
+  44:	6974706f          	jal	x0,47eda <_sp+0x37eda>
+	li a5, 0
+  48:	696d                	.2byte	0x696d
+  4a:	617a                	.2byte	0x617a
+	li a6, 0
+  4c:	6974                	.2byte	0x6974
+  4e:	47006e6f          	jal	x28,64be <__global_pointer$+0x583e>
+	li a7, 0
+  52:	554e                	.2byte	0x554e
+	li s2, 0
+  54:	4120                	.2byte	0x4120
+  56:	2e322053          	.4byte	0x2e322053
+	li s3, 0
+  5a:	6c003833          	.4byte	0x6c003833
+	li s4, 0
+  5e:	20676e6f          	jal	x28,76264 <_sp+0x66264>
+	li s5, 0
+  62:	6f6c                	.2byte	0x6f6c
+	li s6, 0
+  64:	676e                	.2byte	0x676e
+  66:	6920                	.2byte	0x6920
+	li s7, 0
+  68:	746e                	.2byte	0x746e
+  6a:	7500                	.2byte	0x7500
+	li s8, 0
+  6c:	736e                	.2byte	0x736e
+  6e:	6769                	.2byte	0x6769
+	li s9, 0
+  70:	656e                	.2byte	0x656e
+  72:	2064                	.2byte	0x2064
+	li s10, 0
+  74:	72616863          	bltu	x2,x6,7a4 <_ebss+0x2e4>
+	li s11, 0
+  78:	4700                	.2byte	0x4700
+  7a:	554e                	.2byte	0x554e
+	li t3, 0
+  7c:	4320                	.2byte	0x4320
+  7e:	3131                	.2byte	0x3131
+	li t4, 0
+  80:	3120                	.2byte	0x3120
+  82:	2e31                	.2byte	0x2e31
+	li t5, 0
+  84:	2e31                	.2byte	0x2e31
+  86:	2030                	.2byte	0x2030
+	li t6, 0
+  88:	6d2d                	.2byte	0x6d2d
+  8a:	6f6e                	.2byte	0x6f6e
+	j main
+  8c:	722d                	.2byte	0x722d
+  8e:	6c65                	.2byte	0x6c65
+  90:	7861                	.2byte	0x7861
+  92:	2d20                	.2byte	0x2d20
+  94:	616d                	.2byte	0x616d
+  96:	6372                	.2byte	0x6372
+  98:	3d68                	.2byte	0x3d68
+  9a:	7672                	.2byte	0x7672
+  9c:	6d693233          	.4byte	0x6d693233
+	la sp, _sp
+  a0:	2d20                	.2byte	0x2d20
+  a2:	616d                	.2byte	0x616d
+  a4:	6962                	.2byte	0x6962
+  a6:	693d                	.2byte	0x693d
+	sw a0, -8(sp)
+  a8:	706c                	.2byte	0x706c
+  aa:	2d203233          	.4byte	0x2d203233
+	nop
+  ae:	736d                	.2byte	0x736d
+	wfi
+  b0:	7274                	.2byte	0x7274
+  b2:	6369                	.2byte	0x6369
+int isSafe(int x, int y, int sol[N][N]) {
+  b4:	2d74                	.2byte	0x2d74
+  b6:	6c61                	.2byte	0x6c61
+  b8:	6769                	.2byte	0x6769
+  ba:	206e                	.2byte	0x206e
+  bc:	6d2d                	.2byte	0x6d2d
+  be:	6f6e                	.2byte	0x6f6e
+  c0:	642d                	.2byte	0x642d
+  c2:	7669                	.2byte	0x7669
+  c4:	2d20                	.2byte	0x2d20
+  c6:	746d                	.2byte	0x746d
+  c8:	6e75                	.2byte	0x6e75
+  ca:	3d65                	.2byte	0x3d65
+    return ( x >= 0 && x < N && y >= 0 && y < N && sol[x][y] == -1);
+  cc:	6f72                	.2byte	0x6f72
+  ce:	74656b63          	bltu	x10,x6,824 <_ebss+0x364>
+  d2:	2d20                	.2byte	0x2d20
+  d4:	616d                	.2byte	0x616d
+  d6:	6372                	.2byte	0x6372
+  d8:	3d68                	.2byte	0x3d68
+  da:	7672                	.2byte	0x7672
+  dc:	6d693233          	.4byte	0x6d693233
+  e0:	2d20                	.2byte	0x2d20
+  e2:	4f2d2067          	.4byte	0x4f2d2067
+  e6:	2030                	.2byte	0x2030
+  e8:	732d                	.2byte	0x732d
+  ea:	6474                	.2byte	0x6474
+  ec:	673d                	.2byte	0x673d
+  ee:	756e                	.2byte	0x756e
+  f0:	3131                	.2byte	0x3131
+  f2:	6c00                	.2byte	0x6c00
+  f4:	20676e6f          	jal	x28,762fa <_sp+0x662fa>
+  f8:	6f6c                	.2byte	0x6f6c
+  fa:	676e                	.2byte	0x676e
+  fc:	7520                	.2byte	0x7520
+  fe:	736e                	.2byte	0x736e
+ 100:	6769                	.2byte	0x6769
+ 102:	656e                	.2byte	0x656e
+ 104:	2064                	.2byte	0x2064
+ 106:	6e69                	.2byte	0x6e69
+ 108:	0074                	.2byte	0x74
+ 10a:	4d78                	.2byte	0x4d78
+ 10c:	0065766f          	jal	x12,57112 <_sp+0x47112>
+ 110:	656e                	.2byte	0x656e
+ 112:	7478                	.2byte	0x7478
+ 114:	785f 6e00 7865      	.byte	0x5f, 0x78, 0x00, 0x6e, 0x65, 0x78
+ 11a:	5f74                	.2byte	0x5f74
+ 11c:	0079                	.2byte	0x79
+ 11e:	6f6d                	.2byte	0x6f6d
+ 120:	6576                	.2byte	0x6576
+ 122:	0069                	.2byte	0x69
+ 124:	7369                	.2byte	0x7369
+ 126:	65666153          	.4byte	0x65666153
+ 12a:	7900                	.2byte	0x7900
+ 12c:	6f4d                	.2byte	0x6f4d
+ 12e:	6576                	.2byte	0x6576
+ 130:	7300                	.2byte	0x7300
+ 132:	65766c6f          	jal	x24,66f88 <_sp+0x56f88>
+ 136:	7300544b          	.4byte	0x7300544b
+}
+ 13a:	6f68                	.2byte	0x6f68
+ 13c:	7472                	.2byte	0x7472
+ 13e:	7520                	.2byte	0x7520
+ 140:	736e                	.2byte	0x736e
+ 142:	6769                	.2byte	0x6769
+ 144:	656e                	.2byte	0x656e
+ 146:	2064                	.2byte	0x2064
+int solveKT() {
+ 148:	6e69                	.2byte	0x6e69
+ 14a:	0074                	.2byte	0x74
+ 14c:	616d                	.2byte	0x616d
+ 14e:	6e69                	.2byte	0x6e69
+ 150:	6c00                	.2byte	0x6c00
+ 152:	20676e6f          	jal	x28,76358 <_sp+0x66358>
+ 156:	6f64                	.2byte	0x6f64
+    for (int x = 0; x < N; x++)
+ 158:	6275                	.2byte	0x6275
+ 15a:	656c                	.2byte	0x656c
+ 15c:	7300                	.2byte	0x7300
+ 15e:	6f68                	.2byte	0x6f68
+        for (int y = 0; y < N; y++)
+ 160:	7472                	.2byte	0x7472
+ 162:	6920                	.2byte	0x6920
+ 164:	746e                	.2byte	0x746e
+ 166:	7300                	.2byte	0x7300
+            sol[x][y] = -1;
+ 168:	65766c6f          	jal	x24,66fbe <_sp+0x56fbe>
+ 16c:	7455544b          	.4byte	0x7455544b
+ 170:	6c69                	.2byte	0x6c69
+	...
+
+Disassembly of section .debug_rnglists:
+
+00000000 <.debug_rnglists>:
+	nop
+   0:	0016                	.2byte	0x16
+   2:	0000                	.2byte	0x0
+	la ra, exit
+   4:	0005                	.2byte	0x5
+   6:	0004                	.2byte	0x4
+   8:	0000                	.2byte	0x0
+   a:	0000                	.2byte	0x0
+	la sp, _sp
+   c:	00000007          	.4byte	0x7
+  10:	9c00                	.2byte	0x9c00
+  12:	0701                	.2byte	0x701
+	mv s0, sp
+  14:	00a0                	.2byte	0xa0
+  16:	0000                	.2byte	0x0
+	la gp, __global_pointer$
+  18:	0020                	.2byte	0x20
+
+Disassembly of section .debug_frame:
+
+00000000 <.debug_frame>:
+	nop
+   0:	000c                	.2byte	0xc
+   2:	0000                	.2byte	0x0
+	la ra, exit
+   4:	ffff                	.2byte	0xffff
+   6:	ffff                	.2byte	0xffff
+   8:	7c010003          	lb	x0,1984(x2)
+	la sp, _sp
+   c:	0d01                	.2byte	0xd01
+   e:	0002                	.2byte	0x2
+  10:	0020                	.2byte	0x20
+  12:	0000                	.2byte	0x0
+	mv s0, sp
+  14:	0000                	.2byte	0x0
+  16:	0000                	.2byte	0x0
+	la gp, __global_pointer$
+  18:	00b4                	.2byte	0xb4
+  1a:	0000                	.2byte	0x0
+  1c:	0094                	.2byte	0x94
+  1e:	0000                	.2byte	0x0
+	li tp, 0
+  20:	0e44                	.2byte	0xe44
+  22:	4420                	.2byte	0x4420
+	li t0, 0
+  24:	0188                	.2byte	0x188
+  26:	0c44                	.2byte	0xc44
+	li t1, 0
+  28:	0008                	.2byte	0x8
+  2a:	8002                	.2byte	0x8002
+	li t2, 0
+  2c:	0cc8                	.2byte	0xcc8
+  2e:	2002                	.2byte	0x2002
+	li s1, 0
+  30:	0e44                	.2byte	0xe44
+  32:	0000                	.2byte	0x0
+	li a0, 0
+  34:	0028                	.2byte	0x28
+  36:	0000                	.2byte	0x0
+	li a1, 0
+  38:	0000                	.2byte	0x0
+  3a:	0000                	.2byte	0x0
+	li a2, 0
+  3c:	0148                	.2byte	0x148
+  3e:	0000                	.2byte	0x0
+	li a3, 0
+  40:	0158                	.2byte	0x158
+  42:	0000                	.2byte	0x0
+	li a4, 0
+  44:	0e44                	.2byte	0xe44
+  46:	0180                	.2byte	0x180
+	li a5, 0
+  48:	8148                	.2byte	0x8148
+  4a:	8801                	.2byte	0x8801
+	li a6, 0
+  4c:	4402                	.2byte	0x4402
+  4e:	080c                	.2byte	0x80c
+	li a7, 0
+  50:	0300                	.2byte	0x300
+  52:	013c                	.2byte	0x13c
+	li s2, 0
+  54:	44c1                	.2byte	0x44c1
+  56:	0cc8                	.2byte	0xcc8
+	li s3, 0
+  58:	8002                	.2byte	0x8002
+  5a:	4401                	.2byte	0x4401
+	li s4, 0
+  5c:	000e                	.2byte	0xe
+  5e:	0000                	.2byte	0x0
+	li s5, 0
+  60:	0024                	.2byte	0x24
+  62:	0000                	.2byte	0x0
+	li s6, 0
+  64:	0000                	.2byte	0x0
+  66:	0000                	.2byte	0x0
+	li s7, 0
+  68:	02a0                	.2byte	0x2a0
+  6a:	0000                	.2byte	0x0
+	li s8, 0
+  6c:	0170                	.2byte	0x170
+  6e:	0000                	.2byte	0x0
+	li s9, 0
+  70:	0e44                	.2byte	0xe44
+  72:	4840                	.2byte	0x4840
+	li s10, 0
+  74:	0181                	.2byte	0x181
+  76:	0288                	.2byte	0x288
+	li s11, 0
+  78:	0c44                	.2byte	0xc44
+  7a:	0008                	.2byte	0x8
+	li t3, 0
+  7c:	c1015403          	lhu	x8,-1008(x2)
+	li t4, 0
+  80:	c844                	.2byte	0xc844
+  82:	020c                	.2byte	0x20c
+	li t5, 0
+  84:	4440                	.2byte	0x4440
+  86:	000e                	.2byte	0xe
+	li t6, 0
+  88:	0024                	.2byte	0x24
+  8a:	0000                	.2byte	0x0
+	j main
+  8c:	0000                	.2byte	0x0
+  8e:	0000                	.2byte	0x0
+  90:	0410                	.2byte	0x410
+  92:	0000                	.2byte	0x0
+  94:	0030                	.2byte	0x30
+  96:	0000                	.2byte	0x0
+  98:	0e44                	.2byte	0xe44
+  9a:	4810                	.2byte	0x4810
+  9c:	0181                	.2byte	0x181
+  9e:	0288                	.2byte	0x288
+	la sp, _sp
+  a0:	0c44                	.2byte	0xc44
+  a2:	0008                	.2byte	0x8
+  a4:	c154                	.2byte	0xc154
+  a6:	c844                	.2byte	0xc844
+	sw a0, -8(sp)
+  a8:	020c                	.2byte	0x20c
+  aa:	4410                	.2byte	0x4410
+	nop
+  ac:	000e                	.2byte	0xe
+	...

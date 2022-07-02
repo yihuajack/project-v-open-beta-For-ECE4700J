@@ -1,0 +1,190 @@
+
+program.debug_sampler.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <bt1-0x30>:
+   0:	00000013          	addi	x0,x0,0
+   4:	00001137          	lui	x2,0x1
+   8:	80010113          	addi	x2,x2,-2048 # 800 <_ebss+0x580>
+   c:	00100293          	addi	x5,x0,1
+  10:	00000f93          	addi	x31,x0,0
+  14:	00100313          	addi	x6,x0,1
+  18:	00200393          	addi	x7,x0,2
+  1c:	00731a63          	bne	x6,x7,30 <bt1>
+  20:	00000013          	addi	x0,x0,0
+  24:	00000013          	addi	x0,x0,0
+  28:	00000013          	addi	x0,x0,0
+  2c:	10500073          	wfi
+
+00000030 <bt1>:
+  30:	001f8f93          	addi	x31,x31,1
+  34:	00000313          	addi	x6,x0,0
+  38:	00000393          	addi	x7,x0,0
+  3c:	00731463          	bne	x6,x7,44 <bt2>
+  40:	001f8f93          	addi	x31,x31,1
+
+00000044 <bt2>:
+  44:	00730663          	beq	x6,x7,50 <bt3>
+  48:	00000013          	addi	x0,x0,0
+  4c:	10500073          	wfi
+
+00000050 <bt3>:
+  50:	001f8f93          	addi	x31,x31,1
+  54:	00130313          	addi	x6,x6,1
+  58:	02536063          	bltu	x6,x5,78 <bt4>
+  5c:	00534e63          	blt	x6,x5,78 <bt4>
+  60:	0062dc63          	bge	x5,x6,78 <bt4>
+  64:	0062fa63          	bgeu	x5,x6,78 <bt4>
+  68:	001f8f93          	addi	x31,x31,1
+  6c:	00535663          	bge	x6,x5,78 <bt4>
+  70:	00000013          	addi	x0,x0,0
+  74:	10500073          	wfi
+
+00000078 <bt4>:
+  78:	fffff337          	lui	x6,0xfffff
+  7c:	7ffff2b7          	lui	x5,0x7ffff
+  80:	00537663          	bgeu	x6,x5,8c <btt1>
+  84:	00000013          	addi	x0,x0,0
+  88:	10500073          	wfi
+
+0000008c <btt1>:
+  8c:	0062e663          	bltu	x5,x6,98 <btt2>
+  90:	00000013          	addi	x0,x0,0
+  94:	10500073          	wfi
+
+00000098 <btt2>:
+  98:	00534663          	blt	x6,x5,a4 <btt3>
+  9c:	00000013          	addi	x0,x0,0
+  a0:	10500073          	wfi
+
+000000a4 <btt3>:
+  a4:	0062d663          	bge	x5,x6,b0 <btt4>
+  a8:	00000013          	addi	x0,x0,0
+  ac:	10500073          	wfi
+
+000000b0 <btt4>:
+  b0:	00c000ef          	jal	x1,bc <btt5>
+  b4:	00000013          	addi	x0,x0,0
+  b8:	10500073          	wfi
+
+000000bc <btt5>:
+  bc:	00000293          	addi	x5,x0,0
+  c0:	00000317          	auipc	x6,0x0
+  c4:	01030313          	addi	x6,x6,16 # d0 <btt6>
+  c8:	000302e7          	jalr	x5,0(x6)
+
+000000cc <linkaddr>:
+  cc:	10500073          	wfi
+
+000000d0 <btt6>:
+  d0:	00000317          	auipc	x6,0x0
+  d4:	ffc30313          	addi	x6,x6,-4 # cc <linkaddr>
+  d8:	fe629ae3          	bne	x5,x6,cc <linkaddr>
+  dc:	00100293          	addi	x5,x0,1
+  e0:	00000f93          	addi	x31,x0,0
+  e4:	800fef93          	ori	x31,x31,-2048
+  e8:	fff36313          	ori	x6,x6,-1
+  ec:	00000393          	addi	x7,x0,0
+  f0:	00338393          	addi	x7,x7,3
+  f4:	0013f393          	andi	x7,x7,1
+  f8:	00000e13          	addi	x28,x0,0
+  fc:	fffe4e13          	xori	x28,x28,-1
+ 100:	106e1a63          	bne	x28,x6,214 <FAIL>
+ 104:	80037313          	andi	x6,x6,-2048
+ 108:	11f31663          	bne	x6,x31,214 <FAIL>
+ 10c:	00132e93          	slti	x29,x6,1
+ 110:	00133f13          	sltiu	x30,x6,1
+ 114:	01ee9463          	bne	x29,x30,11c <im_hop>
+ 118:	0e635e63          	bge	x6,x6,214 <FAIL>
+
+0000011c <im_hop>:
+ 11c:	00100393          	addi	x7,x0,1
+ 120:	00c39393          	slli	x7,x7,0xc
+ 124:	00001337          	lui	x6,0x1
+ 128:	0e639663          	bne	x7,x6,214 <FAIL>
+ 12c:	fffff337          	lui	x6,0xfffff
+ 130:	01f35313          	srli	x6,x6,0x1f
+ 134:	00100393          	addi	x7,x0,1
+ 138:	0c639e63          	bne	x7,x6,214 <FAIL>
+ 13c:	fffff337          	lui	x6,0xfffff
+ 140:	41f35313          	srai	x6,x6,0x1f
+ 144:	fffff3b7          	lui	x7,0xfffff
+ 148:	fff3e393          	ori	x7,x7,-1
+ 14c:	0c639463          	bne	x7,x6,214 <FAIL>
+ 150:	00200293          	addi	x5,x0,2
+ 154:	0ff00313          	addi	x6,x0,255
+ 158:	00610023          	sb	x6,0(x2)
+ 15c:	00010383          	lb	x7,0(x2)
+ 160:	0a63da63          	bge	x7,x6,214 <FAIL>
+ 164:	00014383          	lbu	x7,0(x2)
+ 168:	0a731663          	bne	x6,x7,214 <FAIL>
+ 16c:	fff36313          	ori	x6,x6,-1
+ 170:	0000f337          	lui	x6,0xf
+ 174:	00611023          	sh	x6,0(x2)
+ 178:	00011383          	lh	x7,0(x2)
+ 17c:	0863dc63          	bge	x7,x6,214 <FAIL>
+ 180:	00015383          	lhu	x7,0(x2)
+ 184:	08739863          	bne	x7,x7,214 <FAIL>
+ 188:	fff36313          	ori	x6,x6,-1
+ 18c:	7ffff337          	lui	x6,0x7ffff
+ 190:	00612023          	sw	x6,0(x2)
+ 194:	00012383          	lw	x7,0(x2)
+ 198:	06731e63          	bne	x6,x7,214 <FAIL>
+ 19c:	00300293          	addi	x5,x0,3
+ 1a0:	00500313          	addi	x6,x0,5
+ 1a4:	00000393          	addi	x7,x0,0
+ 1a8:	006303b3          	add	x7,x6,x6
+ 1ac:	00131313          	slli	x6,x6,0x1
+ 1b0:	06731263          	bne	x6,x7,214 <FAIL>
+ 1b4:	00300313          	addi	x6,x0,3
+ 1b8:	00400393          	addi	x7,x0,4
+ 1bc:	00736333          	or	x6,x6,x7
+ 1c0:	00700e13          	addi	x28,x0,7
+ 1c4:	05c31863          	bne	x6,x28,214 <FAIL>
+ 1c8:	00300313          	addi	x6,x0,3
+ 1cc:	40730333          	sub	x6,x6,x7
+ 1d0:	fff00393          	addi	x7,x0,-1
+ 1d4:	04731063          	bne	x6,x7,214 <FAIL>
+ 1d8:	00400293          	addi	x5,x0,4
+ 1dc:	00e00313          	addi	x6,x0,14
+ 1e0:	02800393          	addi	x7,x0,40
+ 1e4:	02638e33          	mul	x28,x7,x6
+ 1e8:	23000e93          	addi	x29,x0,560
+ 1ec:	03ce9463          	bne	x29,x28,214 <FAIL>
+ 1f0:	7ff00337          	lui	x6,0x7ff00
+ 1f4:	555553b7          	lui	x7,0x55555
+ 1f8:	02733f33          	mulhu	x30,x6,x7
+ 1fc:	02730eb3          	mul	x29,x6,x7
+ 200:	fff00337          	lui	x6,0xfff00
+ 204:	f55553b7          	lui	x7,0xf5555
+ 208:	02731f33          	mulh	x30,x6,x7
+ 20c:	02730eb3          	mul	x29,x6,x7
+ 210:	10500073          	wfi
+
+00000214 <FAIL>:
+ 214:	10500073          	wfi
+	...
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	2241                	.2byte	0x2241
+   2:	0000                	.2byte	0x0
+   4:	7200                	.2byte	0x7200
+   6:	7369                	.2byte	0x7369
+   8:	01007663          	bgeu	x0,x16,14 <bt1-0x1c>
+   c:	0018                	.2byte	0x18
+   e:	0000                	.2byte	0x0
+  10:	7205                	.2byte	0x7205
+  12:	3376                	.2byte	0x3376
+  14:	6932                	.2byte	0x6932
+  16:	7032                	.2byte	0x7032
+  18:	5f30                	.2byte	0x5f30
+  1a:	326d                	.2byte	0x326d
+  1c:	3070                	.2byte	0x3070
+  1e:	0800                	.2byte	0x800
+  20:	0a01                	.2byte	0xa01
+  22:	0b              	Address 0x0000000000000022 is out of bounds.
+

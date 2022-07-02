@@ -10,6 +10,13 @@
 //                                                                      //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
+// Changelog
+// [Deprecated] Add input rs1_forward_type, rs2_forward_type
+// Add input ex_forward_rs, ex_mem_forward_rs
+// Add logic [`XLEN-1:0] brs1_mux_out, brs2_mux_out
+// Change OPA_IS_RS1: opa_mux_out, OPB_IS_RS2: opb_mux_out
+// Add always_comb
+// Change brcond rs1, rs2
 `ifndef __EX_STAGE_V__
 `define __EX_STAGE_V__
 
@@ -100,11 +107,15 @@ module ex_stage(
 	input clock,               // system clock
 	input reset,               // system reset
 	input ID_EX_PACKET   id_ex_packet_in,
+	// input DH_FWD_TYPE rs1_forward_type,
+	// input DH_FWD_TYPE rs2_forward_type,
+	input [`XLEN-1:0] ex_forward_rs,
+	input [`XLEN-1:0] ex_mem_forward_rs,
 	output EX_MEM_PACKET ex_packet_out
 );
 	// Pass-throughs
 	assign ex_packet_out.NPC = id_ex_packet_in.NPC;
-	assign ex_packet_out.rs2_value = id_ex_packet_in.rs2_value;
+	// assign ex_packet_out.rs2_value = id_ex_packet_in.rs2_value;
 	assign ex_packet_out.rd_mem = id_ex_packet_in.rd_mem;
 	assign ex_packet_out.wr_mem = id_ex_packet_in.wr_mem;
 	assign ex_packet_out.dest_reg_idx = id_ex_packet_in.dest_reg_idx;
@@ -116,13 +127,16 @@ module ex_stage(
 
 	logic [`XLEN-1:0] opa_mux_out, opb_mux_out;
 	logic brcond_result;
+	logic [`XLEN-1:0] brs1_mux_out, brs2_mux_out;
 	//
 	// ALU opA mux
 	//
 	always_comb begin
 		opa_mux_out = `XLEN'hdeadfbac;
 		case (id_ex_packet_in.opa_select)
-			OPA_IS_RS1:  opa_mux_out = id_ex_packet_in.rs1_value;
+			OPA_IS_RS1:  opa_mux_out = id_ex_packet_in.rs1_forward_type == ID_EX_FWD ? ex_forward_rs :
+			                           id_ex_packet_in.rs1_forward_type == EX_MEM_FWD ? ex_mem_forward_rs :
+			                           id_ex_packet_in.rs1_value;
 			OPA_IS_NPC:  opa_mux_out = id_ex_packet_in.NPC;
 			OPA_IS_PC:   opa_mux_out = id_ex_packet_in.PC;
 			OPA_IS_ZERO: opa_mux_out = 0;
@@ -137,7 +151,9 @@ module ex_stage(
 		// value on the output of the mux you have an invalid opb_select
 		opb_mux_out = `XLEN'hfacefeed;
 		case (id_ex_packet_in.opb_select)
-			OPB_IS_RS2:   opb_mux_out = id_ex_packet_in.rs2_value;
+			OPB_IS_RS2:   opb_mux_out = id_ex_packet_in.rs2_forward_type == ID_EX_FWD ? ex_forward_rs :
+			                            id_ex_packet_in.rs2_forward_type == EX_MEM_FWD ? ex_mem_forward_rs :
+			                            id_ex_packet_in.rs2_value;
 			OPB_IS_I_IMM: opb_mux_out = `RV32_signext_Iimm(id_ex_packet_in.inst);
 			OPB_IS_S_IMM: opb_mux_out = `RV32_signext_Simm(id_ex_packet_in.inst);
 			OPB_IS_B_IMM: opb_mux_out = `RV32_signext_Bimm(id_ex_packet_in.inst);
@@ -162,8 +178,8 @@ module ex_stage(
 	 // instantiate the branch condition tester
 	 //
 	brcond brcond (// Inputs
-		.rs1(id_ex_packet_in.rs1_value), 
-		.rs2(id_ex_packet_in.rs2_value),
+		.rs1(brs1_mux_out), 
+		.rs2(brs2_mux_out),
 		.func(id_ex_packet_in.inst.b.funct3), // inst bits to determine check
 
 		// Output
@@ -174,6 +190,33 @@ module ex_stage(
 	 //	unconditional, or conditional and the condition is true
 	assign ex_packet_out.take_branch = id_ex_packet_in.uncond_branch
 		                          | (id_ex_packet_in.cond_branch & brcond_result);
-
+    
+    always_comb begin
+        if (id_ex_packet_in.uncond_branch | id_ex_packet_in.cond_branch) begin
+            if (id_ex_packet_in.rs1_forward_type == ID_EX_FWD)
+                brs1_mux_out = ex_forward_rs;
+            else if (id_ex_packet_in.rs1_forward_type == EX_MEM_FWD)
+                brs1_mux_out = ex_mem_forward_rs;
+            else
+                brs1_mux_out = id_ex_packet_in.rs1_value;
+            if (id_ex_packet_in.rs2_forward_type == ID_EX_FWD)
+                brs2_mux_out = ex_forward_rs;
+            else if (id_ex_packet_in.rs2_forward_type == EX_MEM_FWD)
+                brs2_mux_out = ex_mem_forward_rs;
+            else
+                brs2_mux_out = id_ex_packet_in.rs2_value;
+        end
+        else begin
+            brs1_mux_out = id_ex_packet_in.rs1_value;
+            brs2_mux_out = id_ex_packet_in.rs2_value;
+        end
+        if (id_ex_packet_in.wr_mem & id_ex_packet_in.rs2_forward_type == ID_EX_FWD)
+            ex_packet_out.rs2_value = ex_forward_rs;
+        else if (id_ex_packet_in.wr_mem & id_ex_packet_in.rs2_forward_type == EX_MEM_FWD)
+            ex_packet_out.rs2_value = ex_mem_forward_rs;
+        else
+            ex_packet_out.rs2_value = id_ex_packet_in.rs2_value;
+    end
+    
 endmodule // module ex_stage
 `endif // __EX_STAGE_V__

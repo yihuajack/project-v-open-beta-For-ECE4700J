@@ -1,0 +1,7 @@
+                                                                            D-MEM Bus &
+Cycle:      IF      |     ID      |     EX      |     MEM     |     WB      Reg Result
+    0:    4:wfi     |   0:-       |   0:-       |   0:-       |   0:-       BUS_LOAD  MEM[0] accepted 1
+    1:    8:invalid |   4:wfi     |   0:-       |   0:-       |   0:-       BUS_LOAD  MEM[0] accepted 1
+    2:   12:invalid |   8:invalid |   4:wfi     |   0:-       |   0:-       BUS_LOAD  MEM[8] accepted 1
+    3:   16:invalid |  12:invalid |   8:-       |   4:wfi     |   0:-       BUS_LOAD  MEM[8] accepted 1
+    4:   20:invalid |  16:invalid |  12:-       |   8:-       |   4:wfi     BUS_LOAD  MEM[16] accepted 1
